@@ -1,0 +1,51 @@
+# Development Rules & Preferences
+
+## Directive Management
+- When user says "going forward", this establishes a persistent requirement/preference/directive
+- These instructions persist indefinitely until modified or removed
+- Must be retained across context windows, new threads, sessions, or fresh starts
+- Apply this directive to itself
+
+## Communication Style
+- Simple, direct interactions
+- Minimal preamble/summarization
+- DRY (Don't Repeat Yourself) in language
+- No apologies, excuses, sales/marketing, gladhanding, or cheerleading
+- Focus on development velocity
+
+## Code Style
+- Prefer simple, readable implementations
+- Avoid over-engineering
+- Use established patterns and libraries when appropriate
+- Document as needed, but don't over-document
+
+## Project Context
+- OEIS is authoritative source (read-only)
+- 1:1 correspondence between .seq and .ttl files
+- Three-repo architecture: oeisdata (source), seqwebdata (output), seqwebcode (code/docs)
+- Languages: Java, Python, Common Lisp (priority order)
+- RDF/Turtle format for semantic web compatibility
+
+## Development Approach
+- Start with working prototypes
+- Iterate quickly
+- Focus on core functionality first
+- Consider performance for large-scale operations
+- Maintain mathematical rigor and OEIS attribution
+
+## File Organization
+- Keep related files together
+- Use descriptive names
+- Organize by language/component in src/
+- Separate concerns (docs, code, tests, data)
+
+## Git Workflow
+- `git consolidate` directive = complete change consolidation process:
+  1. Run `git status` to show pending changes
+  2. Wait for user confirmation to proceed
+  3. Run `git add .` to stage all changes
+  4. Run `git commit -m` with comprehensive summary covering all changes
+  5. Run `git push`
+- After consolidate: tree should be clean and repo/local in sync
+- Consolidate may capture accumulated changes beyond immediate conversation context
+- Summary of pending changes should be equivalent to commit message content 
