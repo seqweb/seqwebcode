@@ -43,9 +43,7 @@
 - `git consolidate` directive = complete change consolidation process:
   1. Run `git status` to show pending changes
   2. Wait for user confirmation to proceed
-  3. Run `git add .` to stage all changes
-  4. Run `git commit -m` with comprehensive summary covering all changes
-  5. Run `git push`
+  3. Run `git add . && git commit -m "..." && git push` as single command
 - After consolidate: tree should be clean and repo/local in sync
 - Consolidate may capture accumulated changes beyond immediate conversation context
 - Summary of pending changes should be equivalent to commit message content 
