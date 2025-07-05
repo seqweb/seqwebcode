@@ -40,10 +40,12 @@
 - Separate concerns (docs, code, tests, data)
 
 ## Multi-Repo Context
-- Cursor workspace includes both seqwebcode and seqwebdata repos
+- Cursor workspace includes seqwebcode, seqwebdata, and oeisdata repos
 - Default operations target seqwebcode (where Cursor was opened)
-- Can freely read/modify files in either repo
+- Can freely read/modify files in seqwebcode and seqwebdata
+- oeisdata is read-only: can read files but cannot modify or commit
 - Explicit context change required when working in seqwebdata repo
+- For oeisdata updates: use `git pull` only, never `git push`
 
 ## Git Workflow
 - `git consolidate` directive = complete change consolidation process:
