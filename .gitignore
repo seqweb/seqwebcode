@@ -263,11 +263,20 @@ coverage.xml
 *.ppcf64
 *.armf64
 
-# IDE
+# IDE/Editor
+*.code-workspace
 .vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
 *~
+\#*\#
+.#*
 
 # OS
 .DS_Store
