@@ -6,7 +6,7 @@ This directory contains the implementation code for SeqWeb components.
 
 - **java/**: Java implementations
 - **python/**: Python implementations
-- **commonlisp/**: Common Lisp implementations  
+- **cl/**: Common Lisp implementations  
 - **scripts/**: Shell scripts and utilities
 
 ## Components

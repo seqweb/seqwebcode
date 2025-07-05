@@ -13,13 +13,13 @@ seqwebcode/
 ├── src/                    # Source code
 │   ├── java/              # Java implementations
 │   ├── python/            # Python implementations  
-│   ├── commonlisp/        # Common Lisp implementations
+│   ├── cl/               # Common Lisp implementations
 │   └── scripts/           # Shell scripts and utilities
 ├── ontology/              # RDF ontology definitions and vocabularies
 ├── tests/                 # Test suites
 │   ├── java/
 │   ├── python/
-│   └── commonlisp/
+│   └── cl/
 ├── data/                  # Local data files, samples
 └── examples/              # Example usage and demonstrations
 ```
