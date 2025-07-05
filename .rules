@@ -39,6 +39,12 @@
 - Organize by language/component in src/
 - Separate concerns (docs, code, tests, data)
 
+## Multi-Repo Context
+- Cursor workspace includes both seqwebcode and seqwebdata repos
+- Default operations target seqwebcode (where Cursor was opened)
+- Can freely read/modify files in either repo
+- Explicit context change required when working in seqwebdata repo
+
 ## Git Workflow
 - `git consolidate` directive = complete change consolidation process:
   1. Run `git status` to show pending changes
