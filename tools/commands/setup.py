@@ -25,19 +25,18 @@ class SetupCommand(BaseCommand):
     def help_text(self) -> str:
         return """Usage: pythonseqweb setup
   Initialize the SeqWeb development environment.
-  This includes making the seqweb CLI executable and optionally
-  adding the current directory to PATH for global access.
+  This includes making the seqweb CLI executable and creating data directories.
   NOTE: This command is idempotent - safe to run multiple times."""
     
     def execute(self, args):
         # This function is idempotent - safe to run multiple times
         # It will only make changes if they haven't been made already
+        
         print("🧬 Setting up SeqWeb development environment...")
         print()
         
         self._make_executable()
         self._create_data_directories()
-        self._add_to_path()
         self._show_completion_message()
     
     def _make_executable(self):
@@ -73,27 +72,11 @@ class SetupCommand(BaseCommand):
         
         print("✅ Data directories ready")
     
-    def _add_to_path(self):
-        """Add current directory to PATH for this session"""
-        seqweb_home = os.environ["SEQWEB_HOME"]
-        current_path = os.environ.get("PATH", "")
-        
-        if seqweb_home not in current_path.split(os.pathsep):
-            print("🌐 Adding seqweb directory to PATH for this session...")
-            os.environ["PATH"] = f"{seqweb_home}{os.pathsep}{current_path}"
-            print("✅ You can now use 'seqweb <command>' (no './' needed)")
-        else:
-            print("✅ seqweb directory already in PATH")
+
     
     def _show_completion_message(self):
         """Show completion message with instructions"""
-        seqweb_home = os.environ["SEQWEB_HOME"]
-        
         print()
-        print("✅ Setup complete! You can now use 'seqweb <command>' from anywhere in this directory.")
+        print("✅ Setup complete! You can now use './pythonseqweb <command>'")
         print()
-        print("💡 To use 'seqweb' command from other directories or new sessions:")
-        print("   Add this line to your shell profile (~/.bash_profile, ~/.zshrc, etc.):")
-        print(f"   export PATH=\"{seqweb_home}:$PATH\"")
-        print()
-        print(f"💡 To configure additional directories, edit: {seqweb_home}/config/env.sh") 
+        print("💡 To configure additional directories, edit: config/env.sh") 

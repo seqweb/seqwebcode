@@ -32,8 +32,7 @@ class BaseCommand(ABC):
     def create_parser(self) -> argparse.ArgumentParser:
         """Create argument parser for this command"""
         parser = argparse.ArgumentParser(
-            description=self.description,
-            help=self.help_text
+            description=self.description
         )
         self.add_arguments(parser)
         return parser
@@ -45,8 +44,9 @@ class BaseCommand(ABC):
     
     def run(self, args: List[str]):
         """Run the command with given arguments"""
+        # First argument is the command name, skip it for argparse
         parser = self.create_parser()
-        parsed_args = parser.parse_args(args)
+        parsed_args = parser.parse_args(args[1:])
         self.execute(parsed_args)
     
     @abstractmethod

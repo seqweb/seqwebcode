@@ -25,7 +25,7 @@ def main():
         sys.exit(1)
     
     command_name = sys.argv[1]
-    command_args = sys.argv[2:]
+    command_args = sys.argv[1:]  # Include command name as first arg
     
     # Load and execute command
     try:
