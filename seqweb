@@ -1,0 +1,12 @@
+#!/bin/bash
+# SeqWeb CLI Entry Point
+# This file should be made executable with: chmod +x seqweb
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set SEQWEB_HOME to the directory containing this script
+export SEQWEB_HOME="$SCRIPT_DIR"
+
+# Execute the main CLI dispatcher
+exec "$SCRIPT_DIR/tools/seqweb.sh" "$@" 
