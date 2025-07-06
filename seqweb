@@ -1,49 +1,21 @@
-#!/bin/bash
-# SeqWeb CLI Entry Point
-# This file should be made executable with: chmod +x seqweb
+#!/usr/bin/env python3
+"""
+SeqWeb Python CLI Entry Point
+This file should be made executable with: chmod +x pythonseqweb
+"""
 
-# Set SEQWEB_HOME to the directory containing this script
-export SEQWEB_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+import os
+import sys
+from pathlib import Path
 
-# Source environment configuration
-source "$SEQWEB_HOME/config/env.sh"
+# Add the tools directory to Python path
+SCRIPT_DIR = Path(__file__).parent
+TOOLS_DIR = SCRIPT_DIR / "tools"
+sys.path.insert(0, str(TOOLS_DIR))
 
-# Function to list available commands
-list_available_commands() {
-    find "$SEQWEB_COMMAND_DIR" -type f -name "*.sh" \
-        | sed -E 's|^.*/||' \
-        | sed -E 's/\.sh$//' \
-        | sort
-}
+from cli import main
 
-# Function to show usage
-show_usage() {
-    if [[ -z "$1" ]]; then
-        echo "❌ Missing command"
-    else
-        echo "❌ Unknown command: $1"
-    fi
-    echo "  Run 'seqweb help' for a list of available commands"
-}
-
-# Main command processing
-if [[ $# -eq 0 ]]; then
-    echo "🧬 SeqWeb: OEIS Knowledge Graph Development 🧬"
-    show_usage
-    exit 1
-fi
-
-command=$1
-shift
-
-# Source the command file
-command_file="$SEQWEB_COMMAND_DIR/${command}.sh"
-if [[ ! -f "$command_file" ]]; then
-    echo "🧬 SeqWeb: OEIS Knowledge Graph Development 🧬"
-    show_usage "$command"
-    exit 1
-fi
-
-# Source the command file and execute the command function
-source "$command_file"
-"seqweb-command-${command}" "$@" 
+if __name__ == "__main__":
+    # Set SEQWEB_HOME environment variable
+    os.environ["SEQWEB_HOME"] = str(SCRIPT_DIR)
+    main() 

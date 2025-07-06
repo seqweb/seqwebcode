@@ -40,15 +40,16 @@ seqwebcode/
 
 2. **Set up the development environment:**
    ```bash
+   chmod +x seqweb
    ./seqweb setup
    ```
 
 3. **Start using SeqWeb:**
    ```bash
-   seqweb help
+   ./seqweb help
    ```
 
-That's it! The `seqweb` command is now available throughout the project directory.
+That's it! The `./seqweb` command is now available for development work.
 
 ## Development
 

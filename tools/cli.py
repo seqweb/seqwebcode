@@ -21,7 +21,7 @@ def main():
     
     if len(sys.argv) < 2:
         print("❌ Missing command")
-        print("  Run 'pythonseqweb help' for a list of available commands")
+        print("  Run './seqweb help' for a list of available commands")
         sys.exit(1)
     
     command_name = sys.argv[1]
@@ -34,7 +34,7 @@ def main():
         command.run(command_args)
     except ImportError:
         print(f"❌ Unknown command: {command_name}")
-        print("  Run 'pythonseqweb help' for a list of available commands")
+        print("  Run './seqweb help' for a list of available commands")
         sys.exit(1)
     except Exception as e:
         print(f"❌ Error executing command '{command_name}': {e}")

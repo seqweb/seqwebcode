@@ -20,7 +20,7 @@ class HelpCommand(BaseCommand):
     
     @property
     def help_text(self) -> str:
-        return """Usage: pythonseqweb help [command]
+        return """Usage: ./seqweb help [command]
   Show help information for all commands or a specific command.
   If no command is specified, lists all available commands.
   If a command is specified, shows detailed help for that command."""
@@ -51,7 +51,7 @@ class HelpCommand(BaseCommand):
             print(f"  {cmd_name}: {cmd.description}")
         
         print()
-        print("💡 Run 'pythonseqweb help <command>' for detailed help on a specific command.")
+        print("💡 Run './seqweb help <command>' for detailed help on a specific command.")
     
     def _show_command_help(self, command_name: str):
         """Show help for a specific command"""

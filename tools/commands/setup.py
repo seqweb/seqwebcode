@@ -23,7 +23,7 @@ class SetupCommand(BaseCommand):
     
     @property
     def help_text(self) -> str:
-        return """Usage: pythonseqweb setup
+        return """Usage: ./seqweb setup
   Initialize the SeqWeb development environment.
   This includes making the seqweb CLI executable and creating data directories.
   NOTE: This command is idempotent - safe to run multiple times."""
@@ -77,6 +77,6 @@ class SetupCommand(BaseCommand):
     def _show_completion_message(self):
         """Show completion message with instructions"""
         print()
-        print("✅ Setup complete! You can now use './pythonseqweb <command>'")
+        print("✅ Setup complete! You can now use './seqweb <command>'")
         print()
         print("💡 To configure additional directories, edit: config/env.sh") 
