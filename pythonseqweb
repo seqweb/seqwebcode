@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""
+SeqWeb Python CLI Entry Point
+This file should be made executable with: chmod +x pythonseqweb
+"""
+
+import os
+import sys
+from pathlib import Path
+
+# Add the tools directory to Python path
+SCRIPT_DIR = Path(__file__).parent
+TOOLS_DIR = SCRIPT_DIR / "tools"
+sys.path.insert(0, str(TOOLS_DIR))
+
+from cli import main
+
+if __name__ == "__main__":
+    # Set SEQWEB_HOME environment variable
+    os.environ["SEQWEB_HOME"] = str(SCRIPT_DIR)
+    main() 

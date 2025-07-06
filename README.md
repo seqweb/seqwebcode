@@ -30,6 +30,26 @@ seqwebcode/
 - **seqwebdata**: `git@github.com:seqweb/seqwebdata.git` - Generated RDF data (.ttl files)
 - **seqwebcode**: `git@github.com:seqweb/seqwebcode.git` - This repository (code, docs, ontology)
 
+## QuickStart
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/seqweb/seqwebcode.git
+   cd seqwebcode
+   ```
+
+2. **Set up the development environment:**
+   ```bash
+   ./seqweb setup
+   ```
+
+3. **Start using SeqWeb:**
+   ```bash
+   seqweb help
+   ```
+
+That's it! The `seqweb` command is now available throughout the project directory.
+
 ## Development
 
 This repository contains the code, documentation, and ontology for converting OEIS sequence data into a semantic web knowledge graph.
