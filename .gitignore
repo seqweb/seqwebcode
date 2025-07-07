@@ -198,6 +198,9 @@ cython_debug/
 .pypirc
 
 # Cursor
+
+# Draw.io backup files
+*.bkp
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
 #  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
 #  refer to https://docs.cursor.com/context/ignore-files
