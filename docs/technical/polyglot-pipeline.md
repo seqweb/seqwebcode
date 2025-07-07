@@ -2,7 +2,13 @@
 
 ## 🧭 Overview
 
-This architecture supports **polyglot pipelines** composed of modular processing **nodes**, where each node is implemented in an arbitrary language (e.g., Python, Java, Lisp, Bash). These nodes communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
+*SeqWeb is to the OEIS as DBpedia is to Wikipedia.*
+
+A primary goal of the SeqWeb system, as implemented in this `seqwebcode` repository, is to convert OEIS sequence data (`.seq` files) into semantic web knowledge graphs (`.ttl` files).
+
+The `seqwebcode` architecture supports **polyglot pipelines** composed of modular processing **nodes**, where each node may be implemented in an arbitrary language (e.g., Python, Java, Lisp, Bash — see [Rationale for Polyglot Implementation](#rationale-for-polyglot-implementation) below).
+
+These nodes communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
 
 Each node is designed as a **plug-and-play module**, capable of being composed, replaced, tested, or reused independently, regardless of implementation language.
 
@@ -110,9 +116,9 @@ This design allows for:
 
 By structuring programs to build their inbox from command-line arguments (optionally merging with a JSON seed), each module becomes naturally reusable in multiple contexts:
 
-- ✅ **As a stage** in a larger **polyglot pipeline**, invoked by an orchestrator.
-- ✅ **As a standalone CLI tool**, usable directly by developers or scripts.
-- ✅ **In isolation for testing**, with inboxes constructed in code or passed via CLI.
+- **As a stage** in a larger **polyglot pipeline**, invoked by an orchestrator.
+- **As a standalone CLI tool**, usable directly by developers or scripts.
+- **In isolation for testing**, with inboxes constructed in code or passed via CLI.
 
 This versatility makes it easy to scale from interactive experimentation to production pipelines without changing the module’s core logic.
 
@@ -120,16 +126,48 @@ This versatility makes it easy to scale from interactive experimentation to prod
 
 ## 📘 Architectural Principles
 
-1. **Destructurable box interface** — Functions only bind what they need.
-2. **Non-destructive box mutation** — Modules are encouraged to preserve and extend the box, not replace it.
-3. **Interop via wrappers, speed via direct calls** — Same-language modules can call each other directly, avoiding shell overhead.
-4. **Soft schema contracts** — Boxes have loose structure; nodes declare required keys but tolerate unknown ones.
-5. **Composable orchestration** — Pipelines can be expressed as ordered lists of stage functions or shell commands.
-6. **Complete box input** — All parameters required for a module’s operation must be present in the input box, either directly or by reference. This supports functional purity, reproducibility, and testability.
-7. **Box as common carrier** — The box persists across pipeline stages and may accumulate context not just for immediate use but for downstream consumers, metadata propagation, or audit trail enrichment.
+- **Destructurable box interface** — Functions only bind what they need.
+- **Non-destructive box mutation** — Modules are encouraged to preserve and extend the box, not replace it.
+- **Interop via wrappers, speed via direct calls** — Same-language modules can call each other directly, avoiding shell overhead.
+- **Soft schema contracts** — Boxes have loose structure; nodes declare required keys but tolerate unknown ones.
+- **Composable orchestration** — Pipelines can be expressed as ordered lists of stage functions or shell commands.
+- **Complete box input** — All parameters required for a module’s operation must be present in the input box, either directly or by reference. This supports functional purity, reproducibility, and testability.
+- **Box as common carrier** — The box persists across pipeline stages and may accumulate context not just for immediate use but for downstream consumers, metadata propagation, or audit trail enrichment.
 
 ---
 
 ## 🔍 Validation, error handling, testing, debugging & logging
 
 TODO: Add comprehensive section covering validation patterns, error handling strategies, testing approaches, debugging techniques, and logging standards for polyglot pipeline modules.
+
+---
+
+## Rationale for Polyglot Implementation
+
+While the entire conversion pipeline could, in theory, be implemented in a single language, our design favors a **polyglot approach**. This allows each module to leverage the language best suited to its particular role, improving expressiveness, maintainability, and integration with existing tools.
+
+### Java Strengths
+- High-performance file I/O and stream parsing
+- Strong typing and class structure for data validation
+- Excellent for bulk structured transformations (e.g. parsing `.seq` files)
+- Good for JVM-based deployment in stable, high-throughput environments
+
+### Python Strengths
+- Rich NLP and symbolic libraries (spaCy, NLTK, transformers, SymPy)
+- Strong support for ad-hoc analysis, data munging, and prototyping
+- Extremely flexible for orchestration and glue code
+- Easy to script, test, and deploy in multiple environments
+- Ubiquitous community support and package ecosystem
+
+### Lisp (Common Lisp) Strengths
+- High expressiveness for symbolic pattern matching and macro-driven transformation
+- Ideal for defining declarative or rule-based mappings (e.g., `.seq` to RDF idioms)
+- Dynamically interactive development (REPL-driven exploration)
+- Leverages prior work in symbolic math and AI contexts
+
+### Bash Strengths
+- Simple, lightweight task automation and glue across system tools
+- Natural fit for file-system-level orchestration and batch job wiring
+- Ubiquitous on UNIX-like systems and integrates well with Git, Make, etc.
+
+This modular, mixed-language design allows us to prototype rapidly, optimize when needed, and maintain clarity between different kinds of logic: transformation, coordination, parsing, and enrichment.
