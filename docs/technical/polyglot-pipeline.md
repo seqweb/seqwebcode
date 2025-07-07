@@ -155,15 +155,16 @@ While the entire conversion pipeline could, in theory, be implemented in a singl
 ### Python Strengths
 - Rich NLP and symbolic libraries (spaCy, NLTK, transformers, SymPy)
 - Strong support for ad-hoc analysis, data munging, and prototyping
-- Extremely flexible for orchestration and glue code
+- Proven flexible power tool for orchestration, utility and glue code
 - Easy to script, test, and deploy in multiple environments
 - Ubiquitous community support and package ecosystem
 
 ### Lisp (Common Lisp) Strengths
 - High expressiveness for symbolic pattern matching and macro-driven transformation
+- Close long-term co-evolution with semantic web tech, ontologies, knowledge graphs
 - Ideal for defining declarative or rule-based mappings (e.g., `.seq` to RDF idioms)
 - Dynamically interactive development (REPL-driven exploration)
-- Leverages prior work in symbolic math and AI contexts
+- Leverages prior art in neuro-symbolic AI and symbolic mathematics
 
 ### Bash Strengths
 - Simple, lightweight task automation and glue across system tools
