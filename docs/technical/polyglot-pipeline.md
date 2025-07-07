@@ -128,7 +128,8 @@ This versatility makes it easy to scale from interactive experimentation to prod
 6. **Complete box input** — All parameters required for a module’s operation must be present in the input box, either directly or by reference. This supports functional purity, reproducibility, and testability.
 7. **Box as common carrier** — The box persists across pipeline stages and may accumulate context not just for immediate use but for downstream consumers, metadata propagation, or audit trail enrichment.
 
+---
 
+## 🔍 Validation, error handling, testing, debugging & logging
 
-
-
+TODO: Add comprehensive section covering validation patterns, error handling strategies, testing approaches, debugging techniques, and logging standards for polyglot pipeline modules.
