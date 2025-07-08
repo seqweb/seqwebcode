@@ -6,9 +6,9 @@
 
 A primary goal of the SeqWeb system, as implemented in this `seqwebcode` repository, is to convert OEIS sequence data (`.seq` files) into semantic web knowledge graphs (`.ttl` files).
 
-The `seqwebcode` architecture supports **polyglot pipelines** composed of modular processing **nodes**, where each node may be implemented in an arbitrary language (e.g., Python, Java, Lisp, Bash — see [Rationale for Polyglot Implementation](#rationale-for-polyglot-implementation) below).
+The `seqwebcode` architecture supports **polyglot pipelines** composed of modular processing **modules**, where each module may be implemented in an arbitrary language (e.g., Python, Java, Lisp, Bash — see [Rationale for Polyglot Implementation](#rationale-for-polyglot-implementation) below).
 
-These nodes communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
+These modules communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
 
 <!-- ![Box glyph](../drawings/box-glyph.svg) -->
 
@@ -17,9 +17,9 @@ These nodes communicate via a shared abstract structure called a **box** — a l
   <br> <em> a box</em>
 </p>
 
-Each node is designed as a **plug-and-play module**, capable of being composed, replaced, tested, or reused independently, regardless of implementation language.
+Each module is designed as a **plug-and-play unit**, capable of being composed, replaced, tested, or reused independently, regardless of implementation language.
 
-Nodes may be composed via **native orchestration** (when implemented in the same language) or executed in isolation through **IO wrappers** that expose a standardized shell or CLI interface. This hybrid model allows clean decoupling, testability, and flexibility across execution boundaries.
+Modules may be composed via **native orchestration** (when implemented in the same language) or executed in isolation through **IO wrappers** that expose a standardized shell or CLI interface. This hybrid model allows clean decoupling, testability, and flexibility across execution boundaries.
 
 ---
 
@@ -28,11 +28,11 @@ Nodes may be composed via **native orchestration** (when implemented in the same
 | Term                | Meaning |
 |---------------------|---------|
 | **box**             | A dictionary-like structure of key-value pairs shared between modules. It serves both as the input/output of each module and as a shared **common carrier** of state across pipeline stages. |
-| **inbox**           | The input `box` to a node. |
-| **outbox**          | The output `box` from a node, typically the inbox plus zero or more updates. |
-| **node**            | A processing unit that takes an inbox and returns an outbox. |
-| **module**          | A group of related node definitions implemented in a single language. |
-| **program**         | A shell-invocable wrapper around a node/module exposing the inbox/outbox interface over CLI+JSON. |
+| **inbox**           | The input `box` to a module. |
+| **outbox**          | The output `box` from a module, typically the inbox plus zero or more updates. |
+| **module**          | A processing unit that takes an inbox and returns an outbox. |
+| **module group**    | A group of related module definitions implemented in a single language. |
+| **program**         | A shell-invocable wrapper around a module exposing the inbox/outbox interface over CLI+JSON. |
 | **IO wrapper**      | A thin entry point that translates CLI input to a native-language `box`, invokes the inner function, and emits JSON output. |
 | **inner function**  | A native-language, pure function that maps a `box` (dict/map) to another `box`. |
 | **destructuring interface** | A function signature that binds named keys from a box to function arguments (e.g., `*, prompt, noisy=False, **_rest`). |
@@ -105,7 +105,7 @@ def run_pipeline(
 
 ## 🌐 Cross-Language Execution Model
 
-When nodes are implemented in different languages and invoked as standalone programs:
+When modules are implemented in different languages and invoked as standalone programs:
 
 - Each **program derives its `inbox` from its command-line arguments**, using the language's CLI parsing conventions (e.g., `argparse` in Python, `getopts` in Bash, etc.).
 - These arguments effectively form a **shell-flavored keyword map**, which becomes the initial `inbox`.
@@ -136,7 +136,7 @@ This versatility makes it easy to scale from interactive experimentation to prod
 - **Destructurable box interface** — Functions only bind what they need.
 - **Non-destructive box mutation** — Modules are encouraged to preserve and extend the box, not replace it.
 - **Interop via wrappers, speed via direct calls** — Same-language modules can call each other directly, avoiding shell overhead.
-- **Soft schema contracts** — Boxes have loose structure; nodes declare required keys but tolerate unknown ones.
+- **Soft schema contracts** — Boxes have loose structure; modules declare required keys but tolerate unknown ones.
 - **Composable orchestration** — Pipelines can be expressed as ordered lists of stage functions or shell commands.
 - **Complete box input** — All parameters required for a module’s operation must be present in the input box, either directly or by reference. This supports functional purity, reproducibility, and testability.
 - **Box as common carrier** — The box persists across pipeline stages and may accumulate context not just for immediate use but for downstream consumers, metadata propagation, or audit trail enrichment.

@@ -1,22 +1,21 @@
 # Development Notes
 
 ## Project Context
-
-**Goal**: SeqWeb is to the OEIS as DBpedia is to Wikipedia - creating a semantic web knowledge graph from OEIS sequence data.
+**Mission**: *SeqWeb is to the OEIS as DBpedia is to Wikipedia* - creating a semantic web knowledge graph from OEIS sequence data.
 
 **Core Workflow**: Convert OEIS .seq files → RDF .ttl files (1:1 correspondence)
 
 ## Repository Structure
 
 - **oeisdata** (read-only): Source .seq files from OEIS
-- **seqwebdata**: Generated .ttl files (1:1 with .seq files)  
+- **seqwebdata**: Generated .ttl files (1:1 with .seq files)
 - **seqwebcode**: Everything else (code, docs, ontology, etc.)
 
 ## Key Technical Decisions
 
-- **Languages**: Java, Python, Common Lisp (in that priority order)
+- **Languages**: Java, Python, Common Lisp, Bash
 - **Data Format**: RDF/Turtle (.ttl) for semantic web compatibility
-- **Ontology**: Custom SeqWeb ontology for mathematical sequence concepts
+- **Ontology**: Custom SeqWeb ontology for OEIS and mathematical sequence concepts
 - **Architecture**: Pipeline approach (parse → transform → validate → output)
 
 ## Development Priorities
