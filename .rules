@@ -47,6 +47,13 @@
 - Explicit context change required when working in seqwebdata repo
 - For oeisdata updates: use `git pull` only, never `git push`
 
+## Cursor Indexing Configuration
+- DO NOT index oeisdata repository (~400,000 files, read-only data resource)
+- DO NOT index seqwebdata repository (generated RDF data, not source code)
+- Focus indexing on seqwebcode repository only
+- Exclude data/output/, data/intermediate/, data/logs/ from indexing
+- These are large data directories, not development code
+
 ## Git Workflow
 - `git consolidate` directive = complete change consolidation process:
   1. Run `git status` to show pending changes

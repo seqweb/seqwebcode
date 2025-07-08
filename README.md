@@ -26,9 +26,11 @@ seqwebcode/
 
 ## Related Repositories
 
-- **oeisdata**: `git@github.com:oeis/oeisdata.git` - OEIS source corpus (.seq files)
-- **seqwebdata**: `git@github.com:seqweb/seqwebdata.git` - Generated RDF data (.ttl files)
-- **seqwebcode**: `git@github.com:seqweb/seqwebcode.git` - This repository (code, docs, ontology)
+- **oeisdata**: `git@github.com:oeis/oeisdata.git` - OEIS source corpus (~400,000 .seq files, read-only data resource)
+- **seqwebdata**: `git@github.com:seqweb/seqwebdata.git` - Generated RDF data (.ttl files, output data)
+- **seqwebcode**: `git@github.com:seqweb/seqwebcode.git` - This repository (code, docs, ontology, tools)
+
+> **Note for Cursor users**: This workspace includes all three repositories. The data repositories (oeisdata, seqwebdata) contain large numbers of files and should not be indexed. Focus development work in seqwebcode.
 
 ## QuickStart
 

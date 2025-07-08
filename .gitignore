@@ -199,6 +199,9 @@ cython_debug/
 
 # Cursor
 
+# Temporary files and working directories
+tmp/
+
 # Draw.io backup files
 *.bkp
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
