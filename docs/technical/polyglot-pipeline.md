@@ -10,10 +10,11 @@ The `seqwebcode` architecture supports **polyglot pipelines** composed of modula
 
 These nodes communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
 
-![Box glyph](../drawings/box-glyph.svg)
+<!-- ![Box glyph](../drawings/box-glyph.svg) -->
 
 <p align="center">
   <img src="../drawings/box-glyph.svg" width="150" alt="Box glyph" />
+  <br> <em> a box</em>
 </p>
 
 Each node is designed as a **plug-and-play module**, capable of being composed, replaced, tested, or reused independently, regardless of implementation language.
