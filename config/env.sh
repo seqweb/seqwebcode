@@ -1,24 +1,26 @@
 #!/bin/bash
+
 # SeqWeb Environment Configuration
+# Copy this file to config/env.local.sh and customize for your environment
 
-# Base paths (can be overridden by environment variables)
-export SEQWEB_HOME="${SEQWEB_HOME:-$(pwd)}"
-export SEQWEB_COMMAND_DIR="${SEQWEB_COMMAND_DIR:-$SEQWEB_HOME/tools/commands}"
+# Repository paths - customize these for your local setup
+export SEQWEBDATA_PATH="${SEQWEBDATA_PATH:-~/Devo/Data/SeqWeb/seqwebdata}"
+export OEISDATA_PATH="${OEISDATA_PATH:-~/Devo/Data/OEIS/oeisdata}"
 
-# Repository paths (relative to SEQWEB_HOME by default)
-export SEQWEB_CODE_DIR="${SEQWEB_CODE_DIR:-$SEQWEB_HOME}"
-export SEQWEB_DATA_DIR="${SEQWEB_DATA_DIR:-$SEQWEB_HOME/../seqwebdata}"
-export OEIS_DATA_DIR="${OEIS_DATA_DIR:-$SEQWEB_HOME/../oeisdata}"
+# Optional: Override with environment variables if set
+# Example: export SEQWEBDATA_PATH="/path/to/your/seqwebdata"
+# Example: export OEISDATA_PATH="/path/to/your/oeisdata"
 
-# Data directories
-export SEQWEB_INTERMEDIATE_DIR="${SEQWEB_INTERMEDIATE_DIR:-$SEQWEB_HOME/data/intermediate}"
-export SEQWEB_OUTPUT_DIR="${SEQWEB_OUTPUT_DIR:-$SEQWEB_HOME/data/output}"
-export SEQWEB_LOGS_DIR="${SEQWEB_LOGS_DIR:-$SEQWEB_HOME/data/logs}"
+# Validate paths exist (warn if not)
+if [[ ! -d "$SEQWEBDATA_PATH" ]]; then
+    echo "Warning: SEQWEBDATA_PATH not found: $SEQWEBDATA_PATH"
+    echo "  Set SEQWEBDATA_PATH environment variable or update config/env.local.sh"
+fi
 
-# Language runtimes (can be overridden)
-export SEQWEB_JAVA="${SEQWEB_JAVA:-java}"
-export SEQWEB_PYTHON="${SEQWEB_PYTHON:-python3}"
-export SEQWEB_CL="${SEQWEB_CL:-sbcl}"
+if [[ ! -d "$OEISDATA_PATH" ]]; then
+    echo "Warning: OEISDATA_PATH not found: $OEISDATA_PATH"
+    echo "  Set OEISDATA_PATH environment variable or update config/env.local.sh"
+fi
 
-# Ensure data directories exist
-mkdir -p "$SEQWEB_INTERMEDIATE_DIR" "$SEQWEB_OUTPUT_DIR" "$SEQWEB_LOGS_DIR" 
+# Export for use in scripts
+export SEQWEB_REPO_PATHS_CONFIGURED=true 

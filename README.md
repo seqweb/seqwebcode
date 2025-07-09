@@ -32,6 +32,41 @@ seqwebcode/
 
 > **Note for Cursor users**: This workspace includes all three repositories. The data repositories (oeisdata, seqwebdata) contain large numbers of files and should not be indexed. Focus development work in seqwebcode.
 
+### Multi-Repo Workspace Setup
+
+For development with all three repositories:
+
+1. **Automatic setup**: Run `./tools/setup_workspace.sh` to clone the related repositories and configure the workspace
+2. **Manual setup**: Clone the repositories manually and open `seqwebcode` in Cursor - the workspace configuration will automatically include the other repositories
+3. **Workspace configuration**: The `.cursor/` directory contains workspace settings that exclude large data directories from indexing
+
+#### Repository Path Configuration
+
+Each developer can specify their own repository paths:
+
+1. **Copy the template**: `cp config/env.sh config/env.local.sh`
+2. **Edit paths**: Update `config/env.local.sh` with your repository locations
+3. **Generate workspace**: Run `python3 tools/generate_workspace_config.py`
+
+**Example configurations:**
+```bash
+# Option 1: Sibling directories (default)
+export SEQWEBDATA_PATH="$(pwd)/../seqwebdata"
+export OEISDATA_PATH="$(pwd)/../oeisdata"
+
+# Option 2: Custom paths
+export SEQWEBDATA_PATH="~/Devo/Data/SeqWeb/seqwebdata"
+export OEISDATA_PATH="~/Devo/Data/OEIS/oeisdata"
+
+# Option 3: Absolute paths
+export SEQWEBDATA_PATH="/Users/yourname/projects/seqwebdata"
+export OEISDATA_PATH="/Users/yourname/data/oeisdata"
+```
+
+The `config/env.local.sh` file is gitignored and should not be committed.
+
+See `.cursor/workspace-setup.md` for detailed setup instructions.
+
 ## QuickStart
 
 1. **Clone the repository:**

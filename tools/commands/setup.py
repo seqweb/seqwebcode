@@ -37,6 +37,7 @@ class SetupCommand(BaseCommand):
         
         self._make_executable()
         self._create_data_directories()
+        self._setup_workspace_config()
         self._show_completion_message()
     
     def _make_executable(self):
@@ -74,9 +75,46 @@ class SetupCommand(BaseCommand):
     
 
     
+    def _setup_workspace_config(self):
+        """Set up workspace configuration for multi-repo development"""
+        print("🔧 Setting up workspace configuration...")
+        
+        seqweb_home = Path(os.environ["SEQWEB_HOME"])
+        env_local = seqweb_home / "config" / "env.local.sh"
+        env_default = seqweb_home / "config" / "env.sh"
+        
+        # Create local environment configuration if it doesn't exist
+        if not env_local.exists():
+            if env_default.exists():
+                import shutil
+                shutil.copy2(env_default, env_local)
+                print("✅ Created config/env.local.sh")
+                print("  Please edit this file with your repository paths")
+            else:
+                print("⚠️  config/env.sh not found - skipping workspace setup")
+                return
+        
+        # Generate workspace configuration
+        try:
+            import subprocess
+            result = subprocess.run([
+                "python3", 
+                str(seqweb_home / "tools" / "generate_workspace_config.py")
+            ], capture_output=True, text=True, cwd=seqweb_home)
+            
+            if result.returncode == 0:
+                print("✅ Workspace configuration generated")
+                print(result.stdout.strip())
+            else:
+                print("⚠️  Warning: Could not generate workspace configuration")
+                print(result.stderr)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not generate workspace configuration: {e}")
+    
     def _show_completion_message(self):
         """Show completion message with instructions"""
         print()
         print("✅ Setup complete! You can now use './seqweb <command>'")
         print()
-        print("💡 To configure additional directories, edit: config/env.sh") 
+        print("💡 To configure repository paths, edit: config/env.local.sh")
+        print("💡 To update workspace configuration, run: python3 tools/generate_workspace_config.py") 

@@ -198,6 +198,11 @@ cython_debug/
 .pypirc
 
 # Cursor
+.cursor/settings.json
+.cursor/workspace.code-workspace
+
+# Local environment configuration
+config/env.local.sh
 
 # Temporary files and working directories
 tmp/
