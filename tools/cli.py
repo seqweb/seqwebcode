@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 from typing import Dict, Type
 
-from commands.base import BaseCommand
-from commands.registry import get_available_commands, load_command
+from lib.base import BaseCommand
+from lib.registry import get_available_commands, load_command
 
 
 def main():

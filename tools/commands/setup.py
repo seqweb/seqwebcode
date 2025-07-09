@@ -7,7 +7,7 @@ import os
 import stat
 from pathlib import Path
 
-from .base import BaseCommand
+from lib.base import BaseCommand
 
 
 class SetupCommand(BaseCommand):
