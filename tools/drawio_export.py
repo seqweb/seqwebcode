@@ -26,8 +26,9 @@ def export_drawio_to_svg(drawio_path: Path, output_dir: Path = None) -> bool:
     
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Generate output filename
-    svg_filename = drawio_path.stem + ".svg"
+    # Generate output filename using Draw.io convention
+    # Draw.io exports as .drawio.svg, not just .svg
+    svg_filename = drawio_path.name + ".svg"
     svg_path = output_dir / svg_filename
     
     try:
@@ -45,18 +46,22 @@ def export_drawio_to_svg(drawio_path: Path, output_dir: Path = None) -> bool:
 
         if result.returncode == 0:
             # The CLI creates files with the diagram title, find the one we want
-            for svg_file in output_dir.glob("*.svg"):
-                if "Box Glyph" in svg_file.name:
-                    # Backup existing SVG if it exists
-                    if svg_path.exists():
-                        backup_path = svg_path.parent / f".${svg_path.name}.bkp"
-                        svg_path.rename(backup_path)
-                        print(f"📦 Backed up existing SVG to {backup_path.name}")
-                    
-                    # Rename the CLI output to our desired filename
-                    svg_file.rename(svg_path)
-                    print(f"✓ Exported {drawio_path} → {svg_path}")
-                    return True
+            # Look for any SVG file that was just created (should be the only one)
+            svg_files = list(output_dir.glob("*.svg"))
+            if svg_files:
+                # Take the first (and should be only) SVG file created
+                created_svg = svg_files[0]
+                
+                # Backup existing SVG if it exists
+                if svg_path.exists():
+                    backup_path = svg_path.parent / f".${svg_path.name}.bkp"
+                    svg_path.rename(backup_path)
+                    print(f"📦 Backed up existing SVG to {backup_path.name}")
+                
+                # Rename the CLI output to our desired filename
+                created_svg.rename(svg_path)
+                print(f"✓ Exported {drawio_path} → {svg_path}")
+                return True
             
             print(f"✗ Export succeeded but no matching file found")
             return False

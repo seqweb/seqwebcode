@@ -8,12 +8,17 @@ A primary goal of the SeqWeb system, as implemented in this `seqwebcode` reposit
 
 The `seqwebcode` architecture supports **polyglot pipelines** composed of modular processing **modules**, where each module may be implemented in an arbitrary language (e.g., Python, Java, Lisp, Bash — see [Rationale for Polyglot Implementation](#rationale-for-polyglot-implementation) below).
 
+<p align="center">
+  <img src="../drawings/pipeline.drawio.svg" width="650" alt="Pipeline" />
+  <br> <em>polyglot pipeline</em>
+</p>
+
 These modules communicate via a shared abstract structure called a **box** — a language-agnostic key-value map that flows through the pipeline.
 
-<!-- ![Box glyph](../drawings/box-glyph.svg) -->
+<!-- ![Box glyph](../drawings/box-glyph.drawio.svg) -->
 
 <p align="center">
-  <img src="../drawings/box-glyph.svg" width="150" alt="Box glyph" />
+  <img src="../drawings/box-glyph.drawio.svg" width="100" alt="Box glyph" />
   <br> <em> a box</em>
 </p>
 

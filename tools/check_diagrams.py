@@ -21,7 +21,7 @@ def find_stale_diagrams(directory: Path) -> List[Tuple[Path, Path]]:
     stale_files = []
     
     for drawio_file in directory.glob("*.drawio"):
-        svg_file = drawio_file.with_suffix(".svg")
+        svg_file = drawio_file.with_suffix(".drawio.svg")
         
         # Check if SVG is missing or older than .drawio
         needs_export = False
