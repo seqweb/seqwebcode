@@ -3,7 +3,6 @@
 SeqWeb CLI Dispatcher
 """
 
-import argparse
 import sys
 from pathlib import Path
 from typing import Dict, Type
@@ -14,8 +13,6 @@ from commands.registry import get_available_commands, load_command
 
 def main():
     """Main CLI entry point"""
-    print("🧬 SeqWeb: OEIS Knowledge Graph Development 🧬")
-    
     # Get available commands
     available_commands = get_available_commands()
     
