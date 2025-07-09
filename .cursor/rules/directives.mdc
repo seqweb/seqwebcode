@@ -22,6 +22,13 @@ No extra approval steps, preamble, commentary, or post-action summarization need
 - Focus on development velocity and clean foundation for team collaboration
 - Manual Draw.io export workflow with check_diagrams.py tool for maintenance
 
+## Myriad Relationship
+- Myriad is a temporary reference resource for seeding seqweb patterns
+- Extract useful patterns but avoid direct myriad dependencies
+- All myriad references should be segregated and removable
+- Goal: seqweb becomes completely independent open-source effort
+- Future participants won't know/care about myriad
+
 ## AI Interaction Patterns
 - Use structured responses
 - Include context in prompts
