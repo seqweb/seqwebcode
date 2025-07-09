@@ -32,15 +32,34 @@ def export_drawio_to_svg(drawio_path: Path, output_dir: Path = None) -> bool:
     
     try:
         # Use drawio-export CLI to export
+        # Note: drawio-export ignores -o parameter and always appends title
+        # So we run it in the output directory and then rename the result
+        if drawio_path.parent == output_dir:
+            drawio_arg = drawio_path.name
+        else:
+            drawio_arg = os.path.relpath(drawio_path, output_dir)
         cmd = [
-            "drawio-export", "-f", "svg", "-o", str(svg_path), str(drawio_path)
+            "drawio-export", "-f", "svg", drawio_arg
         ]
-        
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=output_dir)
+
         if result.returncode == 0:
-            print(f"✓ Exported {drawio_path} → {svg_path}")
-            return True
+            # The CLI creates files with the diagram title, find the one we want
+            for svg_file in output_dir.glob("*.svg"):
+                if "Box Glyph" in svg_file.name:
+                    # Backup existing SVG if it exists
+                    if svg_path.exists():
+                        backup_path = svg_path.parent / f".${svg_path.name}.bkp"
+                        svg_path.rename(backup_path)
+                        print(f"📦 Backed up existing SVG to {backup_path.name}")
+                    
+                    # Rename the CLI output to our desired filename
+                    svg_file.rename(svg_path)
+                    print(f"✓ Exported {drawio_path} → {svg_path}")
+                    return True
+            
+            print(f"✗ Export succeeded but no matching file found")
+            return False
         else:
             print(f"✗ Export failed: {result.stderr}")
             return False
