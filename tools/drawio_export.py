@@ -31,10 +31,9 @@ def export_drawio_to_svg(drawio_path: Path, output_dir: Path = None) -> bool:
     svg_path = output_dir / svg_filename
     
     try:
-        # Use draw.io CLI to export
+        # Use drawio-export CLI to export
         cmd = [
-            "draw.io", "--export", "--format", "svg", 
-            "--output", str(svg_path), str(drawio_path)
+            "drawio-export", "-f", "svg", "-o", str(svg_path), str(drawio_path)
         ]
         
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -47,9 +46,8 @@ def export_drawio_to_svg(drawio_path: Path, output_dir: Path = None) -> bool:
             return False
             
     except FileNotFoundError:
-        print("Error: draw.io CLI not found. Please install draw.io desktop app or draw.io CLI.")
-        print("  - Desktop: https://github.com/jgraph/drawio-desktop")
-        print("  - CLI: npm install -g @drawio/cli")
+        print("Error: drawio-export CLI not found. Please install the drawio-export package.")
+        print("  - CLI: npm install -g @mattiash/drawio-export")
         return False
 
 

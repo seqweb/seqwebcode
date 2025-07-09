@@ -1,0 +1,23 @@
+# SeqWeb Project AI Assistant Rules
+
+## Persistent Directives
+
+### "Going Forward" Directive
+When the user prefixes a directive with "going forward", it remains in effect until notified otherwise. This directive applies to itself.
+
+### Git Consolidate Directive
+When the user requests "git consolidate", immediately:
+
+1. **Phase 1**: Run `git status` to show pending changes
+2. **Phase 2**: Provide a single concatenated command with:
+   - `git add .`
+   - `git commit -m "concise summary covering all changes"`
+   - `git push`
+   
+No extra approval steps, preamble, commentary, or post-action summarization needed.
+
+## Project Context
+- SeqWeb converts OEIS sequence data to semantic web knowledge graphs
+- Polyglot pipeline architecture with modules in Python, Java, Lisp, Bash
+- Focus on development velocity and clean foundation for team collaboration
+- Manual Draw.io export workflow with check_diagrams.py tool for maintenance 
