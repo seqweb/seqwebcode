@@ -28,9 +28,6 @@ Embed SVGs in markdown documentation using standard HTML or markdown syntax:
 </p>
 ```
 
-### Maintenance Tools
-For checking and updating diagrams, see [`drawings/README.md`](drawings/README.md) for details on using the `check_diagrams.py` tool.
-
 ## Documentation Standards
 
 - Use clear, concise language
