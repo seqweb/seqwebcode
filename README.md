@@ -75,13 +75,17 @@ See `.cursor/workspace-setup.md` for detailed setup instructions.
    cd seqwebcode
    ```
 
-2. **Set up the development environment:**
+2. **Make the CLI executable:**
    ```bash
    chmod +x seqweb
+   ```
+
+3. **Set up the development environment:**
+   ```bash
    ./seqweb setup
    ```
 
-3. **Start using SeqWeb:**
+4. **Start using SeqWeb:**
    ```bash
    ./seqweb help
    ```
