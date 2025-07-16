@@ -2,39 +2,25 @@
 
 SeqWeb is to the OEIS as DBpedia is to Wikipedia.
 
-## Project Structure
+## Repository Overview
 
-```
-seqwebcode/
-├── docs/                    # Documentation
-│   ├── technical/          # Technical specifications, APIs, etc.
-│   ├── process/            # Development processes, workflows
-│   └── plans/              # Project plans, roadmaps, milestones
-├── src/                    # Source code
-│   ├── java/              # Java implementations
-│   ├── python/            # Python implementations  
-│   ├── cl/               # Common Lisp implementations
-│   └── scripts/           # Shell scripts and utilities
-├── ontology/              # RDF ontology definitions and vocabularies
-├── tests/                 # Test suites
-│   ├── java/
-│   ├── python/
-│   └── cl/
-├── data/                  # Local data files, samples
-└── examples/              # Example usage and demonstrations
-```
+This repository contains the code, documentation, and ontology for converting OEIS sequence data into a semantic web knowledge graph.
 
-## Related Repositories
+
+### Related Repositories
 
 - **oeisdata**: `git@github.com:oeis/oeisdata.git` - OEIS source corpus (~400,000 .seq files, read-only data resource)
 - **seqwebdata**: `git@github.com:seqweb/seqwebdata.git` - Generated RDF data (.ttl files, output data)
 - **seqwebcode**: `git@github.com:seqweb/seqwebcode.git` - This repository (code, docs, ontology, tools)
 
-> **Note for Cursor users**: This workspace includes all three repositories. The data repositories (oeisdata, seqwebdata) contain large numbers of files and should not be indexed. Focus development work in seqwebcode.
+> **Note for Cursor users**: This workspace includes all repositories. The data repositories (oeisdata, seqwebdata) contain large numbers of files and should not be indexed. Focus development work in seqwebcode.
+
+- **.github**: `git@github.com:seqweb/.github.git` - This is a *fourth* repo where Github keeps the `SeqWeb` top-level public README.md (under `profile/`) that appears on seqweb.org's organization page. 
+This repo is sometimes also added to the workspace to facilitate editing, although this is sporadic.
 
 ### Multi-Repo Workspace Setup
 
-For development with all three repositories:
+For development with the main repositories:
 
 1. **Automatic setup**: Run `./tools/setup_workspace.sh` to clone the related repositories and configure the workspace
 2. **Manual setup**: Clone the repositories manually and open `seqwebcode` in Cursor - the workspace configuration will automatically include the other repositories
@@ -92,6 +78,26 @@ See `.cursor/workspace-setup.md` for detailed setup instructions.
 
 That's it! The `./seqweb` command is now available for development work.
 
-## Development
 
-This repository contains the code, documentation, and ontology for converting OEIS sequence data into a semantic web knowledge graph.
+## Project Structure
+
+```
+seqwebcode/
+├── docs/                  # Documentation
+│   ├── technical/            # Technical specifications, APIs, etc.
+│   ├── process/              # Development processes, workflows
+│   └── plans/                # Project plans, roadmaps, milestones
+├── src/                   # Source code
+│   ├── java/                 # Java implementations
+│   ├── python/               # Python implementations  
+│   ├── cl/                   # Common Lisp implementations
+│   └── scripts/              # Shell scripts and utilities
+├── ontology/                 # RDF ontology definitions and vocabularies
+├── tests/                 # Test suites
+│   ├── java/
+│   ├── python/
+│   └── cl/
+├── data/                  # Local data files, samples
+└── examples/              # Example usage and demonstrations
+```
+
