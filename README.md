@@ -1,11 +1,10 @@
-# SeqWeb
+# seqwebcode
 
-SeqWeb is to the OEIS as DBpedia is to Wikipedia.
+_**SeqWeb** is to the OEIS as DBpedia is to Wikipedia._<br>
+Project level documentation may be found at the [SeqWeb Wiki](https://github.com/seqweb/seqweb/wiki)
 
 ## Repository Overview
-
-This repository contains the code, documentation, and ontology for converting OEIS sequence data into a semantic web knowledge graph.
-
+This **seqwebcode** repository contains the code, documentation, and ontology for converting OEIS sequence data into a semantic web knowledge graph.
 
 ### Related Repositories
 

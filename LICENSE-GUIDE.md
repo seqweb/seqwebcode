@@ -1,19 +1,17 @@
 # LICENSE-GUIDE.md  
 
-## TODO: Licensing and Attribution for seqweb
-
-You are correct in your understanding of how to license seqweb’s data/content and code.
+## TODO: Licensing and Attribution for SeqWeb
 
 ---
 
 ### Where to Post CC-BY-SA-4.0 Notices and Attribution
 
-**1. In the seqweb GitHub Repo (for data/content):**
+**1.  In the seqwebdata Github repo (for data/content):**
 - Create a top-level file named something like `DATA_LICENSE.md` or `NOTICE.md`.
-- In this file, state clearly that all data/content provided by seqweb (including any OEIS-derived data) is licensed under [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+- In this file, state clearly that all data/content provided by SeqWeb (including any OEIS-derived data) is licensed under [CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - Include attribution to OEIS, e.g.:
 
-  > Portions of the data/content provided by seqweb are derived from the OEIS (Online Encyclopedia of Integer Sequences), © The OEIS Foundation Inc. Licensed under CC-BY-SA-4.0.
+  > Portions of the data/content provided by SeqWeb are derived from the OEIS (Online Encyclopedia of Integer Sequences), © The OEIS Foundation Inc. Licensed under CC-BY-SA-4.0.
 
 - You may also include a short excerpt of the license or, more commonly, a link to the full license text.
 
