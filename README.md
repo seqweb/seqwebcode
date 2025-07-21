@@ -11,11 +11,10 @@ This **seqwebcode** repository contains the code, documentation, and ontology fo
 - **oeisdata**: `git@github.com:oeis/oeisdata.git` - OEIS source corpus (~400,000 .seq files, read-only data resource)
 - **seqwebdata**: `git@github.com:seqweb/seqwebdata.git` - Generated RDF data (.ttl files, output data)
 - **seqwebcode**: `git@github.com:seqweb/seqwebcode.git` - This repository (code, docs, ontology, tools)
+- **seqweb**: `git@github.com:seqweb/seqweb.git` - Project wiki repository (documentation at https://github.com/seqweb/seqweb/wiki)
+- **.github**: `git@github.com:seqweb/.github.git` - Organization profile repository (controls the SeqWeb organization landing page)
 
 > **Note for Cursor users**: This workspace includes all repositories. The data repositories (oeisdata, seqwebdata) contain large numbers of files and should not be indexed. Focus development work in seqwebcode.
-
-- **.github**: `git@github.com:seqweb/.github.git` - This is a *fourth* repo where Github keeps the `SeqWeb` top-level public README.md (under `profile/`) that appears on seqweb.org's organization page. 
-This repo is sometimes also added to the workspace to facilitate editing, although this is sporadic.
 
 ### Multi-Repo Workspace Setup
 

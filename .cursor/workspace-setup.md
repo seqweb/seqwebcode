@@ -1,10 +1,12 @@
 # SeqWeb Multi-Repo Workspace Setup
 
-This workspace contains three repositories:
+This workspace contains five repositories:
 
 1. **seqwebcode** (main development) - This repository
 2. **seqwebdata** (generated RDF data) - Path configured in `config/env.local.sh`
 3. **oeisdata** (OEIS source corpus) - Path configured in `config/env.local.sh`
+4. **seqweb** (project wiki) - Project documentation at https://github.com/seqweb/seqweb/wiki
+5. **.github** (organization profile) - Controls the SeqWeb organization landing page
 
 ## Opening in Cursor
 
@@ -42,6 +44,8 @@ Each developer can specify their own repository paths:
 - seqwebcode: https://github.com/seqweb/seqwebcode.git
 - seqwebdata: https://github.com/seqweb/seqwebdata.git  
 - oeisdata: https://github.com/oeis/oeisdata.git
+- seqweb: https://github.com/seqweb/seqweb.git
+- .github: https://github.com/seqweb/.github.git
 
 ## Folder Structure Examples
 
@@ -70,5 +74,18 @@ Different developers can use different folder structures:
 /Users/developer/data/seqwebdata/
 /Users/developer/data/oeisdata/
 ```
+
+**Example 4: Personal organization (mlb's setup)**
+```
+/Users/mlb/Devo/seqweb/seqwebcode/     # Main development repository
+/Users/mlb/Devo/Data/SeqWeb/seqwebdata/ # Generated RDF data  
+/Users/mlb/Data/OEIS/oeisdata/         # OEIS source corpus
+/Users/mlb/Devo/seqweb/seqweb/         # Project wiki
+/Users/mlb/Devo/seqweb/.github/        # Organization profile
+```
+
+This example shows a pattern where:
+- Code repositories are kept in `/Users/mlb/Devo/[org]/[repo]`
+- Data repositories are kept in `/Users/mlb/Devo/Data/[Org]/[repo]` or `/Users/mlb/Data/[Org]/[repo]`
 
 Configure your paths in `config/env.local.sh` to match your setup. 
