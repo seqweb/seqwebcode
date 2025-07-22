@@ -5,7 +5,7 @@ This workspace contains five repositories:
 1. **seqwebcode** (main development) - This repository
 2. **seqwebdata** (generated RDF data) - Path configured in `config/env.local.sh`
 3. **oeisdata** (OEIS source corpus) - Path configured in `config/env.local.sh`
-4. **seqweb** (project documentation) - Project documentation at https://seqweb.github.io/seqweb/
+4. **seqweb** (project documentation) - Project documentation at https://www.seqweb.org/
 5. **.github** (organization profile) - Controls the SeqWeb organization landing page
 
 ## Opening in Cursor
