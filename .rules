@@ -55,9 +55,4 @@
 - These are large data directories, not development code
 
 ## Git Workflow
-- `git consolidate` directive = complete change consolidation process:
-  1. Run `git status` to show pending changes
-  2. Run `git add . && git commit -m "..." && git push` as single command
-- After consolidate: tree should be clean and repo/local in sync
-- Consolidate may capture accumulated changes beyond immediate conversation context
-- Summary of pending changes should be equivalent to commit message content 
+- Use global git consolidate directive from ~/.cursor/rules/global-directives.mdc 
