@@ -31,7 +31,7 @@ class OEISSession:
     
     def _extract_hidden_fields(self, html_content):
         """Extract hidden form fields using regex instead of BeautifulSoup.
-        See further @https://blog.codinghorror.com/content/images/2014/Apr/stack-overflow-regex-zalgo.png
+        See @https://blog.codinghorror.com/content/images/2014/Apr/stack-overflow-regex-zalgo.png
         """
         hidden_fields = {}
         
