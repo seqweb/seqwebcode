@@ -7,7 +7,7 @@
 # - No external dependencies required yet
 
 # Future dependencies (uncomment as needed):
-# requests>=2.31.0          # For HTTP operations
+requests>=2.31.0          # For HTTP operations
 # rdflib>=6.3.0             # For RDF processing
 # sparqlwrapper>=2.0.0      # For SPARQL queries
 
