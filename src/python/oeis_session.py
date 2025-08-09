@@ -1,7 +1,7 @@
 import os
 import requests
 import re
-import time
+# import time
 
 
 class OEISSession:
@@ -192,4 +192,4 @@ def get_oeis_session():
     global _oeis_session
     if _oeis_session is None:
         _oeis_session = OEISSession()
-    return _oeis_session 
+    return _oeis_session
