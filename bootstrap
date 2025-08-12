@@ -17,7 +17,13 @@
 
 set -e  # Exit on any error
 
-echo "Bootstrapping SeqWeb dev home environment in $(pwd)"
+# Save previous value of SEQWEBDEV_HOME if it exists
+PREV_SEQWEBDEV_HOME="${SEQWEBDEV_HOME:-}"
+
+# Set SEQWEBDEV_HOME to current directory and export it
+export SEQWEBDEV_HOME="$(pwd)"
+
+echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
 
 # TODO: Add bootstrap logic here
 # - Create seqweb.conf with stub configuration
