@@ -23,6 +23,9 @@ PREV_SEQWEBDEV_HOME="${SEQWEBDEV_HOME:-}"
 # Set SEQWEBDEV_HOME to current directory and export it
 export SEQWEBDEV_HOME="$(pwd)"
 
+# Add SeqWeb dev home to PATH for immediate availability
+export PATH="$SEQWEBDEV_HOME:$PATH"
+
 echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
 
 # Check if seqweb.conf already exists
@@ -102,16 +105,16 @@ echo "Appending SeqWeb configuration to $BASH_FILE..."
 echo "" >> "$BASH_FILE"
 echo "# SeqWeb development environment" >> "$BASH_FILE"
 echo "export SEQWEBDEV_HOME=\"$SEQWEBDEV_HOME\"" >> "$BASH_FILE"
-echo "alias seqwebdev=\"$SEQWEBDEV_HOME/seqwebdev\"" >> "$BASH_FILE"
+echo "export PATH=\"$SEQWEBDEV_HOME:\$PATH\"" >> "$BASH_FILE"
 
 # Source the bash file to make the environment variable and alias available
 echo "Sourcing $BASH_FILE to activate environment..."
 source "$BASH_FILE"
 
 echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
-echo "seqwebdev command is now available as an alias"
+echo "seqwebdev command is now available"
 echo ""
-echo "Bootstrap complete! You can now:"
+echo "SeqWeb Bootstrap complete! You can now:"
 echo "1. Clone repositories as needed"
 echo "2. Edit seqweb.conf if repositories are located elsewhere"
 echo "3. Use 'seqwebdev' command to access the CLI"
