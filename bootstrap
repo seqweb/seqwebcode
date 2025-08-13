@@ -28,18 +28,15 @@ echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV
 # Check if seqweb.conf already exists
 if [ ! -f "seqweb.conf" ]; then
     echo "Creating initial seqweb.conf configuration file..."
-    cat > seqweb.conf << EOF
-# SeqWeb Development Configuration
-# This file contains paths to SeqWeb repositories and configuration
-
-[repos]
-seqwebcode=$SEQWEBDEV_HOME/seqwebcode
-seqweb=$SEQWEBDEV_HOME/seqweb
-seqwebdata=$SEQWEBDEV_HOME/seqwebdata
-oeisdata=$SEQWEBDEV_HOME/oeisdata
-github=$SEQWEBDEV_HOME/.github
-
-EOF
+    echo "# SeqWeb Development Configuration" > seqweb.conf
+    echo "# This file contains paths to SeqWeb repositories and configuration" >> seqweb.conf
+    echo "" >> seqweb.conf
+    echo "[repos]" >> seqweb.conf
+    echo "seqwebcode=$SEQWEBDEV_HOME/seqwebcode" >> seqweb.conf
+    echo "seqweb=$SEQWEBDEV_HOME/seqweb" >> seqweb.conf
+    echo "seqwebdata=$SEQWEBDEV_HOME/seqwebdata" >> seqweb.conf
+    echo "oeisdata=$SEQWEBDEV_HOME/oeisdata" >> seqweb.conf
+    echo "github=$SEQWEBDEV_HOME/.github" >> seqweb.conf
     echo "Created seqweb.conf with default repository paths"
 else
     echo "seqweb.conf already exists, skipping creation"
