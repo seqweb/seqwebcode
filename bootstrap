@@ -25,30 +25,31 @@ export SEQWEBDEV_HOME="$(pwd)"
 
 # Add SeqWeb dev home to PATH for immediate availability
 export PATH="$SEQWEBDEV_HOME:$PATH"
+echo "Added $SEQWEBDEV_HOME to PATH: $PATH"
 
 echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
 
-# Check if seqweb.conf already exists
-if [ ! -f "seqweb.conf" ]; then
+# Check if seqweb.conf already exists in the dev home
+if [ ! -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     echo "Creating initial seqweb.conf configuration file..."
-    echo "# SeqWeb Development Configuration" > seqweb.conf
-    echo "# This file contains paths to SeqWeb repositories and configuration" >> seqweb.conf
-    echo "" >> seqweb.conf
-    echo "[repos]" >> seqweb.conf
-    echo "seqwebcode=$SEQWEBDEV_HOME/seqwebcode" >> seqweb.conf
-    echo "seqweb=$SEQWEBDEV_HOME/seqweb" >> seqweb.conf
-    echo "seqwebdata=$SEQWEBDEV_HOME/seqwebdata" >> seqweb.conf
-    echo "oeisdata=$SEQWEBDEV_HOME/oeisdata" >> seqweb.conf
-    echo "github=$SEQWEBDEV_HOME/.github" >> seqweb.conf
+    echo "# SeqWeb Development Configuration" > "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "# This file contains paths to SeqWeb repositories and configuration" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "[repos]" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "seqwebcode=$SEQWEBDEV_HOME/seqwebcode" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "seqweb=$SEQWEBDEV_HOME/seqweb" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "seqwebdata=$SEQWEBDEV_HOME/seqwebdata" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "oeisdata=$SEQWEBDEV_HOME/oeisdata" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "github=$SEQWEBDEV_HOME/.github" >> "$SEQWEBDEV_HOME/seqweb.conf"
     echo "Created seqweb.conf with default repository paths"
 else
     echo "seqweb.conf already exists, skipping creation"
 fi
 
-# Check if universal SeqWeb CLI entry point exists
-if [ ! -f "seqwebdev" ]; then
+# Check if universal SeqWeb CLI entry point exists in the dev home
+if [ ! -f "$SEQWEBDEV_HOME/seqwebdev" ]; then
     echo "Creating universal SeqWeb CLI entry point..."
-    cat > seqwebdev << 'EOF'
+    cat > "$SEQWEBDEV_HOME/seqwebdev" << 'EOF'
 #!/bin/bash
 # Universal SeqWeb CLI Entry Point
 # This script reads seqweb.conf and delegates to the actual SeqWeb CLI implementation
@@ -82,7 +83,7 @@ else
 fi
 
 # Make the CLI entry point executable
-chmod +x seqwebdev
+chmod +x "$SEQWEBDEV_HOME/seqwebdev"
 
 # Detect and modify the appropriate bash file
 echo "Detecting bash configuration file..."
@@ -112,6 +113,7 @@ echo "Sourcing $BASH_FILE to activate environment..."
 source "$BASH_FILE"
 
 echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
+echo "PATH now includes: $SEQWEBDEV_HOME"
 echo "seqwebdev command is now available"
 echo ""
 echo "SeqWeb Bootstrap complete! You can now:"
