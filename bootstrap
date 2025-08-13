@@ -25,6 +25,34 @@ export SEQWEBDEV_HOME="$(pwd)"
 
 echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
 
+# Detect and modify the appropriate bash file
+echo "Detecting bash configuration file..."
+
+# Determine which bash file to use
+if [ -f "$HOME/.bashrc" ]; then
+    BASH_FILE="$HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+    BASH_FILE="$HOME/.bash_profile"
+elif [ -f "$HOME/.profile" ]; then
+    BASH_FILE="$HOME/.profile"
+else
+    BASH_FILE="$HOME/.bashrc"
+fi
+
+echo "Using bash file: $BASH_FILE"
+
+# Append the export line to the bash file
+echo "Appending SEQWEBDEV_HOME export to $BASH_FILE..."
+echo "" >> "$BASH_FILE"
+echo "# SeqWeb development environment" >> "$BASH_FILE"
+echo "export SEQWEBDEV_HOME=\"$SEQWEBDEV_HOME\"" >> "$BASH_FILE"
+
+# Source the bash file to make the environment variable available
+echo "Sourcing $BASH_FILE to activate environment..."
+source "$BASH_FILE"
+
+echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
+
 # TODO: Add bootstrap logic here
 # - Create seqweb.conf with stub configuration
 # - Run configuration wizard to populate repo paths
