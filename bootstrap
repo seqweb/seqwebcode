@@ -3,16 +3,16 @@
 # SeqWeb Bootstrap Script
 # 
 # This script initializes a SeqWeb development environment by:
-# 1. Detecting the current directory as the SeqWeb dev home
-# 2. Creating the seqweb.conf configuration file
-# 3. Setting up the development environment
+# 1. Setting SEQWEBDEV_HOME environment variable
+# 2. Creating initial seqweb.conf if none exists
+# 3. Creating universal SeqWeb CLI entry point if none exists
+# 4. Setting up bash integration
 #
 # Usage: curl -s https://raw.githubusercontent.com/seqweb/seqwebcode/main/bootstrap | bash
 #
 # Requirements:
 # - Must be run from the intended SeqWeb dev home directory
 # - User must have write permissions in the current directory
-# - Git repositories should be cloned before running this script
 #
 
 set -e  # Exit on any error
@@ -24,6 +24,65 @@ PREV_SEQWEBDEV_HOME="${SEQWEBDEV_HOME:-}"
 export SEQWEBDEV_HOME="$(pwd)"
 
 echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
+
+# Check if seqweb.conf already exists
+if [ ! -f "seqweb.conf" ]; then
+    echo "Creating initial seqweb.conf configuration file..."
+    cat > seqweb.conf << 'EOF'
+# SeqWeb Development Configuration
+# This file contains paths to SeqWeb repositories and configuration
+
+[repos]
+seqwebcode=$SEQWEBDEV_HOME/seqwebcode
+seqweb=$SEQWEBDEV_HOME/seqweb
+seqwebdata=$SEQWEBDEV_HOME/seqwebdata
+oeisdata=$SEQWEBDEV_HOME/oeisdata
+github=$SEQWEBDEV_HOME/.github
+
+EOF
+    echo "Created seqweb.conf with default repository paths"
+else
+    echo "seqweb.conf already exists, skipping creation"
+fi
+
+# Check if universal SeqWeb CLI entry point exists
+if [ ! -f "seqweb" ]; then
+    echo "Creating universal SeqWeb CLI entry point..."
+    cat > seqweb << 'EOF'
+#!/bin/bash
+# Universal SeqWeb CLI Entry Point
+# This script reads seqweb.conf and delegates to the actual SeqWeb CLI implementation
+
+set -e
+
+# Source the configuration
+if [ -f "seqweb.conf" ]; then
+    # Simple config parsing to get seqwebcode path
+    SEQWEBCODE_PATH=$(grep "^seqwebcode=" seqweb.conf | cut -d'=' -f2 | sed 's/\$SEQWEBDEV_HOME/'"$SEQWEBDEV_HOME"'/g')
+    
+    if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBCODE_PATH/seqweb" ]; then
+        # Call the actual CLI implementation with all arguments
+        exec "$SEQWEBCODE_PATH/seqweb" "$@"
+    else
+        echo "Error: Could not find seqweb SeqWeb CLI implementation at $SEQWEBCODE_PATH/seqweb"
+        echo "Please ensure seqwebcode repository is cloned and configured correctly"
+        echo "See https://www.seqweb.org/quickstart for guidance."
+        exit 1
+    fi
+    else
+        echo "Error: seqweb.conf not found in current directory"
+        echo "Please run bootstrap script from SeqWeb dev home directory"
+        echo "See https://www.seqweb.org/quickstart for guidance."
+        exit 1
+fi
+EOF
+    echo "Created universal SeqWeb CLI entry point"
+else
+    echo "Universal SeqWeb CLI entry point already exists, skipping creation"
+fi
+
+# Make the CLI entry point executable
+chmod +x seqweb
 
 # Detect and modify the appropriate bash file
 echo "Detecting bash configuration file..."
@@ -41,20 +100,21 @@ fi
 
 echo "Using bash file: $BASH_FILE"
 
-# Append the export line to the bash file
-echo "Appending SEQWEBDEV_HOME export to $BASH_FILE..."
+# Append the export line and alias to the bash file
+echo "Appending SeqWeb configuration to $BASH_FILE..."
 echo "" >> "$BASH_FILE"
 echo "# SeqWeb development environment" >> "$BASH_FILE"
 echo "export SEQWEBDEV_HOME=\"$SEQWEBDEV_HOME\"" >> "$BASH_FILE"
+echo "alias seqweb=\"$SEQWEBDEV_HOME/seqweb\"" >> "$BASH_FILE"
 
-# Source the bash file to make the environment variable available
+# Source the bash file to make the environment variable and alias available
 echo "Sourcing $BASH_FILE to activate environment..."
 source "$BASH_FILE"
 
 echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
-
-# TODO: Add bootstrap logic here
-# - Create seqweb.conf with stub configuration
-# - Run configuration wizard to populate repo paths
-# - Set up CLI and shell integration
-# - Complete the setup process
+echo "seqweb command is now available as an alias"
+echo ""
+echo "Bootstrap complete! You can now:"
+echo "1. Clone repositories as needed"
+echo "2. Edit seqweb.conf if repositories are located elsewhere"
+echo "3. Use 'seqweb' command to access the CLI"
