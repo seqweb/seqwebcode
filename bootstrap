@@ -28,7 +28,7 @@ echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV
 # Check if seqweb.conf already exists
 if [ ! -f "seqweb.conf" ]; then
     echo "Creating initial seqweb.conf configuration file..."
-    cat > seqweb.conf << 'EOF'
+    cat > seqweb.conf << EOF
 # SeqWeb Development Configuration
 # This file contains paths to SeqWeb repositories and configuration
 
