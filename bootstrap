@@ -58,7 +58,7 @@ set -e
 # Source the configuration
 if [ -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     # Simple config parsing to get seqwebcode path
-    SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2 | sed 's/\$SEQWEBDEV_HOME/'"$SEQWEBDEV_HOME"'/g')
+    SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2)
     
     if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBCODE_PATH/seqwebdev" ]; then
         # Call the actual CLI implementation with all arguments
