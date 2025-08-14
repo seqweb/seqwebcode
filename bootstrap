@@ -46,10 +46,9 @@ else
     echo "seqweb.conf already exists, skipping creation"
 fi
 
-# Check if universal SeqWeb CLI entry point exists in the dev home
-if [ ! -f "$SEQWEBDEV_HOME/seqwebdev" ]; then
-    echo "Creating universal SeqWeb CLI entry point..."
-    cat > "$SEQWEBDEV_HOME/seqwebdev" << 'EOF'
+# Always recreate the universal SeqWeb CLI entry point (it's generated, not user data)
+echo "Creating universal SeqWeb CLI entry point..."
+cat > "$SEQWEBDEV_HOME/seqwebdev" << 'EOF'
 #!/bin/bash
 # Universal SeqWeb CLI Entry Point
 # This script reads seqweb.conf and delegates to the actual SeqWeb CLI implementation
@@ -57,9 +56,9 @@ if [ ! -f "$SEQWEBDEV_HOME/seqwebdev" ]; then
 set -e
 
 # Source the configuration
-if [ -f "seqweb.conf" ]; then
+if [ -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     # Simple config parsing to get seqwebcode path
-    SEQWEBCODE_PATH=$(grep "^seqwebcode=" seqweb.conf | cut -d'=' -f2 | sed 's/\$SEQWEBDEV_HOME/'"$SEQWEBDEV_HOME"'/g')
+    SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2 | sed 's/\$SEQWEBDEV_HOME/'"$SEQWEBDEV_HOME"'/g')
     
     if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBCODE_PATH/seqwebdev" ]; then
         # Call the actual CLI implementation with all arguments
@@ -71,16 +70,13 @@ if [ -f "seqweb.conf" ]; then
         exit 1
     fi
     else
-        echo "Error: seqweb.conf not found in current directory"
-        echo "Please run bootstrap script from SeqWeb dev home directory"
+        echo "Error: seqweb.conf not found in $SEQWEBDEV_HOME"
+        echo "Please ensure bootstrap script has been run correctly"
         echo "See https://www.seqweb.org/quickstart for guidance."
         exit 1
 fi
 EOF
-    echo "Created universal SeqWeb CLI entry point"
-else
-    echo "Universal SeqWeb CLI entry point already exists, skipping creation"
-fi
+echo "Created universal SeqWeb CLI entry point"
 
 # Make the CLI entry point executable
 chmod +x "$SEQWEBDEV_HOME/seqwebdev"
@@ -114,9 +110,10 @@ source "$BASH_FILE"
 
 echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
 echo "PATH now includes: $SEQWEBDEV_HOME"
-echo "seqwebdev command is now available"
 echo ""
-echo "SeqWeb Bootstrap complete! You can now:"
+echo "SeqWeb bootstrap complete! You can now:"
 echo "1. Clone repositories as needed"
 echo "2. Edit seqweb.conf if repositories are located elsewhere"
-echo "3. Use 'seqwebdev' command to access the CLI"
+echo "3. Start a new terminal session to use 'seqwebdev' command"
+echo ""
+echo "Note: The seqwebdev command requires a fresh shell session to pick up PATH changes."
