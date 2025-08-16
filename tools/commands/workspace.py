@@ -23,7 +23,7 @@ class WorkspaceCommand(BaseCommand):
     
     @property
     def help_text(self) -> str:
-        return """Usage: ./seqweb workspace [update]
+        return """Usage: seqwebdev workspace [update]
   Manage SeqWeb workspace configuration for multi-repo development.
   
   Commands:
@@ -83,14 +83,14 @@ class WorkspaceCommand(BaseCommand):
             print("✅ Local environment configuration: config/env.local.sh")
         else:
             print("⚠️  Local environment configuration not found")
-            print("   Run './seqweb setup' to create it")
+            print("   Run 'seqwebdev setup' to create it")
         
         # Check workspace configuration
         if workspace_config.exists():
             print("✅ Workspace configuration: .cursor/workspace.code-workspace")
         else:
             print("⚠️  Workspace configuration not found")
-            print("   Run './seqweb workspace update' to generate it")
+            print("   Run 'seqwebdev workspace update' to generate it")
         
         # Show repository paths if available
         if env_local.exists():
@@ -123,5 +123,5 @@ class WorkspaceCommand(BaseCommand):
                 print(f"   Error reading paths: {e}")
         
         print()
-        print("💡 To update workspace configuration, run: ./seqweb workspace update")
+        print("💡 To update workspace configuration, run: seqwebdev workspace update")
         print("💡 To edit repository paths, edit: config/env.local.sh") 

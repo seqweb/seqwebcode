@@ -20,10 +20,10 @@ class HelpCommand(BaseCommand):
     
     @property
     def help_text(self) -> str:
-        return """Usage: ./seqweb help [command]
+        return """Usage: seqwebdev help [command]
   Show help information for all commands or a specific command.
-  If no command is specified, lists all available commands.
-  If a command is specified, shows detailed help for that command."""
+     If a command is specified, shows detailed help for that command.
+     Otherwise, lists all available commands."""
     
     def add_arguments(self, parser):
         parser.add_argument(
@@ -40,18 +40,23 @@ class HelpCommand(BaseCommand):
     
     def _show_all_commands(self):
         """Show all available commands"""
-        print("🧬 SeqWeb Development Environment")
-        print()
-        print("📜 Available commands:")
-        print()
-        
+        print("SeqWeb development CLI commands:")
         commands = get_available_commands()
+        
+        # Find the longest command name for proper column alignment
+        max_name_length = (max(len(cmd_name) 
+                              for cmd_name in commands.keys()) 
+                          if commands else 0)
+        
+        # Print commands in two columns
         for cmd_name, cmd_class in sorted(commands.items()):
             cmd = cmd_class()
-            print(f"  {cmd_name}: {cmd.description}")
+            # Format: "  cmd_name    description" with proper spacing
+            padding = " " * (max_name_length - len(cmd_name) + 2)
+            print(f"  {cmd_name}{padding}"
+                  f"- {cmd.description}")
         
-        print()
-        print("💡 Run './seqweb help <command>' for detailed help on a specific command.")
+        print(" Run 'seqwebdev help <command>' for detailed help on specific commands.")
     
     def _show_command_help(self, command_name: str):
         """Show help for a specific command"""
@@ -64,10 +69,8 @@ class HelpCommand(BaseCommand):
             cmd_class = commands[command_name]
             cmd = cmd_class()
             
-            print(f"🧬 Help for command: {command_name}")
-            print()
+            print(f" Help for command: {command_name}")
             print(f"  {cmd.help_text}")
-            print()
             
         except Exception as e:
             print(f"❌ Error showing help for '{command_name}': {e}") 

@@ -22,7 +22,7 @@ class SetupCommand(BaseCommand):
     
     @property
     def help_text(self) -> str:
-        return """Usage: ./seqweb setup
+        return """Usage: seqwebdev setup
   Initialize the SeqWeb development environment.
   This includes generating workspace configuration.
   NOTE: This command is idempotent - safe to run multiple times."""
@@ -31,7 +31,7 @@ class SetupCommand(BaseCommand):
         # This function is idempotent - safe to run multiple times
         # It will only make changes if they haven't been made already
         
-        print("🧬 Setting up SeqWeb development environment...")
+        print(" Setting up SeqWeb development environment...")
         
         self._generate_workspace_config()
         
@@ -46,7 +46,7 @@ class SetupCommand(BaseCommand):
     
     def _generate_workspace_config(self):
         """Generate workspace configuration"""
-        print("🔧 Generating workspace configuration...")
+        print(" Generating workspace configuration...")
         
         seqweb_home = Path(os.environ["SEQWEB_HOME"])
         
