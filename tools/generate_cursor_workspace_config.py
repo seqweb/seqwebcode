@@ -65,18 +65,21 @@ In summary
     And preserve any other entries as-is
 
 """
-generate_folders_from_seqweb_config()
-INCLUDED_WORKSPACE_DIRS_ = {}    # include SeqWeb dev home
-EXCLUDED_SEQWEB_CODE_DATA_DIRS = # these are subfolders in the `seqwebcode/data` tree
-    {
-        "**/data/output": true,
-        "**/data/intermediate": true,
-        "**/data/logs": true
-    }
-EXCLUDED_SEQWEB_DATA_REPO_DIRS = # these could be anywhere in the filesystem
-    {
-        "**/seqwebdata": true,
-        "**/oeisdata": true
-    }
+# Configuration constants
+INCLUDED_WORKSPACE_DIRS = {}    # include SeqWeb dev home
+EXCLUDED_SEQWEB_CODE_DATA_DIRS = {  # subfolders in seqwebcode/data tree
+    "**/data/output": True,
+    "**/data/intermediate": True,
+    "**/data/logs": True
+}
+EXCLUDED_SEQWEB_DATA_REPO_DIRS = {  # could be anywhere in filesystem
+    "**/seqwebdata": True,
+    "**/oeisdata": True
+}
+
+
+def generate_folders_from_seqweb_config():
+    """Generate folders configuration from SeqWeb config"""
+    pass  # TODO: Implement this function
 
 

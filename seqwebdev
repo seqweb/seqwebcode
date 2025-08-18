@@ -13,6 +13,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent
 os.environ["SEQWEB_HOME"] = str(SCRIPT_DIR)
 
+
 # Source environment configuration (Myriad-style)
 def source_env_config():
     """Source config/env.sh to set up environment variables"""
@@ -24,15 +25,15 @@ def source_env_config():
                 f"source {env_sh}",
                 shell=True, cwd=str(SCRIPT_DIR)
             )
+        except Exception as e:
+            )
             if result.returncode != 0:
                 sys.exit(1)
-        except Exception as e:
             print(f"Error sourcing config/env.sh: {e}")
             sys.exit(1)
 
 # Source environment configuration first (Myriad pattern)
 source_env_config()
-
 # Add the tools directory to Python path
 TOOLS_DIR = SCRIPT_DIR / "tools"
 sys.path.insert(0, str(TOOLS_DIR))

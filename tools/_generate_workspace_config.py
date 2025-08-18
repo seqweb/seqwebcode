@@ -11,12 +11,12 @@ from pathlib import Path
 
 def get_repo_paths():
     """Get repository paths from environment or prompt user."""
-    
+
     # Try to source the environment configuration
     config_dir = Path(__file__).parent.parent / "config"
     env_local = config_dir / "env.local.sh"
     env_default = config_dir / "env.sh"
-    
+
     # Source the environment file to get variables
     env_vars = {}
     if env_local.exists():
@@ -37,22 +37,22 @@ def get_repo_paths():
             if '=' in line:
                 key, value = line.split('=', 1)
                 env_vars[key] = value
-    
+
     # Get paths from environment or use defaults
     seqwebdata_path = env_vars.get('SEQWEBDATA_PATH', '~/Devo/Data/SeqWeb/seqwebdata')
     oeisdata_path = env_vars.get('OEISDATA_PATH', '~/Devo/Data/OEIS/oeisdata')
-    
+
     # Expand ~ to home directory
     seqwebdata_path = os.path.expanduser(seqwebdata_path)
     oeisdata_path = os.path.expanduser(oeisdata_path)
-    
+
     return seqwebdata_path, oeisdata_path
 
 def generate_workspace_config():
     """Generate the workspace configuration file."""
-    
+
     seqwebdata_path, oeisdata_path = get_repo_paths()
-    
+
     # Create workspace configuration
     workspace_config = {
         "folders": [
@@ -113,19 +113,19 @@ def generate_workspace_config():
             ]
         }
     }
-    
+
     # Write the configuration
     cursor_dir = Path(__file__).parent.parent / ".cursor"
     cursor_dir.mkdir(exist_ok=True)
-    
+
     workspace_file = cursor_dir / "workspace.code-workspace"
     with open(workspace_file, 'w') as f:
         json.dump(workspace_config, f, indent=2)
-    
+
     print(f"✓ Generated workspace configuration: {workspace_file}")
     print(f"  seqwebdata: {seqwebdata_path}")
     print(f"  oeisdata: {oeisdata_path}")
-    
+
     # Validate paths exist
     if not os.path.exists(seqwebdata_path):
         print(f"⚠️  Warning: seqwebdata path not found: {seqwebdata_path}")
@@ -133,4 +133,4 @@ def generate_workspace_config():
         print(f"⚠️  Warning: oeisdata path not found: {oeisdata_path}")
 
 if __name__ == "__main__":
-    generate_workspace_config() 
+    generate_workspace_config()
