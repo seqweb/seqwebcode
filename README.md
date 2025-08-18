@@ -20,25 +20,22 @@ Here's a recap of the Github repos associated with the SeqWeb project
 - **.github**: `git@github.com:seqweb/.github.git` - Github's seqweb.org profile and repo (admin only)
 
 ## Repository structure
-
 ```
 seqwebcode/
-├── docs/                  # Documentation
-│   ├── technical/            # Technical specifications, APIs, etc.
-│   ├── process/              # Development processes, workflows
-│   └── plans/                # Project plans, roadmaps, milestones
-├── src/                   # Source code
-│   ├── java/                 # Java implementations
-│   ├── python/               # Python implementations  
-│   ├── cl/                   # Common Lisp implementations
-│   └── scripts/              # Shell scripts and utilities
-├── ontology/                 # RDF ontology definitions and vocabularies
-├── tests/                 # Test suites
-│   ├── java/
-│   ├── python/
-│   └── cl/
-├── data/                  # Local data files, samples
-└── examples/              # Example usage and demonstrations
+├── data/                   # Local data files, samples
+├── examples/               # Example usage and demonstrations
+├── ontology/               # RDF ontology definitions and vocabularies
+├── src/                    # Source code implementations
+│   ├── java/                   # Java code
+│   ├── python/                 # Python code
+│   ├── cl/                     # Common Lisp code
+│   └── scripts/                # Shell scripts and utilities
+├── tests/                  # Test suites (subfolders mirror `src/`)
+├── tools/                  # development tools, including CLI command support
+├── bootstrap               # quickstart bootstrap script (called via curl command to Github repo)
+├── LICENSE                 # MIT license for this repo
+├── README.md               # This README file
+└── seqwebdev               # seqwebdev CLI Python implementation & entry point
 ```
 
 ### Quickstart

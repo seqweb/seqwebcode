@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SeqWeb Python CLI Entry Point
-This file should be made executable with: chmod +x seqweb
+This file should be made executable with: chmod +x
 """
 
 import os
