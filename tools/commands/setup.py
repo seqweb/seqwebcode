@@ -38,12 +38,6 @@ class SetupCommand(BaseCommand):
         print("✅ Setup complete!")
         print("💡 Edit config/seqweb.conf to configure repository paths")
 
-
-
-
-
-
-
     def _generate_workspace_config(self):
         """Generate workspace configuration"""
         print(" Generating workspace configuration...")

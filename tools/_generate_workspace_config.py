@@ -9,6 +9,7 @@ import json
 import subprocess
 from pathlib import Path
 
+
 def get_repo_paths():
     """Get repository paths from environment or prompt user."""
 
@@ -47,6 +48,7 @@ def get_repo_paths():
     oeisdata_path = os.path.expanduser(oeisdata_path)
 
     return seqwebdata_path, oeisdata_path
+
 
 def generate_workspace_config():
     """Generate the workspace configuration file."""
@@ -131,6 +133,7 @@ def generate_workspace_config():
         print(f"⚠️  Warning: seqwebdata path not found: {seqwebdata_path}")
     if not os.path.exists(oeisdata_path):
         print(f"⚠️  Warning: oeisdata path not found: {oeisdata_path}")
+
 
 if __name__ == "__main__":
     generate_workspace_config()

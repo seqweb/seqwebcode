@@ -100,7 +100,9 @@ class WorkspaceCommand(BaseCommand):
                 # Source the environment file and extract paths
                 result = subprocess.run([
                     "bash", "-c",
-                    f"source {env_local} && echo 'SEQWEBDATA_PATH: $SEQWEBDATA_PATH' && echo 'OEISDATA_PATH: $OEISDATA_PATH'"
+                    f"source {env_local} && "
+                    f"echo 'SEQWEBDATA_PATH: $SEQWEBDATA_PATH' && "
+                    f"echo 'OEISDATA_PATH: $OEISDATA_PATH'"
                 ], capture_output=True, text=True)
 
                 if result.returncode == 0:

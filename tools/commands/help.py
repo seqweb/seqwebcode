@@ -45,8 +45,8 @@ class HelpCommand(BaseCommand):
 
         # Find the longest command name for proper column alignment
         max_name_length = (max(len(cmd_name)
-                              for cmd_name in commands.keys())
-                          if commands else 0)
+                               for cmd_name in commands.keys())
+                           if commands else 0)
 
         # Print commands in two columns
         for cmd_name, cmd_class in sorted(commands.items()):

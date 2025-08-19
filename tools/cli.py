@@ -8,7 +8,7 @@ import sys
 # from typing import Dict, Type
 
 # from lib.base import BaseCommand
-from lib.registry import load_command
+from tools.lib.registry import load_command
 
 
 def main():
