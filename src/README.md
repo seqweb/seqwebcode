@@ -51,14 +51,14 @@ seqwebcode/
 - **On missing DB/table**: throw/raise a clear error:
   > "seqvar store not initialized (missing env.sqlite or seqvars table). Run SeqWeb bootstrap."
 
-## TOML "Sidecar" for SeqVar Facility 
+## TOML "Sidecar" for SeqVar Facility
 
 ### Common Contract (All Languages):
 - **Flattening**: TOML tables become dotted keys (`[service] host="..."` → `service.host = "..."`)
 - **Strings only**: sidecars stringify non-string TOML values (keeps seqvar DB uniform)
 - **APIs to expose** (same names everywhere):
   - `load_toml(paths: list|array)` → `map/dict<string,string>`
-  - `write_to_seqvar(bindings, ns="SeqVar", src="seqweb")` → `None`
+  - `write_toml_to_seqvar(bindings, ns="SeqVar", src="seqweb")` → `None`
 
 ### Language-specific implementation/dependency notes:
 - **Python**: use stdlib tomllib (read-only, 3.11+)
