@@ -75,9 +75,12 @@ class OEISSession:
         # Extract hidden fields using regex
         hidden_fields = self._extract_hidden_fields(response.text)
         # print(f"Found hidden fields: {hidden_fields}")
-
         # Debug: show the actual form structure
-        # form_match = re.search(r'<form[^>]*method=["\']POST["\'][^>]*>.*?</form>', response.text, re.DOTALL | re.IGNORECASE)
+        # form_match = re.search(
+        #     r'<form[^>]*method=["\']POST["\'][^>]*>.*?</form>',
+        #     response.text,
+        #     re.DOTALL | re.IGNORECASE
+        # )
         # if form_match:
         #     print(f"Login form found: {form_match.group(0)[:200]}...")
         # else:
