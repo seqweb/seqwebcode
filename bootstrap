@@ -61,6 +61,8 @@ if [ -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2)
     
     if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBCODE_PATH/seqwebdev" ]; then
+        # Ensure the target CLI implementation is executable
+        chmod +x "$SEQWEBCODE_PATH/seqwebdev"
         # Call the actual CLI implementation with all arguments
         exec "$SEQWEBCODE_PATH/seqwebdev" "$@"
     else
@@ -111,9 +113,12 @@ source "$BASH_FILE"
 echo "SEQWEBDEV_HOME is now set to: $SEQWEBDEV_HOME"
 echo "PATH now includes: $SEQWEBDEV_HOME"
 echo ""
+
+# Set up universal SeqWeb CLI entry point
+
 echo "SeqWeb bootstrap complete! You can now:"
 echo "1. Clone repositories as needed"
 echo "2. Edit seqweb.conf if repositories are located elsewhere"
 echo "3. Start a new terminal session to use 'seqwebdev' command"
 echo ""
-echo "Note: The seqwebdev command requires a fresh shell session to pick up PATH changes."
+echo "Note: The seqwebdev command requires a fresh shell session to pick up the PATH changes."

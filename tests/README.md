@@ -7,7 +7,7 @@ This directory contains test suites for all SeqWeb components.
 - **java/**: Java test suites
 - **python/**: Python test suites
 - **cl/**: Common Lisp test suites
-- **scripts/**: Shell script and utility tests
+- **bash/**: Shell script and utility tests
 
 ## Test Types
 
