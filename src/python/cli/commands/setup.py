@@ -6,7 +6,7 @@ Setup command for SeqWeb CLI
 import os
 from pathlib import Path
 
-from lib.base import BaseCommand
+from ..base import BaseCommand
 
 
 class SetupCommand(BaseCommand):

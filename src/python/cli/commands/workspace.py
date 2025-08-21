@@ -7,7 +7,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from lib.base import BaseCommand
+from ..base import BaseCommand
 
 
 class WorkspaceCommand(BaseCommand):

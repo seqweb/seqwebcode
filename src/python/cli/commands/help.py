@@ -3,8 +3,8 @@
 Help command for SeqWeb CLI
 """
 
-from lib.base import BaseCommand
-from lib.registry import get_available_commands
+from ..base import BaseCommand
+from ..registry import get_available_commands
 
 
 class HelpCommand(BaseCommand):
