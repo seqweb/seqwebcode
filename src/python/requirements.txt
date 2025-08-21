@@ -22,3 +22,16 @@ requests>=2.31.0          # HTTP client for OEIS API interactions
 # black>=23.0.0             # For code formatting
 # mypy>=1.5.0               # For type checking
 # flake8>=6.0.0             # For linting
+
+# Future CLI dependencies (uncomment as needed):
+# click>=8.1.0               # For building CLI applications
+# typer>=0.9.0               # For modern CLI with type hints
+# rich>=13.0.0               # For rich terminal output and formatting
+# tabulate>=0.9.0            # For table formatting in CLI output
+# colorama>=0.4.6            # For cross-platform colored terminal output
+
+# Future development tool dependencies (uncomment as needed):
+# watchdog>=3.0.0            # For file system monitoring and auto-reloading
+# invoke>=2.0.0              # For task automation and build scripts
+# fabric>=3.0.0              # For remote deployment and server management
+# docker>=6.0.0              # For containerization support
