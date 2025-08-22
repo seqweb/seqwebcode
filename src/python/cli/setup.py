@@ -14,9 +14,10 @@ sys.path.insert(0, str(PYTHON_SRC_DIR))
 
 # Import seqvar functionality
 try:
-    from seqvar.seqvar import get, set as seqvar_set
+    from seqvar.seqvar import set as seqvar_set
     from seqvar.seqvar_toml import load_toml, write_toml_to_seqvar
     from seqvar.init_seqvar_db import init_seqvar_db
+    from seqvar.seqvar import get as seqvar_get
 except ImportError as e:
     print(f"❌ seqvar package not found: {e}")
     print("Please ensure seqvar package is available in seqwebcode/src/python/seqvar/")
@@ -45,14 +46,16 @@ def setup_for_cli():
 
         # Set basic environment values if they're not already set
         try:
-            if not get("seqweb.home", ns="env"):
-                seqvar_set("seqweb.home", os.environ["SEQWEBDEV_HOME"], ns="env", src="seqwebdev")
+            # Always update this value to ensure it's correct
+            # Note: seqweb.home is accessed by the config file loading code below
+            seqvar_set("seqwebdev.home", os.environ["SEQWEBDEV_HOME"], ns="env", src="seqwebdev")
+
             # print("✅ Basic environment configuration set")
         except Exception as e:
-            print(f"⚠️  Warning: Could not set seqweb.home: {e}")
+            print(f"⚠️  Warning: Could not set environment configuration: {e}")
 
         # Load seqweb.conf configuration file if it exists
-        config_file = Path(os.environ["SEQWEBDEV_HOME"]) / "seqweb.conf"
+        config_file = Path(seqvar_get("seqwebdev.home", ns="env")) / "seqweb.conf"
         if config_file.exists():
             try:
                 bindings = load_toml(str(config_file))
