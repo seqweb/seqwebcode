@@ -49,3 +49,17 @@ def set(key: str, val: str, ns: str = "SeqVar", src: str = "seqweb") -> None:
             )
     except sqlite3.OperationalError as e:
         raise SeqVarError("seqvar table missing. Run SeqWeb bootstrap.") from e
+
+
+def dump() -> list[tuple]:
+    """
+    Return all rows and columns from the seqvar database.
+    Returns a list of tuples, each containing (ns, key, val, src, ts)
+    """
+    try:
+        with _conn() as db:
+            rows = db.execute("SELECT ns, key, val, src, ts FROM seqvars ORDER BY ns, key").fetchall()
+            return rows
+    except sqlite3.OperationalError as e:
+        # Likely missing table
+        raise SeqVarError("seqvar table missing. Run SeqWeb bootstrap.") from e

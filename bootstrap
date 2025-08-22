@@ -60,7 +60,7 @@ set -e
 # Source the configuration
 if [ -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     # Simple config parsing to get seqwebcode path
-    SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2)
+    SEQWEBCODE_PATH=$(awk '/^[[:space:]]*seqwebcode[[:space:]]*=/ {gsub(/^[[:space:]]*seqwebcode[[:space:]]*=[[:space:]]*"/, ""); gsub(/".*$/, ""); print}' "$SEQWEBDEV_HOME/seqweb.conf")
     # Construct the path to the implementation entry point
     SEQWEBDEV_ENTRYPOINT="$SEQWEBCODE_PATH/src/python/cli/seqwebdev"
     
