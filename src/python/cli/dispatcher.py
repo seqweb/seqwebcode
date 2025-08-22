@@ -9,10 +9,14 @@ import sys
 
 # from lib.base import BaseCommand
 from .registry import load_command
+from .setup import setup_for_cli
 
 
 def main():
     """Main CLI entry point"""
+    # Set up CLI environment first
+    setup_for_cli()
+    
     # Get available commands
     # available_commands = get_available_commands()
 

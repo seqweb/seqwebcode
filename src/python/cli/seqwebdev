@@ -5,11 +5,14 @@ This file is made executable by the Universal entry point via chmod +x
 """
 
 import sys
+import os
 
+# Add the parent directory to the Python path so we can import our modules
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import and run CLI
 try:
-    from .dispatcher import main
+    from cli.dispatcher import main
 except ImportError as e:
     print(f"Error: Could not import CLI main (from dispatcher.py): {e}")
     sys.exit(1)
