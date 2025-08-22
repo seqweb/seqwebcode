@@ -61,14 +61,16 @@ set -e
 if [ -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     # Simple config parsing to get seqwebcode path
     SEQWEBCODE_PATH=$(grep "^seqwebcode=" "$SEQWEBDEV_HOME/seqweb.conf" | cut -d'=' -f2)
+    # Construct the path to the implementation entry point
+    SEQWEBDEV_ENTRYPOINT="$SEQWEBCODE_PATH/src/python/cli/seqwebdev"
     
-    if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBCODE_PATH/seqwebdev" ]; then
+    if [ -n "$SEQWEBCODE_PATH" ] && [ -f "$SEQWEBDEV_ENTRYPOINT" ]; then
         # Ensure the target CLI implementation is executable
-        chmod +x "$SEQWEBCODE_PATH/seqwebdev"
+        chmod +x "$SEQWEBDEV_ENTRYPOINT"
         # Call the actual CLI implementation with all arguments
-        exec "$SEQWEBCODE_PATH/seqwebdev" "$@"
+        exec "$SEQWEBDEV_ENTRYPOINT" "$@"
     else
-        echo "Error: Could not find seqweb SeqWeb CLI implementation at $SEQWEBCODE_PATH/seqwebdev"
+        echo "Error: Could not find seqweb SeqWeb CLI implementation at $SEQWEBDEV_ENTRYPOINT"
         echo "Please ensure seqwebcode repository is cloned and configured correctly"
         echo "See https://www.seqweb.org/quickstart for guidance."
         exit 1
@@ -82,7 +84,7 @@ fi
 EOF
 echo "Created universal SeqWeb CLI entry point"
 
-# Make the CLI entry point executable
+# Make the Universal CLI entry point executable
 chmod +x "$SEQWEBDEV_HOME/seqwebdev"
 
 # Detect and modify the appropriate bash file

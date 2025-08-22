@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-SeqWeb Python CLI Setup functions +x
+SeqWeb Python CLI Setup functions
 """
 
 import sys
 from pathlib import Path
 
 # Add the src/python directory to Python path to access the seqvar package
-SCRIPT_DIR = Path(__file__).parent
-PYTHON_SRC_DIR = SCRIPT_DIR / "src" / "python"
+SEQWEBCODE_DIR = Path(__file__).parent
+PYTHON_SRC_DIR = SEQWEBCODE_DIR / "src" / "python"
 sys.path.insert(0, str(PYTHON_SRC_DIR))
 
 # Import seqvar functionality
@@ -103,21 +103,3 @@ def setup_seqvar_environment():
     except Exception as e:
         print(f"Warning: Could not set up seqvar environment: {e}")
 
-
-# # Set up environment first
-# setup_seqvar_environment()
-
-# # Add the tools directory to Python path for CLI commands
-# TOOLS_DIR = SCRIPT_DIR / "tools"
-# sys.path.insert(0, str(TOOLS_DIR))
-
-# # Import and run CLI
-# try:
-#     from cli.dispatcher import main
-# except ImportError as e:
-#     print(f"Error: Could not import seqwebdev CLI dispatcher: {e}")
-#     print("Looking for seqwebcode/src/python/cli/ directory...")
-#     sys.exit(1)
-
-# if __name__ == "__main__":
-#     main()
