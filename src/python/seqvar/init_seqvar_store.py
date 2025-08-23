@@ -1,15 +1,9 @@
-# Created by Waldo 2025-08-20
+# Created by Waldo 2025-08-21
 
-# seqwebcode/tools/bootstrap/init_seqvar_db.py
 from __future__ import annotations
-import os
 import sqlite3
 from pathlib import Path
-from typing import Optional
-
-
-class BootstrapError(RuntimeError):
-    pass
+from home.paths import seqvar_store_path
 
 
 SCHEMA_SQL = """
@@ -26,36 +20,17 @@ CREATE TABLE IF NOT EXISTS seqvars(
 """
 
 
-def seqwebdev_home(env: Optional[dict] = None) -> Path:
+def init_seqvar_store() -> Path:
     """
-    Resolve SEQWEBDEV_HOME from the environment (or a passed-in mapping for tests).
-    """
-    env = env or os.environ
-    home = env.get("SEQWEBDEV_HOME")
-    if not home:
-        raise BootstrapError("SEQWEBDEV_HOME is not set; cannot initialize seqvar store.")
-    return Path(home).expanduser().resolve()
-
-
-def env_db_path(home: Path) -> Path:
-    """
-    Return the absolute path to $SEQWEBDEV_HOME/.state/env.sqlite
-    """
-    return home / ".state" / "seqvar.sqlite"
-
-
-def init_seqvar_db(verbose: bool = True) -> Path:
-    """
-    Idempotently create the seqvar SQLite store and schema at:
+    Idempotently create the seqvar store and schema at:
       $SEQWEBDEV_HOME/.state/seqvar.sqlite
 
     - Creates the .state directory if needed
     - Enables WAL journaling
     - Ensures the seqvars table exists (no data is modified)
-    - Returns the absolute DB path
+    - Returns the absolute store path
     """
-    home = seqwebdev_home()
-    db_path = env_db_path(home)
+    db_path = seqvar_store_path()
     db_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Connect and apply schema in a single session
@@ -67,10 +42,7 @@ def init_seqvar_db(verbose: bool = True) -> Path:
                     db.execute(stmt)
             # No data writes; just ensure structure exists
     except sqlite3.Error as e:
-        raise BootstrapError(f"Failed to initialize seqvar store at {db_path}: {e}") from e
-
-    if verbose:
-        print(f"[seqvar] initialized at {db_path}")
+        raise RuntimeError(f"Failed to initialize seqvar store at {db_path}: {e}") from e
 
     return db_path
 
@@ -78,7 +50,7 @@ def init_seqvar_db(verbose: bool = True) -> Path:
 if __name__ == "__main__":
     # Allow invoking this module directly during bootstrap
     try:
-        init_seqvar_db(verbose=True)
-    except BootstrapError as e:
+        init_seqvar_store()
+    except RuntimeError as e:
         print(f"[seqvar] ERROR: {e}")
         raise SystemExit(1)

@@ -16,7 +16,7 @@ sys.path.insert(0, str(PYTHON_SRC_DIR))
 try:
     from seqvar.seqvar import set as seqvar_set
     from seqvar.seqvar_toml import load_toml, write_toml_to_seqvar
-    from seqvar.init_seqvar_db import init_seqvar_db
+    from seqvar.init_seqvar_store import init_seqvar_store
     from seqvar.seqvar import get as seqvar_get
 except ImportError as e:
     print(f"❌ seqvar package not found: {e}")
@@ -38,7 +38,7 @@ def setup_for_cli():
 
         # Initialize seqvar database if needed
         try:
-            init_seqvar_db(verbose=False)
+            init_seqvar_store()
             # print(f"✅ seqvar database ready at: {db_path}")
         except Exception as e:
             print(f"⚠️  Warning: Could not initialize seqvar database: {e}")

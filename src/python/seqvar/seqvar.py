@@ -1,28 +1,26 @@
 # Created by Waldo 2025-08-20
 
 from __future__ import annotations
-import os
 import sqlite3
 import time
 import inspect
 from pathlib import Path
+from home.paths import seqwebdev_state_path
 
 
 class SeqVarError(RuntimeError):
     pass
 
 
-def _db_path() -> Path:
-    home = os.environ.get("SEQWEBDEV_HOME")
-    if not home:
-        raise SeqVarError("SEQWEBDEV_HOME is not set")
-    return (Path(home).expanduser().resolve() / ".state" / "seqvar.sqlite")
+def seqvar_store_path() -> Path:
+    """Get the path to the seqvar store database file."""
+    return seqwebdev_state_path("seqvar.sqlite")
 
 
 def _conn() -> sqlite3.Connection:
-    p = _db_path()
+    p = seqvar_store_path()
     if not p.exists():
-        raise SeqVarError(f"seqvar store not initialized: {p} missing. Run SeqWeb bootstrap.")
+        raise SeqVarError(f"seqvar store {p} missing.")
     try:
         return sqlite3.connect(p)
     except sqlite3.Error as e:
