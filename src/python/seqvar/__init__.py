@@ -7,7 +7,7 @@ This package provides persistent key-value storage with namespace support,
 TOML file loading capabilities, and a unified interface across languages.
 """
 
-from .seqvar import get, set, SeqVarError
+from .seqvar import get, set, SeqVarError, seqvar_store_path
 from .seqvar_toml import load_toml, write_toml_to_seqvar
 
 __version__ = "0.0.1"
@@ -15,6 +15,7 @@ __all__ = [
     "get",
     "set",
     "SeqVarError",
+    "seqvar_store_path",
     "load_toml",
     "write_toml_to_seqvar"
 ]

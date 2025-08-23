@@ -3,7 +3,7 @@
 from __future__ import annotations
 import sqlite3
 from pathlib import Path
-from home.paths import seqvar_store_path
+from seqvar import seqvar_store_path
 
 
 SCHEMA_SQL = """
