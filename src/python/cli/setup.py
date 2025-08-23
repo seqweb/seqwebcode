@@ -48,19 +48,19 @@ def setup_for_cli():
         try:
             # Always update this value to ensure it's correct
             # Note: seqweb.home is accessed by the config file loading code below
-            seqvar_set("seqwebdev.home", os.environ["SEQWEBDEV_HOME"], ns="env", src="seqwebdev")
+            seqvar_set("seqwebdev.home", os.environ["SEQWEBDEV_HOME"], ns="", src=None)
 
             # print("✅ Basic environment configuration set")
         except Exception as e:
             print(f"⚠️  Warning: Could not set environment configuration: {e}")
 
         # Load seqweb.conf configuration file if it exists
-        config_file = Path(seqvar_get("seqwebdev.home", ns="env")) / "seqweb.conf"
+        config_file = Path(seqvar_get("seqwebdev.home", ns="")) / "seqweb.conf"
         if config_file.exists():
             try:
                 bindings = load_toml(str(config_file))
-                # Write to seqvar with 'config' namespace
-                write_toml_to_seqvar(bindings, ns="config", src="seqwebdev")
+                # Write to seqvar with 'default' namespace
+                write_toml_to_seqvar(bindings, ns="", src=None)
                 # print(f"📄 Loaded configuration from: {config_file}")
             except Exception as e:
                 print(f"⚠️  Warning: Could not load config from {config_file}: {e}")

@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 import sqlite3
 import time
+import inspect
 from pathlib import Path
 
 
@@ -15,7 +16,7 @@ def _db_path() -> Path:
     home = os.environ.get("SEQWEBDEV_HOME")
     if not home:
         raise SeqVarError("SEQWEBDEV_HOME is not set")
-    return (Path(home).expanduser().resolve() / ".state" / "env.sqlite")
+    return (Path(home).expanduser().resolve() / ".state" / "seqvar.sqlite")
 
 
 def _conn() -> sqlite3.Connection:
@@ -28,18 +29,26 @@ def _conn() -> sqlite3.Connection:
         raise SeqVarError(f"cannot open seqvar store at {p}: {e}") from e
 
 
-def get(key: str, ns: str = "SeqVar") -> str:
+def get(key: str, ns: str = "") -> str:
     try:
         with _conn() as db:
             row = db.execute("SELECT val FROM seqvars WHERE ns=? AND key=?", (ns, key)).fetchone()
             return "" if row is None or row[0] is None else row[0]
     except sqlite3.OperationalError as e:
         # Likely missing table
-        raise SeqVarError("seqvar table missing. Run SeqWeb bootstrap.") from e
+        raise SeqVarError("seqvar store missing.") from e
 
 
-def set(key: str, val: str, ns: str = "SeqVar", src: str = "seqweb") -> None:
+def set(key: str, val: str, ns: str = "", src: str = None) -> None:
     now = int(time.time())
+
+    # If src is not specified, try to get the caller function name
+    if src is None:
+        try:
+            src = str(inspect.stack()[1].function)
+        except Exception:
+            src = "??"
+
     try:
         with _conn() as db:
             db.execute(
@@ -48,7 +57,7 @@ def set(key: str, val: str, ns: str = "SeqVar", src: str = "seqweb") -> None:
                 (ns, key, val, src, now)
             )
     except sqlite3.OperationalError as e:
-        raise SeqVarError("seqvar table missing. Run SeqWeb bootstrap.") from e
+        raise SeqVarError("seqvar store missing.") from e
 
 
 def dump() -> list[tuple]:
@@ -62,4 +71,4 @@ def dump() -> list[tuple]:
             return rows
     except sqlite3.OperationalError as e:
         # Likely missing table
-        raise SeqVarError("seqvar table missing. Run SeqWeb bootstrap.") from e
+        raise SeqVarError("seqvar store missing.") from e

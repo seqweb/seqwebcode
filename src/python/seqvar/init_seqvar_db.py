@@ -41,13 +41,13 @@ def env_db_path(home: Path) -> Path:
     """
     Return the absolute path to $SEQWEBDEV_HOME/.state/env.sqlite
     """
-    return home / ".state" / "env.sqlite"
+    return home / ".state" / "seqvar.sqlite"
 
 
 def init_seqvar_db(verbose: bool = True) -> Path:
     """
     Idempotently create the seqvar SQLite store and schema at:
-      $SEQWEBDEV_HOME/.state/env.sqlite
+      $SEQWEBDEV_HOME/.state/seqvar.sqlite
 
     - Creates the .state directory if needed
     - Enables WAL journaling
