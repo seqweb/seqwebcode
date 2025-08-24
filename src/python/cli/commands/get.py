@@ -32,9 +32,8 @@ class GetCommand(BaseCommand):
 
     def execute(self, args):
         try:
-            print(f'"{args.key}"')
+            # print(f'"{args.key}"')
             value = seqvar_get(args.key)
             print(f'"{value}"')
         except Exception as e:
             print(f"❌ Error getting seqvar '{args.key}': {e}")
-            print("   Make sure the seqvar database is initialized (run bootstrap)")

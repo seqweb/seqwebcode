@@ -38,30 +38,53 @@ class VarsCommand(BaseCommand):
 
             print(f"Found {len(rows)} entries in seqvar database:")
 
-            # Calculate the maximum width needed for the namespace:key column
+            # Import datetime once at the top
+            from datetime import datetime
+
+            # Calculate the maximum width needed for each column
+            max_timestamp_width = 0
             max_key_width = 0
+            max_value_width = 0
+            
             for ns, key, val, src, ts in rows:
+                # Calculate timestamp width
+                try:
+                    timestamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
+                except (ValueError, TypeError):
+                    timestamp = str(ts)
+                timestamp_col = f"{src}@{timestamp}"
+                max_timestamp_width = max(max_timestamp_width, len(timestamp_col))
+                
+                # Calculate key width
                 key_col = f"{ns}:{key}"
                 max_key_width = max(max_key_width, len(key_col))
+                
+                # Calculate value width
+                max_value_width = max(max_value_width, len(str(val)))
 
-            # Display column headings using the same template format
-            print(f"{'source@timestamp':<20}  {'namespace:key':<{max_key_width}}  value")
-            print("-" * (20 + 2 + max_key_width + 2 + 20))  # Adjust separator length
+            # Ensure minimum widths for readability
+            max_timestamp_width = max(max_timestamp_width, 20)  # Minimum width for header
+            max_key_width = max(max_key_width, 15)             # Minimum width for header
+            max_value_width = max(max_value_width, 5)           # Minimum width for header
+
+            # Display column headings with perfect alignment
+            print(f"{'source@timestamp':<{max_timestamp_width}}  {'namespace:key':<{max_key_width}}  value")
+            print("-" * (max_timestamp_width + 2 + max_key_width + 2 + max_value_width))
 
             for ns, key, val, src, ts in rows:
                 # Convert timestamp to readable format
-                from datetime import datetime
                 try:
                     timestamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
                 except (ValueError, TypeError):
                     timestamp = str(ts)
 
-                # Use the template format: {src}@{ts}<pad1>{ns}:{key}<pad2>{val}
-                # where <pad1> is two spaces and <pad2> aligns all values in the same column
+                # Format each column with consistent alignment
+                timestamp_col = f"{src}@{timestamp}"
                 key_col = f"{ns}:{key}"
-                print(f"{src}@{timestamp}  {key_col:<{max_key_width}}  {val}")
+                
+                print(f"{timestamp_col:<{max_timestamp_width}}  {key_col:<{max_key_width}}  {val}")
 
-            print("-" * (20 + 2 + max_key_width + 2 + 20))  # Adjust separator length
+            print("-" * (max_timestamp_width + 2 + max_key_width + 2 + max_value_width))
 
         except Exception as e:
             print(f"❌ Error accessing seqvar database: {e}")
