@@ -22,7 +22,7 @@ class VarsCommand(BaseCommand):
     def help_text(self) -> str:
         return """Usage: seqwebdev vars
   Display all rows and columns from the seqvar database in a human-readable format.
-  Each row shows: namespace, key, value, source, and timestamp."""
+  Each row shows: key, value, source, and timestamp."""
 
     def add_arguments(self, parser):
         # No additional arguments needed for vars command
@@ -45,8 +45,8 @@ class VarsCommand(BaseCommand):
             max_timestamp_width = 0
             max_key_width = 0
             max_value_width = 0
-            
-            for ns, key, val, src, ts in rows:
+
+            for key, val, src, ts in rows:
                 # Calculate timestamp width
                 try:
                     timestamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
@@ -54,11 +54,10 @@ class VarsCommand(BaseCommand):
                     timestamp = str(ts)
                 timestamp_col = f"{src}@{timestamp}"
                 max_timestamp_width = max(max_timestamp_width, len(timestamp_col))
-                
+
                 # Calculate key width
-                key_col = f"{ns}:{key}"
-                max_key_width = max(max_key_width, len(key_col))
-                
+                max_key_width = max(max_key_width, len(key))
+
                 # Calculate value width
                 max_value_width = max(max_value_width, len(str(val)))
 
@@ -68,10 +67,10 @@ class VarsCommand(BaseCommand):
             max_value_width = max(max_value_width, 5)           # Minimum width for header
 
             # Display column headings with perfect alignment
-            print(f"{'source@timestamp':<{max_timestamp_width}}  {'namespace:key':<{max_key_width}}  value")
+            print(f"{'source@timestamp':<{max_timestamp_width}}  {'key':<{max_key_width}}  value")
             print("-" * (max_timestamp_width + 2 + max_key_width + 2 + max_value_width))
 
-            for ns, key, val, src, ts in rows:
+            for key, val, src, ts in rows:
                 # Convert timestamp to readable format
                 try:
                     timestamp = datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
@@ -80,9 +79,8 @@ class VarsCommand(BaseCommand):
 
                 # Format each column with consistent alignment
                 timestamp_col = f"{src}@{timestamp}"
-                key_col = f"{ns}:{key}"
-                
-                print(f"{timestamp_col:<{max_timestamp_width}}  {key_col:<{max_key_width}}  {val}")
+
+                print(f"{timestamp_col:<{max_timestamp_width}}  {key:<{max_key_width}}  {val}")
 
             print("-" * (max_timestamp_width + 2 + max_key_width + 2 + max_value_width))
 

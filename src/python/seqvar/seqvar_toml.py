@@ -67,14 +67,13 @@ def load_toml(paths: Union[str, Path, List[Union[str, Path]]]) -> Dict[str, str]
     return all_bindings
 
 
-def write_toml_to_seqvar(bindings: Dict[str, str], ns: str = "", src: str = None) -> None:
+def write_toml_to_seqvar(bindings: Dict[str, str], src: str = None) -> None:
     """
     Write flattened key-value bindings to the seqvar database.
 
     Args:
         bindings: Dictionary of key-value pairs to write
-        ns: Namespace for the bindings (default: "")
         src: Source identifier (default: None)
     """
     for key, value in bindings.items():
-        seqvar_set(key, value, ns, src)
+        seqvar_set(key, value, src)

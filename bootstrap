@@ -40,7 +40,7 @@ if [ ! -f "$SEQWEBDEV_HOME/seqweb.conf" ]; then
     echo "seqweb=$SEQWEBDEV_HOME/seqweb" >> "$SEQWEBDEV_HOME/seqweb.conf"
     echo "seqwebdata=$SEQWEBDEV_HOME/seqwebdata" >> "$SEQWEBDEV_HOME/seqweb.conf"
     echo "oeisdata=$SEQWEBDEV_HOME/oeisdata" >> "$SEQWEBDEV_HOME/seqweb.conf"
-    echo "github=$SEQWEBDEV_HOME/.github" >> "$SEQWEBDEV_HOME/seqweb.conf"
+    echo "\".github\"=$SEQWEBDEV_HOME/.github" >> "$SEQWEBDEV_HOME/seqweb.conf"
     echo "Created seqweb.conf with default repository paths"
 else
     echo "seqweb.conf already exists, skipping creation"

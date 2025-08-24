@@ -3,29 +3,20 @@
 """
 SeqVar Facility - Simple key-value configuration system for SeqWeb.
 
-This package provides persistent key-value storage with namespace support,
-TOML file loading capabilities, and a unified interface across languages.
+This package provides persistent key-value storage with TOML file loading
+capabilities and a unified interface across languages.
 """
 
-from .seqvar import get, set, SeqVarError, seqvar_store_path
+from .seqvar import get, set, get_dict, SeqVarError, seqvar_store_path
 from .seqvar_toml import load_toml, write_toml_to_seqvar
 
 __version__ = "0.0.1"
 __all__ = [
     "get",
-    "set",
+    "set", 
+    "get_dict",
     "SeqVarError",
     "seqvar_store_path",
     "load_toml",
     "write_toml_to_seqvar"
 ]
-
-
-# Convenience aliases for common operations
-def put(key: str, val: str, ns: str = "SeqVar", src: str = "seqweb") -> None:
-    """Alias for set() - follows the naming convention used in other languages."""
-    return set(key, val, ns, src)
-
-
-# Add the alias to __all__
-__all__.append("put")

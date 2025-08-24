@@ -10,12 +10,11 @@ SCHEMA_SQL = """
 PRAGMA journal_mode=WAL;
 PRAGMA synchronous=NORMAL;
 CREATE TABLE IF NOT EXISTS seqvars(
-  ns   TEXT NOT NULL,
   key  TEXT NOT NULL,
   val  TEXT NOT NULL DEFAULT '',
   src  TEXT,
   ts   INTEGER NOT NULL,
-  PRIMARY KEY(ns,key)
+  PRIMARY KEY(key)
 );
 """
 

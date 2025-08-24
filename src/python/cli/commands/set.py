@@ -40,6 +40,6 @@ class SetCommand(BaseCommand):
             # Set the value in the seqvar database
             seqvar_set(args.key, args.value)
             # print(f"Set '{args.key}' = '{args.value}'")
-            
+
         except Exception as e:
             print(f"❌ Error setting seqvar '{args.key}': {e}")
