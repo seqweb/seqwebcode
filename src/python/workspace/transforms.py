@@ -1,8 +1,8 @@
 # functions for transforming Cursor/VS Code workspace configs to help support development.
 
 """
-Cursor onfigs are embodied as dicts; this file implements the SeqWeb-specific dict->dict transforms.
-Reading and writing the actual data is implemented in [todo].
+Cursor configs are embodied as dicts; this file implements the SeqWeb-specific dict->dict transforms.
+Reading and writing the actual data is implemented by the caller.
 
 The transforms "respectfully" augment an existing "base" dict, never overriding explicit settings.
 The augmentation items here are all derived from repo path info obtained from the seqvar store.
