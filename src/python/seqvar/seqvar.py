@@ -1,4 +1,4 @@
-# Created by Waldo 2025-08-20
+# seqvar store untilities
 
 from __future__ import annotations
 import sqlite3
@@ -75,16 +75,16 @@ def dump() -> list[tuple]:
 def get_dict(keys: str = None) -> dict[str, str]:
     """
     Return key-value pairs from the seqvar database as a dictionary.
-    
+
     Args:
         keys: Optional filter pattern for keys. Uses SQLite LIKE operator with wildcards:
               - % matches any sequence of characters
               - _ matches any single character
               - Examples: "repos.*" -> "repos.%", "config.*.url" -> "config.%.url"
-    
+
     Returns:
         Dictionary mapping keys to values
-        
+
     Raises:
         SeqVarError: If the seqvar store is missing or inaccessible
     """
@@ -98,10 +98,10 @@ def get_dict(keys: str = None) -> dict[str, str]:
                 # Replace .* with .% for SQLite compatibility
                 like_pattern = keys.replace(".*", ".%")
                 rows = db.execute(
-                    "SELECT key, val FROM seqvars WHERE key LIKE ? ORDER BY key", 
+                    "SELECT key, val FROM seqvars WHERE key LIKE ? ORDER BY key",
                     (like_pattern,)
                 ).fetchall()
-            
+
             return {key: val for key, val in rows}
     except sqlite3.OperationalError as e:
         # Likely missing table

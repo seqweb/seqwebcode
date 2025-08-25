@@ -130,7 +130,7 @@ class CursorCommand(BaseCommand):
                                        repo_path in existing_folder_paths or
                                        repo_name in existing_folder_paths or
                                        repo_path in existing_folder_names)
-                        
+
                         if not repo_exists:
                             # Add new repo folder
                             merged_workspace["folders"].append({

@@ -25,7 +25,7 @@ class DictCommand(BaseCommand):
   Display seqvar key-value pairs as a dictionary.
   If no keys argument is provided, shows all key-value pairs.
   If keys is provided, filters to show only matching keys.
-  
+
   Examples:
     seqwebdev dict                    # Show all key-value pairs
     seqwebdev dict "repos.*"         # Show keys starting with "repos."
@@ -49,9 +49,9 @@ class DictCommand(BaseCommand):
         try:
             # Get the dictionary from seqvar store
             result_dict = seqvar_dict(args.keys)
-            
+
             # Print the dictionary using pprint for clean formatting
             pprint.pprint(result_dict)
-                
+
         except Exception as e:
             print(f"❌ Error: {e}")
