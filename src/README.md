@@ -1,13 +1,20 @@
 # Source Code
 
-This directory contains the implementation code for SeqWeb components.
+The `src/` directory contains the implementation code for all SeqWeb components.
 
 ## Structure
+
+Each language has its own directory with a consistent internal structure:
+- **app/**: Language-specific applications (CLI, web services, etc.)
+- **lib/**: Shared libraries and core functionality
+- **test/**: Language-specific tests
+
+## Language Directories
 
 - **java/**: Java implementations
 - **python/**: Python implementations
 - **cl/**: Common Lisp implementations  
-- **scripts/**: Shell scripts and utilities
+- **bash/**: Shell script implementations
 
 ## Components
 
@@ -25,20 +32,38 @@ This directory contains the implementation code for SeqWeb components.
 seqwebcode/
 └─ src/
    ├─ python/
-   │  └─ seqvar/
-   │     ├─ __init__.py
-   │     ├─ seqvar.py         # get/set (assumes DB exists)
-   │     └─ seqvar_toml.py    # load TOML → dict[str,str]; write dict → DB
+   │  ├─ app/
+   │  │  └─ cli/
+   │  │     └─ seqwebdev
+   │  ├─ lib/
+   │  │  ├─ __init__.py
+   │  │  ├─ seqvar/
+   │  │  │  ├─ __init__.py
+   │  │  │  ├─ seqvar.py         # get/set (assumes DB exists)
+   │  │  │  └─ seqvar_toml.py    # load TOML → dict[str,str]; write dict → DB
+   │  │  └─ ...
+   │  └─ test/
+   │     ├─ test_seqvar.py
+   │     └─ show_seqwebdev.py
    ├─ java/
-   │  └─ seqvar/
-   │     ├─ SeqVar.java       # get/set (assumes DB exists)
-   │     └─ SeqvarToml.java   # load TOML; write to DB
+   │  ├─ app/
+   │  ├─ lib/
+   │  │  └─ seqvar/
+   │  │     ├─ SeqVar.java       # get/set (assumes DB exists)
+   │  │     └─ SeqvarToml.java   # load TOML; write to DB
+   │  └─ test/
    ├─ cl/
-   │  ├─ seqvar.lisp          # get/set (assumes DB exists)
-   │  └─ seqvar-toml.lisp     # read TOML; write to DB
+   │  ├─ app/
+   │  ├─ lib/
+   │  │  ├─ seqvar.lisp          # get/set (assumes DB exists)
+   │  │  └─ seqvar-toml.lisp     # read TOML; write to DB
+   │  └─ test/
    └─ bash/
-      ├─ seqvar.sh            # get/set (assumes DB exists) — reference
-      └─ seqvar_toml.sh       # calls out to python to load TOML — reference
+      ├─ app/
+      ├─ lib/
+      │  ├─ seqvar.sh            # get/set (assumes DB exists) — reference
+      │  └─ seqvar_toml.sh       # calls out to python to load TOML — reference
+      └─ test/
 ```
 
 ## SeqVar Facility Common Contract (All Languages)
@@ -65,3 +90,175 @@ seqwebcode/
 - **Java**: tiny dep org.tomlj:tomlj (read-only)
 - **Lisp**: cl-toml 
 - **Bash**: avoid parsing TOML; call Python helper from scripts if needed
+
+## Testing
+
+Tests are co-located with their respective language implementations:
+- **Python tests**: `src/python/test/`
+- **Java tests**: `src/java/test/`
+- **CL tests**: `src/cl/test/`
+- **Bash tests**: `src/bash/test/`
+
+
+## Build Dependencies Documentation
+
+The SeqWeb polyglot system maintains dependency documentation via separate `build-dependencies.md` files for each language, along with a common/cross-cutting overview doc at the `src/` level.
+
+### Language-Specific Dependencies
+
+Each language implementation has its own detailed dependency documentation:
+
+- **`src/python/dependencies.md`** - Python-specific dependencies, package structure, and testing requirements
+- **`src/java/dependencies.md`** - Java dependencies, Maven/Gradle configuration, and build instructions  
+- **`src/cl/dependencies.md`** - Common Lisp Quicklisp dependencies and ASDF system definitions
+- **`src/bash/dependencies.md`** - Bash system requirements and Python delegation strategy
+
+### Common Dependencies Overview
+
+**`src/dependencies.md`** contains:
+- Cross-cutting dependencies (SQLite, environment variables)
+- Polyglot architecture requirements
+- Common contracts and schemas
+- Integration testing dependencies
+- Build order and troubleshooting
+
+
+## Current Status
+
+*Status as of 2025-08-27*
+
+### Implementation Status Summary
+
+- **Python**: ✅ **COMPLETE** - Fully functional with built-in libraries
+- **Java**: 🟡 **IMPLEMENTATION COMPLETE** - Requires external libraries
+- **Common Lisp**: ❌ **NOT STARTED**
+- **Bash**: ❌ **NOT STARTED**
+
+### Detailed Status by Language
+
+#### Python Implementation ✅ COMPLETE
+**Location**: `src/python/lib/seqvar/`
+**Status**: Production ready
+**Dependencies**: Built-in libraries only (sqlite3, tomllib)
+**Testing**: ✅ All functionality verified working
+**Features Working**:
+- Core seqvar operations (get, set, dump, getDict)
+- TOML file loading and parsing
+- SQLite database management
+- Source tracking and timestamps
+- CLI integration
+
+#### Java Implementation 🟡 IMPLEMENTATION COMPLETE
+**Location**: `src/java/lib/seqvar/`
+**Status**: Code complete, requires external libraries
+**Dependencies**: SQLite JDBC driver, TOML library
+**Testing**: ❌ Cannot run due to missing dependencies
+**What's Working**:
+- Complete Java class structure
+- All seqvar functionality implemented
+- Proper exception handling
+- Database schema management
+**What's Blocking Progress**:
+- Missing SQLite JDBC driver
+- Missing TOML parsing library
+
+#### Common Lisp Implementation ❌ NOT STARTED
+**Location**: `src/cl/lib/seqvar/`
+**Status**: Not implemented
+**Dependencies**: Unknown (needs research)
+**Planned Features**:
+- Core seqvar operations
+- TOML file handling
+- SQLite database integration
+- Source tracking
+
+#### Bash Implementation ❌ NOT STARTED
+**Location**: `src/bash/lib/seqvar/`
+**Status**: Not implemented
+**Dependencies**: Unknown (needs research)
+**Planned Features**:
+- Core seqvar operations
+- TOML file handling
+- SQLite database integration
+- Source tracking
+
+### External Library Requirements
+
+#### Python
+- ✅ sqlite3 (built-in)
+- ✅ tomllib (built-in, Python 3.11+)
+
+#### Java
+- ❌ SQLite JDBC driver (org.xerial:sqlite-jdbc:3.42.0.0)
+- ❌ TOML parser (org.tomlj:tomlj:1.1.0)
+
+#### Common Lisp
+- ❌ SQLite library (research needed)
+- ❌ TOML parser (research needed)
+
+#### Bash
+- ❌ SQLite integration (research needed)
+- ❌ TOML parsing (research needed)
+
+### Development Phases
+
+#### Phase 1: Python Foundation ✅ COMPLETE
+- Establish lib/app directory structure
+- Implement working seqvar system
+- Verify CLI integration
+- Document patterns and architecture
+
+#### Phase 2: Language-Specific Implementation 🟡 IN PROGRESS
+- Java: Implementation complete, needs dependencies
+- CL: Not started
+- Bash: Not started
+
+#### Phase 3: Integration and Testing ❌ NOT STARTED
+- Cross-language compatibility testing
+- Performance benchmarking
+- Error handling consistency
+- Documentation standardization
+
+### Next Steps
+
+#### Immediate (Next Session)
+1. **Research CL and Bash options** for seqvar implementation
+2. **Document library requirements** for each language
+3. **Plan dependency management** approach
+
+#### Short-term (Next 1-2 Sessions)
+1. **Implement CL seqvar** if feasible
+2. **Implement Bash seqvar** if feasible
+3. **Add comprehensive testing** for all implementations
+
+### Key Learnings Applied
+
+1. **File Management**: `cat` is reliable, `edit_file` causes rework
+2. **Status Documentation**: Leave comprehensive TODO notes for incomplete work
+3. **External Libraries**: Use standards, don't roll your own
+4. **Testing**: Verify functionality before proceeding
+5. **Architecture**: Plan for scalability and polyglot development
+
+### Commands That Work
+
+```bash
+# From seqweb directory
+seqwebdev help                    # Show available commands
+seqwebdev vars                    # Display seqvar contents
+seqwebdev get <key>              # Get seqvar value
+seqwebdev set <key> <value>      # Set seqvar value
+
+# From seqwebcode directory
+python3 src/python/test/test_seqvar.py  # Run Python tests
+javac -cp src/java src/java/lib/seqvar/*.java  # Compile Java
+```
+
+### Questions for Future Sessions
+
+1. **CL Implementation**: What CL SQLite and TOML libraries are available?
+2. **Bash Implementation**: How to integrate SQLite and TOML with Bash?
+3. **Dependency Management**: When to transition to Gradle vs. language-native tools?
+4. **Testing Framework**: How to implement cross-language testing?
+5. **Performance**: What performance characteristics are acceptable for each language?
+
+**Recommendation**: Continue with CL and Bash implementation research, focusing on feasibility and library availability before committing to full implementation.
