@@ -86,7 +86,7 @@ seqwebcode/
 - **get(key, ns)**: always returns a string (empty `""` if missing)
 - **set(key, val, ns, src)**: upsert; no schema creation here
 - **On missing DB/table**: throw/raise a clear error:
-  > "seqvar store not initialized (missing env.sqlite or seqvars table). Run SeqWeb bootstrap."
+  > "seqvar store not initialized (missing env.sqlite or seqvars table)"
 
 *Note: Additional common contracts will be defined as new system components are added.*
 
@@ -104,7 +104,7 @@ seqwebcode/
 1. **Bootstrap**: Initialize SQLite database and schema
 2. **Python**: Install Python package in development mode (see `src/python/dependencies.md`)
 3. **Java**: Resolve Maven/Gradle dependencies (see `src/java/dependencies.md`)
-4. **Common Lisp**: Install Quicklisp dependencies (see `src/cl/dependencies.md`)
+4. **Common Lisp**: Install Quicklisp dependencies (see `src/cl/dependencies.md`) - ✅ IMPLEMENTATION COMPLETE
 5. **Bash**: Ensure system dependencies are available (see `src/bash/dependencies.md`)
 
 ## Integration Testing Dependencies

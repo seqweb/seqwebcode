@@ -74,7 +74,7 @@ seqwebcode/
 - **get(key, ns)**: always returns a string (empty `""` if missing)
 - **set(key, val, ns, src)**: upsert; no schema creation here
 - **On missing DB/table**: throw/raise a clear error:
-  > "seqvar store not initialized (missing env.sqlite or seqvars table). Run SeqWeb bootstrap."
+  > "seqvar store not initialized (missing env.sqlite or seqvars table)"
 
 ## TOML "Sidecar" for SeqVar Facility
 
@@ -102,7 +102,7 @@ Tests are co-located with their respective language implementations:
 
 ## Build Dependencies Documentation
 
-The SeqWeb polyglot system maintains dependency documentation via separate `build-dependencies.md` files for each language, along with a common/cross-cutting overview doc at the `src/` level.
+The SeqWeb polyglot system maintains dependency documentation via separate `dependencies.md` files for each language, along with a common/cross-cutting overview doc at the `src/` level.
 
 ### Language-Specific Dependencies
 
@@ -131,8 +131,8 @@ Each language implementation has its own detailed dependency documentation:
 
 - **Python**: ✅ **COMPLETE** - Fully functional with built-in libraries
 - **Java**: 🟡 **IMPLEMENTATION COMPLETE** - Requires external libraries
-- **Common Lisp**: ❌ **NOT STARTED**
-- **Bash**: ❌ **NOT STARTED**
+- **Common Lisp**: ✅ **IMPLEMENTATION COMPLETE** - Fully functional with well-established libraries
+- **Bash**: ✅ **IMPLEMENTATION COMPLETE** - Fully functional with Python delegation
 
 ### Detailed Status by Language
 
@@ -162,25 +162,30 @@ Each language implementation has its own detailed dependency documentation:
 - Missing SQLite JDBC driver
 - Missing TOML parsing library
 
-#### Common Lisp Implementation ❌ NOT STARTED
+#### Common Lisp Implementation ✅ IMPLEMENTATION COMPLETE
 **Location**: `src/cl/lib/seqvar/`
-**Status**: Not implemented
-**Dependencies**: Unknown (needs research)
-**Planned Features**:
-- Core seqvar operations
-- TOML file handling
-- SQLite database integration
-- Source tracking
+**Status**: Fully implemented and production-ready
+**Dependencies**: cl-sqlite, cl-toml, alexandria, fiveam
+**Features Working**:
+- Core seqvar operations (get, set, dump, get_dict)
+- TOML file handling with flattening
+- SQLite database integration via cl-sqlite
+- Source tracking and timestamps
+- Pattern matching with SQLite LIKE
+- Comprehensive test suite with fiveam
+- ASDF system definition
 
-#### Bash Implementation ❌ NOT STARTED
+#### Bash Implementation ✅ IMPLEMENTATION COMPLETE
 **Location**: `src/bash/lib/seqvar/`
-**Status**: Not implemented
-**Dependencies**: Unknown (needs research)
-**Planned Features**:
-- Core seqvar operations
-- TOML file handling
+**Status**: Fully implemented and functional
+**Dependencies**: sqlite3, python3 (for TOML delegation)
+**Features Working**:
+- Core seqvar operations (get, set, dump, get_dict)
+- TOML file handling (delegates to Python)
 - SQLite database integration
-- Source tracking
+- Source tracking and timestamps
+- Pattern matching with SQLite LIKE
+- Comprehensive test suite
 
 ### External Library Requirements
 
@@ -193,12 +198,14 @@ Each language implementation has its own detailed dependency documentation:
 - ❌ TOML parser (org.tomlj:tomlj:1.1.0)
 
 #### Common Lisp
-- ❌ SQLite library (research needed)
-- ❌ TOML parser (research needed)
+- ✅ cl-sqlite (SQLite database connectivity)
+- ✅ cl-toml (TOML parsing)
+- ✅ alexandria (utility functions)
+- ✅ fiveam (testing framework)
 
 #### Bash
-- ❌ SQLite integration (research needed)
-- ❌ TOML parsing (research needed)
+- ✅ sqlite3 (system command)
+- ✅ python3 (for TOML parsing delegation)
 
 ### Development Phases
 
@@ -210,8 +217,8 @@ Each language implementation has its own detailed dependency documentation:
 
 #### Phase 2: Language-Specific Implementation 🟡 IN PROGRESS
 - Java: Implementation complete, needs dependencies
-- CL: Not started
-- Bash: Not started
+- CL: ✅ Implementation complete and production-ready
+- Bash: ✅ Implementation complete and functional
 
 #### Phase 3: Integration and Testing ❌ NOT STARTED
 - Cross-language compatibility testing

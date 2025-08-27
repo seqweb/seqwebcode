@@ -86,4 +86,4 @@ class VarsCommand(BaseCommand):
 
         except Exception as e:
             print(f"❌ Error accessing seqvar database: {e}")
-            print("   Make sure the seqvar database is initialized (run bootstrap)")
+            print("   Make sure the seqvar database is initialized")
