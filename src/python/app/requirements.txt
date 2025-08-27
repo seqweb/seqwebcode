@@ -3,11 +3,16 @@
 # part of the core SeqWeb system (as distinct from development tools in tools/)
 # 
 # Current components:
+# - seqvar: Core key-value configuration system
 # - oeis_session.py: OEIS authentication and session management
 # - get_core_oeis_numbers.py: OEIS data retrieval utilities
 
 # Core dependencies
 requests>=2.31.0          # HTTP client for OEIS API interactions
+
+# Built-in libraries used (no pip install needed):
+# - sqlite3: Database operations (built-in)
+# - tomllib: TOML parsing (built-in, Python 3.11+)
 
 # Future dependencies (uncomment as needed):
 # rdflib>=6.3.0             # For RDF processing and semantic web operations
