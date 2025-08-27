@@ -8,19 +8,19 @@ import sys
 from pathlib import Path
 
 # Add the src/python directory to Python path to access the seqvar package
-# Assumption: This file is located at seqwebcode/src/python/cli/setup.py
-PYTHON_SRC_DIR = Path(__file__).parent  # Go up to src/python/
+# Assumption: This file is located at seqwebcode/src/python/app/cli/setup.py
+PYTHON_SRC_DIR = Path(__file__).parent.parent.parent.parent.parent / "src" / "python"  # Go up to seqwebcode then down to src/python
 sys.path.insert(0, str(PYTHON_SRC_DIR))
 
 # Import seqvar functionality
 try:
-    from seqvar.seqvar import set as seqvar_set
-    from seqvar.seqvar_toml import load_toml, write_toml_to_seqvar
-    from seqvar.init_seqvar_store import init_seqvar_store
-    from seqvar.seqvar import get as seqvar_get
+    from lib.seqvar.seqvar import set as seqvar_set
+    from lib.seqvar.seqvar_toml import load_toml, write_toml_to_seqvar
+    from lib.seqvar.init_seqvar_store import init_seqvar_store
+    from lib.seqvar.seqvar import get as seqvar_get
 except ImportError as e:
     print(f"❌ seqvar package not found: {e}")
-    print("Please ensure seqvar package is available in seqwebcode/src/python/seqvar/")
+    print("Please ensure seqvar package is available in seqwebcode/src/python/lib/seqvar/")
     sys.exit(1)
 
 

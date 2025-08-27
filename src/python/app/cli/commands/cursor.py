@@ -7,7 +7,7 @@ import json
 import shutil
 from pathlib import Path
 from ..base import BaseCommand
-from seqvar.seqvar import get as seqvar_get
+from lib.seqvar.seqvar import get as seqvar_get
 
 
 class CursorCommand(BaseCommand):
@@ -72,7 +72,7 @@ class CursorCommand(BaseCommand):
                     base_config = {}
 
             # Transform the base config using augmented_config
-            from workspace.transforms import augmented_config
+            from ..workspace.transforms import augmented_config
             result_config = augmented_config(base_config)
 
             # Pretty print the resulting config only if noisy
