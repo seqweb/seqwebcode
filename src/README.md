@@ -68,13 +68,13 @@ seqwebcode/
 
 ## SeqVar Facility Common Contract (All Languages)
 
-- **DB path**: `$SEQWEBDEV_HOME/.state/env.sqlite`
+- **DB path**: `$SEQWEBDEV_HOME/.state/seqvar/seqvar.db`
 - **Table**: `seqvars(ns TEXT NOT NULL, key TEXT NOT NULL, val TEXT NOT NULL DEFAULT '', src TEXT, ts INTEGER NOT NULL, PRIMARY KEY(ns,key))`
 - **Defaults**: `ns="SeqVar"`, `src="seqweb"`
 - **get(key, ns)**: always returns a string (empty `""` if missing)
 - **set(key, val, ns, src)**: upsert; no schema creation here
 - **On missing DB/table**: throw/raise a clear error:
-  > "seqvar store not initialized (missing env.sqlite or seqvars table)"
+  > "seqvar store not initialized (missing seqvar.db or seqvars table)"
 
 ## TOML "Sidecar" for SeqVar Facility
 

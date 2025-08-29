@@ -15,7 +15,7 @@ requests>=2.31.0          # HTTP client for OEIS API interactions
 # - tomllib: TOML parsing (built-in, Python 3.11+)
 
 # Future dependencies (uncomment as needed):
-# rdflib>=6.3.0             # For RDF processing and semantic web operations
+rdflib>=6.3.0             # For RDF processing and semantic web operations
 # numpy>=1.24.0             # For mathematical computations and array operations
 # pandas>=2.0.0             # For data manipulation and analysis
 # scipy>=1.10.0             # For scientific computing and mathematical functions
