@@ -21,10 +21,22 @@ class SeqWebDevCommand(BaseCommand):
     # Root command supports subcommands
     has_subcommands: bool = True
     
+    @property
+    def name(self) -> str:
+        return "seqwebdev"
+    
+    @property
+    def description(self) -> str:
+        return "SeqWeb Development CLI"
+    
+    @property
+    def help_text(self) -> str:
+        return "SeqWeb Development CLI - manages development environments and tools"
+    
     def do_initializations(self):
         """Override with command-specific initialization."""
         # Root command sets up fundamental environment
-        print(f"SeqWeb Development CLI - Command Directory: {self.command_dir}")
+        pass
     
     def do_command(self):
         """Override with command-specific functionality."""
@@ -35,6 +47,12 @@ class SeqWebDevCommand(BaseCommand):
         print("  help      - Show help information")
         print("  <to be continued>")
         print("\nUse 'seqwebdev <command> --help' for more information.")
+
+
+def main():
+    """Entry point function for the chaining CLI."""
+    command = SeqWebDevCommand()
+    command.main()
 
 
 # Entry point - generic, no command-specific names

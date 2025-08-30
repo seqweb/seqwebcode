@@ -9,8 +9,10 @@ It provides the uniform two-method structure for command implementations.
 import sys
 import re
 import inspect
+import argparse
 from pathlib import Path
 from abc import ABC, abstractmethod
+from typing import List
 
 
 def auto_run_command():
@@ -48,7 +50,10 @@ class BaseCommand(ABC):
     def __init__(self):
         self.args = sys.argv[1:]  # Skip command name
         # Capture the directory where THIS command is defined
-        self.command_dir = Path(__file__).parent
+        # Use the calling frame's file location, not the base class file
+        caller_frame = inspect.currentframe().f_back
+        caller_file = caller_frame.f_globals['__file__']
+        self.command_dir = Path(caller_file).parent
     
     def main(self):
         """Main entry point following chaining CLI pattern."""
@@ -85,12 +90,14 @@ class BaseCommand(ABC):
         # Try to find and run that canonical name
         subcommand_filename = f"{canonical_name}.py"
         
-        # Check for file flavor subcommand (S.py)
-        if self._execute_subcommand(self.command_dir / subcommand_filename, canonical_name):
+        # Check for file flavor subcommand (S.py) in the command's own directory
+        file_path = self.command_dir / subcommand_filename
+        if self._execute_subcommand(file_path, canonical_name):
             return True
         
-        # Check for folder flavor subcommand (S/S.py)
-        return self._execute_subcommand(self.command_dir / canonical_name / subcommand_filename, canonical_name)
+        # Check for folder flavor subcommand (S/S.py) in the command's own directory
+        folder_path = self.command_dir / canonical_name / subcommand_filename
+        return self._execute_subcommand(folder_path, canonical_name)
     
     def canonical_subcommand_name(self, name: str) -> str | None:
         """
@@ -101,14 +108,6 @@ class BaseCommand(ABC):
         - Followed by alphanumeric + underscores (a-z, A-Z, 0-9, _)
         - No leading underscores (eliminates Python magic files)
         - Returns lowercase canonical form if valid, None if invalid
-        
-        Examples:
-        - 'Setup' -> 'setup'
-        - 'OEIS' -> 'oeis'
-        - 'my_command' -> 'my_command'
-        - '1command' -> None (starts with digit)
-        - '_private' -> None (starts with underscore)
-        - 'my-command' -> None (contains hyphen)
         """
         if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', name):
             return None
@@ -121,9 +120,19 @@ class BaseCommand(ABC):
         
         try:
             # Dynamic import of subcommand module
-            module_name = f"chain.{subcommand_name}.{subcommand_name}"
+            # For file case: import from the current command's directory
+            # For folder case: import from the subcommand's directory
+            if subcommand_file.parent == self.command_dir:
+                # File case: S.py in C's directory
+                module_name = f"chain.{self.command_dir.name}.{subcommand_name}"
+            else:
+                # Folder case: S/S.py in C's directory  
+                module_name = f"chain.{self.command_dir.name}.{subcommand_name}.{subcommand_name}"
+            
             module = __import__(module_name, fromlist=[subcommand_name])
-            command_class = getattr(module, f"{subcommand_name.capitalize()}Command")
+            
+            command_class_name = f"{subcommand_name.capitalize()}Command"
+            command_class = getattr(module, command_class_name)
             
             # Create instance and call with remaining args
             subcommand_instance = command_class()
@@ -139,3 +148,91 @@ class BaseCommand(ABC):
     def do_command(self):
         """Override with command-specific functionality."""
         pass
+    
+    # Help system properties
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Command name"""
+        pass
+    
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        """Command description - terse, good for lists"""
+        pass
+    
+    @property
+    def help_text(self) -> str:
+        """Detailed help text - automatically includes subcommands for group commands"""
+        base_help = f"{self.name} - {self.description}"
+        
+        if self.has_subcommands:
+            subcommands = self._discover_subcommands()
+            if subcommands:
+                base_help += "\n\nAvailable subcommands:"
+                for cmd in subcommands:
+                    base_help += f"\n  {cmd['name']:<15} {cmd['description']}"
+                base_help += f"\n\nFor detailed usage: {self.name} <subcommand> --help"
+        
+        base_help += f"\n\nFor full documentation: {self._get_docs_url()}"
+        return base_help
+    
+    # Argument parsing helpers
+    def create_parser(self) -> argparse.ArgumentParser:
+        """Create argument parser for this command"""
+        parser = argparse.ArgumentParser(description=self.description)
+        self.add_arguments(parser)
+        return parser
+    
+    def add_arguments(self, parser: argparse.ArgumentParser):
+        """Add command-specific arguments to parser"""
+        # Override in subclasses
+        pass
+    
+    # Subcommand discovery (for help_text)
+    def _discover_subcommands(self) -> List[dict]:
+        """Discover subcommands - called only for help_text generation"""
+        subcommands = []
+        
+        # Quick file system scan without imports
+        for py_file in self.command_dir.glob("*.py"):
+            if py_file.name != "__init__.py":
+                name = py_file.stem
+                info = self._extract_subcommand_info(py_file, name)
+                subcommands.append(info)
+        
+        # Folder-based subcommands
+        for folder in self.command_dir.iterdir():
+            if folder.is_dir() and (folder / f"{folder.name}.py").exists():
+                name = folder.name
+                info = self._extract_subcommand_info(folder / f"{folder.name}.py", name)
+                subcommands.append(info)
+        
+        return subcommands
+    
+    def _extract_subcommand_info(self, file_path: Path, name: str) -> dict:
+        """Extract basic info from subcommand file without full import"""
+        try:
+            # Quick docstring extraction
+            with open(file_path, 'r') as f:
+                content = f.read()
+                # Simple extraction of class docstring
+                if f'class {name.capitalize()}Command' in content:
+                    # Extract first line of docstring if available
+                    lines = content.split('\n')
+                    for i, line in enumerate(lines):
+                        if f'class {name.capitalize()}Command' in line:
+                            # Look for docstring in next few lines
+                            for j in range(i+1, min(i+5, len(lines))):
+                                if '"""' in lines[j]:
+                                    desc = lines[j].strip().strip('"').strip("'")
+                                    return {"name": name, "description": desc}
+                    return {"name": name, "description": "No description available"}
+        except:
+            pass
+        return {"name": name, "description": "No description available"}
+    
+    def _get_docs_url(self) -> str:
+        """Get documentation URL for this command"""
+        return f"https://seqweb.dev/docs/commands/{self.name}"
