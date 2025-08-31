@@ -50,10 +50,9 @@ class BaseCommand(ABC):
     def __init__(self):
         self.args = sys.argv[1:]  # Skip command name
         # Capture the directory where THIS command is defined
-        # Use the calling frame's file location, not the base class file
-        caller_frame = inspect.currentframe().f_back
-        caller_file = caller_frame.f_globals['__file__']
-        self.command_dir = Path(caller_file).parent
+        # Use the class's own module file location, not the calling frame
+        module = sys.modules[self.__class__.__module__]
+        self.command_dir = Path(module.__file__).parent
     
     def main(self):
         """Main entry point following chaining CLI pattern."""
@@ -74,30 +73,44 @@ class BaseCommand(ABC):
     
     def find_and_call_subcommand(self) -> bool:
         """Command-invariant: find and call subcommand if it exists."""
+        print(f"DEBUG: find_and_call_subcommand() called with args: {self.args}")
+        
         # Gating process: check if command supports subcommands
         if not self.has_subcommands:
+            print(f"DEBUG: has_subcommands is False, returning False")
             return False
         
         # Check if there's another CLI argument
         if not self.args:
+            print(f"DEBUG: no args, returning False")
             return False
+        
+        print(f"DEBUG: first arg: '{self.args[0]}'")
         
         # Check if there's a canonical form of the argument
         canonical_name = self.canonical_subcommand_name(self.args[0])
+        print(f"DEBUG: canonical_name: {canonical_name}")
         if canonical_name is None:
+            print(f"DEBUG: canonical_name is None, returning False")
             return False
         
         # Try to find and run that canonical name
         subcommand_filename = f"{canonical_name}.py"
+        print(f"DEBUG: subcommand_filename: {subcommand_filename}")
         
         # Check for file flavor subcommand (S.py) in the command's own directory
         file_path = self.command_dir / subcommand_filename
+        print(f"DEBUG: Checking file case: {file_path}")
         if self._execute_subcommand(file_path, canonical_name):
+            print(f"DEBUG: File case succeeded")
             return True
         
         # Check for folder flavor subcommand (S/S.py) in the command's own directory
         folder_path = self.command_dir / canonical_name / subcommand_filename
-        return self._execute_subcommand(folder_path, canonical_name)
+        print(f"DEBUG: Checking folder case: {folder_path}")
+        result = self._execute_subcommand(folder_path, canonical_name)
+        print(f"DEBUG: Folder case result: {result}")
+        return result
     
     def canonical_subcommand_name(self, name: str) -> str | None:
         """
@@ -119,19 +132,25 @@ class BaseCommand(ABC):
             return False
         
         try:
-            # Dynamic import of subcommand module
-            # For file case: import from the current command's directory
-            # For folder case: import from the subcommand's directory
-            if subcommand_file.parent == self.command_dir:
-                # File case: S.py in C's directory
-                module_name = f"chain.{self.command_dir.name}.{subcommand_name}"
-            else:
-                # Folder case: S/S.py in C's directory  
-                module_name = f"chain.{self.command_dir.name}.{subcommand_name}.{subcommand_name}"
+            # Simple approach: convert file path to Python module name
+            # Convert slashes to dots and remove .py extension
+            chain_root = Path(__file__).parent  # /chain/
+            relative_path = subcommand_file.relative_to(chain_root)  # seqwebdev/hello.py
+            module_name = "chain." + str(relative_path).replace("/", ".").replace(".py", "")
             
+            print(f"DEBUG: Importing module: {module_name}")
+            
+            # Use Python's built-in import mechanism
             module = __import__(module_name, fromlist=[subcommand_name])
             
-            command_class_name = f"{subcommand_name.capitalize()}Command"
+            # Convert subcommand name to PascalCase for class name
+            # e.g., "seqvar" -> "SeqVarCommand", "hello" -> "HelloCommand"
+            # For now, handle the specific case of "seqvar" -> "SeqVar"
+            if subcommand_name == "seqvar":
+                command_class_name = "SeqVarCommand"
+            else:
+                command_class_name = f"{subcommand_name.capitalize()}Command"
+            print(f"DEBUG: Looking for command class: {command_class_name}")
             command_class = getattr(module, command_class_name)
             
             # Create instance and call with remaining args
