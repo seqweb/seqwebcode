@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SeqVar command for SeqWeb CLI - manages seqvar values
+Seqvar command for SeqWeb CLI - manages seqvar values
 
 This is a group command that delegates to get and set subcommands.
 """
@@ -8,7 +8,7 @@ This is a group command that delegates to get and set subcommands.
 from ...base_command import BaseCommand
 
 
-class SeqVarCommand(BaseCommand):
+class SeqvarCommand(BaseCommand):
     """Manage seqvar values (get, set)"""
 
     # This command has subcommands
@@ -41,7 +41,7 @@ class SeqVarCommand(BaseCommand):
     
     def do_command(self):
         """Show help when no subcommand specified."""
-        print("SeqVar Command")
+        print("Seqvar Command")
         print("==============")
         print()
         print("Available subcommands:")

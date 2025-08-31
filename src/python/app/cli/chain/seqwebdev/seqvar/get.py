@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Get subcommand for SeqVar - retrieves seqvar values
+Get subcommand for Seqvar - retrieves seqvar values
 """
 
 from ...base_command import BaseCommand
@@ -39,10 +39,10 @@ class GetCommand(BaseCommand):
         
         key = self.args[0]
         try:
-            # ToDo: Implement actual seqvar get functionality
-            # For now, just show what we would do
-            print(f"Would get seqvar '{key}' (implementation pending)")
-            print("Note: This will integrate with lib.seqvar.seqvar.get when available")
+            # Import and call the actual seqvar get function
+            from lib.seqvar.seqvar import get as seqvar_get
+            value = seqvar_get(key)
+            print(f'"{value}"')
         except Exception as e:
             print(f"❌ Error getting seqvar '{key}': {e}")
 

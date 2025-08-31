@@ -1,1 +1,1 @@
-# SeqVar command package
+# Seqvar command package

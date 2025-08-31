@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Set subcommand for SeqVar - sets seqvar values
+Set subcommand for Seqvar - sets seqvar values
 """
 
 from ...base_command import BaseCommand
@@ -41,10 +41,10 @@ class SetCommand(BaseCommand):
         key = self.args[0]
         value = self.args[1]
         try:
-            # ToDo: Implement actual seqvar set functionality
-            # For now, just show what we would do
-            print(f"Would set seqvar '{key}' = '{value}' (implementation pending)")
-            print("Note: This will integrate with lib.seqvar.seqvar.set when available")
+            # Import and call the actual seqvar set function
+            from lib.seqvar.seqvar import set as seqvar_set
+            seqvar_set(key, value)
+            print(f"Set '{key}' = '{value}'")
         except Exception as e:
             print(f"❌ Error setting seqvar '{key}': {e}")
 
