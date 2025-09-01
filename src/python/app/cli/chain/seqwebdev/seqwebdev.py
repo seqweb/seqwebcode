@@ -27,26 +27,11 @@ class SeqWebDevCommand(BaseCommand):
     
     @property
     def description(self) -> str:
-        return "SeqWeb Development CLI"
+        return "SeqWeb Development chaining CLI"
     
     @property
     def help_text(self) -> str:
-        return "SeqWeb Development CLI - manages development environments and tools"
-    
-    def do_initializations(self):
-        """Override with command-specific initialization."""
-        # Root command sets up fundamental environment
-        pass
-    
-    def do_command(self):
-        """Override with command-specific functionality."""
-        # ToDo: Root command shows help when no subcommand specified
-        print("\nSeqWeb Development CLI")
-        print("=====================")
-        print("\nAvailable commands:")
-        print("  help      - Show help information")
-        print("  <to be continued>")
-        print("\nUse 'seqwebdev <command> --help' for more information.")
+        return "Say 'seqwebdev <commands> --help' for more information on a specific command."
 
 
 def main():

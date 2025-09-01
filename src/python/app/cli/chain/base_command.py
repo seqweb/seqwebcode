@@ -49,15 +49,13 @@ class BaseCommand(ABC):
     # Override to return True when the command supports subcommands
     has_subcommands: bool = False
     
-    @abstractmethod
     def do_initializations(self):   # this runs before any subcommand code
         """Override with command-specific initialization."""
         pass
     
-    @abstractmethod
     def do_command(self):   # this gets run if no subcommand preempts control 
         """Override with command-specific functionality."""
-        pass
+        self.do_help()
 
     ## Methods implementing the generic chaining CLI framework
 
@@ -66,9 +64,6 @@ class BaseCommand(ABC):
         
         # Check for help mode
         self.help_mode = "--help" in self.args
-        if self.help_mode:
-            # Remove --help from args for normal processing
-            self.args = [arg for arg in self.args if arg != "--help"]
         
         # Capture the directory where THIS command is defined
         # Use the class's own module file location, not the calling frame
@@ -177,18 +172,8 @@ class BaseCommand(ABC):
     
     @property
     def help_text(self) -> str:
-        """Detailed help text - automatically includes subcommands for group commands"""
+        """Default help text"""
         base_help = f"{self.name} - {self.description}"
-        
-        if self.has_subcommands:
-            subcommands = self._discover_subcommands()
-            if subcommands:
-                base_help += "\n\nAvailable subcommands:"
-                for cmd in subcommands:
-                    base_help += f"\n  {cmd['name']:<15} {cmd['description']}"
-                base_help += f"\n\nFor detailed usage: {self.name} <subcommand> --help"
-        
-        base_help += f"\n\nFor full documentation: {self._get_docs_url()}"
         return base_help
     
     # Argument parsing helpers
@@ -208,65 +193,86 @@ class BaseCommand(ABC):
         """Discover subcommands - called only for help_text generation"""
         subcommands = []
         
-        # Quick file system scan without imports
-        for py_file in self.command_dir.glob("*.py"):
-            if py_file.name != "__init__.py":
-                name = py_file.stem
-                info = self._extract_subcommand_info(py_file, name)
-                subcommands.append(info)
+        # Single loop through directory contents
+        for item in self.command_dir.iterdir():
+            name = None
+            file_path = None
+            
+            if item.is_dir():
+                # Folder case: S/S.py
+                path = (item / f"{item.name}.py")
+                if path.exists():
+                    name = item.name
+                    file_path = path
+            else:
+                # File case: S.py
+                if item.suffix == '.py':
+                    name = item.stem
+                    # Skip if this file is the current command itself
+                    if name == self.name:
+                        continue
+                    file_path = item
+            
+            # Only process if we found a valid subcommand
+            if name is not None and file_path is not None:
+                info = self._extract_subcommand_info(file_path, name)
+                if info is not None:  # Skip invalid subcommand names
+                    subcommands.append(info)
         
-        # Folder-based subcommands
-        for folder in self.command_dir.iterdir():
-            if folder.is_dir() and (folder / f"{folder.name}.py").exists():
-                name = folder.name
-                info = self._extract_subcommand_info(folder / f"{folder.name}.py", name)
-                subcommands.append(info)
-        
+        # Sort subcommands alphabetically by name
+        subcommands.sort(key=lambda cmd: cmd['name'])
         return subcommands
     
-    def _extract_subcommand_info(self, file_path: Path, name: str) -> dict:
-        """Extract basic info from subcommand file without full import"""
+    def _extract_subcommand_info(self, file_path: Path, name: str) -> dict | None:
+        """Extract basic info from subcommand by importing and calling its description property"""
+        # First canonicalize the name - if invalid, return None
+        canonical_name = self.canonical_subcommand_name(name)
+        if canonical_name is None:
+            return None
+        
         try:
-            # Quick docstring extraction
-            with open(file_path, 'r') as f:
-                content = f.read()
-                # Simple extraction of class docstring
-                if f'class {name.capitalize()}Command' in content:
-                    # Extract first line of docstring if available
-                    lines = content.split('\n')
-                    for i, line in enumerate(lines):
-                        if f'class {name.capitalize()}Command' in line:
-                            # Look for docstring in next few lines
-                            for j in range(i+1, min(i+5, len(lines))):
-                                if '"""' in lines[j]:
-                                    desc = lines[j].strip().strip('"').strip("'")
-                                    return {"name": name, "description": desc}
-                    return {"name": name, "description": "No description available"}
-        except:
-            pass
-        return {"name": name, "description": "No description available"}
+            # Import the subcommand module and get its description
+            chain_root = Path(__file__).parent  # /chain/
+            relative_path = file_path.relative_to(chain_root)  # seqwebdev/hello.py
+            module_name = "chain." + str(relative_path).replace("/", ".").replace(".py", "")
+            
+            # Import the module
+            module = __import__(module_name, fromlist=[canonical_name])
+            
+            # Get the command class
+            command_class_name = f"{canonical_name.capitalize()}Command"
+            command_class = getattr(module, command_class_name)
+            
+            # Create instance and get description
+            command_instance = command_class()
+            description = command_instance.description
+            
+            return {"name": canonical_name, "description": description}
+            
+        except (ImportError, AttributeError, Exception) as e:
+            # Fallback to a default description if import fails
+            return {"name": canonical_name, "description": "No description available"}
     
 
     def do_help(self):
         """Display help for this command and its subcommands."""
-        # Print the command's detailed help_text
+        # Print the command's description followed by detailed help_text
+        print(self.description)
         print(self.help_text)
-        print()
         
-        # Next print a listing of its subcommands, if any. Each subcommand in the list is presented on one line with the following contents, in left-aligned columns:
+        # Then append a listing of any subcommands. Each subcommand in the list is presented on one line with the following contents, in left-aligned columns:
         # - the canonical name of the subcommand
         #   - possibly suffixed with an ellipsis … when the command has sub-subcommands
         # - the subcommand's short description text
         if self.has_subcommands:
             subcommands = self._discover_subcommands()
             if subcommands:
-                print("Available subcommands:")
+                print("Subcommands:")
                 for cmd in subcommands:
                     # Add ellipsis for commands with sub-subcommands
                     suffix = "…" if self._has_subsubcommands(cmd['name']) else ""
                     name_with_suffix = f"{cmd['name']}{suffix}"
                     print(f"  {name_with_suffix:<20} {cmd['description']}")
-                print()
                 print(f"Use '{self.name} <subcommand> --help' for more information.")
     
     def _has_subsubcommands(self, subcommand_name: str) -> bool:
