@@ -6,7 +6,7 @@ This is the root command for the SeqWeb development system.
 It inherits from BaseCommand and follows the chaining CLI pattern.
 """
 
-from ..base_command import BaseCommand
+from app.cli.chain.base_command import BaseCommand
 
 
 class SeqWebDevCommand(BaseCommand):
@@ -38,9 +38,3 @@ def main():
     """Entry point function for the chaining CLI."""
     command = SeqWebDevCommand()
     command.main()
-
-
-# Entry point - generic, no command-specific names
-if __name__ == "__main__":
-    from .base_command import auto_run_command
-    auto_run_command()

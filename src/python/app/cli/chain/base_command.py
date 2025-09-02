@@ -15,23 +15,6 @@ from abc import ABC, abstractmethod
 from typing import List
 
 
-def auto_run_command():
-    """Automatically discover and run the command class in the current module."""
-    # Get the current module
-    current_module = sys.modules[__name__]
-    
-    # Find the class that inherits from BaseCommand
-    for name, obj in inspect.getmembers(current_module):
-        if (inspect.isclass(obj) and 
-            issubclass(obj, BaseCommand) and 
-            obj != BaseCommand):
-            # Found it! Run the command
-            obj.main()
-            return
-    
-    raise RuntimeError("No command class found in module")
-
-
 class BaseCommand(ABC):
     """
     Base class for all SeqWeb CLI commands.
