@@ -7,21 +7,20 @@ This file is made executable by the Universal entry point via chmod +x
 import sys
 from pathlib import Path
 
-# Add the src/python directory to Python path so we can import our modules
-# This enables both CLI imports and cross-domain imports between subdomains
+# Find and import foothold for environment setup
 script_dir = Path(__file__).parent
-python_src_dir = script_dir.parent.parent  # Go up to src/python/
-sys.path.insert(0, str(python_src_dir))
+foothold_path = script_dir.parent.parent / "lib" / "foothold"
+sys.path.insert(0, str(foothold_path))
+
+import foothold
+foothold.setup_environment()
 
 # Import and run CLI
 try:
-    # Note: We use absolute import 'app.cli.dispatcher' instead of relative '.dispatcher'
-    # because this file is run directly as a script, not imported as part of a package.
-    # The sys.path manipulation above ensures Python can find the cli module.
-    # from app.cli.dispatcher import main  # type: ignore[import-unresolved]  ### OLD CLI
+    # Now this import works because foothold set up the broad Python path
     from app.cli.chain.seqwebdev.seqwebdev import main  # type: ignore[import-unresolved]  ### NEW CHAINING CLI
 except ImportError as e:
-    print(f"Error: Could not import CLI main (from dispatcher.py): {e}")
+    print(f"Error: Could not import CLI main: {e}")
     sys.exit(1)
 
 if __name__ == "__main__":
