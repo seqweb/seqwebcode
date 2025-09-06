@@ -54,8 +54,10 @@ if [ -n "$SEQWEBCODE_PATH" ]; then
     if [ -f "$SEQWEBDEV_ENTRYPOINT" ]; then
         # Ensure the target CLI implementation is executable
         chmod +x "$SEQWEBDEV_ENTRYPOINT"
-        # Pass the discovered code path as a temporary environment variable for initial setup
-        export SEQWEBCODE_PATH_TEMP="$SEQWEBCODE_PATH"
+        # Export the discovered code path
+        export SEQWEBCODE_PATH="$SEQWEBCODE_PATH"
+        # Set up CLI setup trigger
+        export SETUP_CLI="true"
         # Call the actual CLI implementation with all arguments
         exec "$SEQWEBDEV_ENTRYPOINT" "$@"
     else

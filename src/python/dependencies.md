@@ -4,7 +4,7 @@ This document outlines the dependencies required to build and run the Python com
 
 ## Core Dependencies
 
-- **Python 3.11+**: Required for `tomllib` standard library module
+- **Python 3.11+**: Required for standard library modules (such as `tomllib` and others)
 - **No external packages required**: All dependencies are in the Python standard library
 
 ## Development Dependencies (Optional)
@@ -30,7 +30,7 @@ seqwebcode/src/python/
 │   └── seqvar/
 │       ├── __init__.py    # Package exports
 │       ├── seqvar.py      # Core get/set functionality
-│       └── seqvar_toml.py # TOML parsing and integration
+│       └── toml.py        # TOML parsing and integration
 └── test/
     ├── test_seqvar.py     # Unit tests
     └── show_seqwebdev.py  # Test utilities

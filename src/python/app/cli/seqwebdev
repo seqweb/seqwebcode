@@ -4,24 +4,23 @@ SeqWeb Python CLI Implementation entry point
 This file is made executable by the Universal entry point via chmod +x
 """
 
+import os
 import sys
-from pathlib import Path
 
-# Find and import foothold for environment setup
-script_dir = Path(__file__).parent
-foothold_path = script_dir.parent.parent / "lib" / "foothold"
-sys.path.insert(0, str(foothold_path))
-
-import foothold
-foothold.setup_environment()
-
-# Import and run CLI
-try:
-    # Now this import works because foothold set up the broad Python path
-    from app.cli.chain.seqwebdev.seqwebdev import main  # type: ignore[import-unresolved]  ### NEW CHAINING CLI
-except ImportError as e:
-    print(f"Error: Could not import CLI main: {e}")
+# Read SEQWEBCODE_PATH from environment and immediately set up Python path
+seqwebcode_path = os.environ.get('SEQWEBCODE_PATH')
+if seqwebcode_path:
+    # Insert the Python source directory into sys.path
+    sys.path.insert(0, f"{seqwebcode_path}/src/python")
+else:
+    print("Error: SEQWEBCODE_PATH environment variable not set")
     sys.exit(1)
 
+# Only run setup if SETUP_CLI environment variable is set
+if os.environ.get('SETUP_CLI'):
+    from lib.foothold.foothold import setup_environment
+    setup_environment()
+
 if __name__ == "__main__":
+    from app.cli.chain.seqwebdev.seqwebdev import main
     main()

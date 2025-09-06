@@ -26,7 +26,7 @@ sys.path.insert(0, str(src_python))
 
 try:
     from lib.seqvar.seqvar import get, set, get_dict, dump
-    from lib.seqvar.init_seqvar_store import init_seqvar_store
+    from lib.seqvar import init_seqvar_store
 except ImportError as e:
     print(f"❌ Import error: {e}")
     print(f"Make sure you're running from the seqwebcode directory")
