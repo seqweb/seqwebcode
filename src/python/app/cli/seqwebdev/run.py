@@ -7,7 +7,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from app.cli.chain.base_command import BaseCommand
+from app.cli.base_command import BaseCommand
 
 
 class RunCommand(BaseCommand):

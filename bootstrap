@@ -49,7 +49,7 @@ SEQWEBCODE_PATH=$(find ~ -name "seqwebcode" -type d -exec test -f {}/bootstrap \
 
 if [ -n "$SEQWEBCODE_PATH" ]; then
     # Construct the path to the implementation entry point
-    SEQWEBDEV_ENTRYPOINT="$SEQWEBCODE_PATH/src/python/app/cli/seqwebdev"
+    SEQWEBDEV_ENTRYPOINT="$SEQWEBCODE_PATH/src/python/app/cli/_seqwebdev"
     
     if [ -f "$SEQWEBDEV_ENTRYPOINT" ]; then
         # Ensure the target CLI implementation is executable

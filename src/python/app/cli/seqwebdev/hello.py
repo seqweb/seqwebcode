@@ -3,7 +3,7 @@
 Hello command for SeqWeb CLI - simple greeting command
 """
 
-from app.cli.chain.base_command import BaseCommand
+from app.cli.base_command import BaseCommand
 
 
 class HelloCommand(BaseCommand):

@@ -91,7 +91,7 @@ def setup_universal_CLI_entrypoint(seqwebcode_path: str = None) -> None:
         f"export SEQWEBCODE_PATH=\"{seqwebcode_path}\"",
         "unset SETUP_CLI",
         "",
-        f"SEQWEBDEV_ENTRYPOINT=\"$SEQWEBCODE_PATH/src/python/app/cli/seqwebdev\"",
+        f"SEQWEBDEV_ENTRYPOINT=\"$SEQWEBCODE_PATH/src/python/app/cli/_seqwebdev\"",
         "",
         "exec \"$SEQWEBDEV_ENTRYPOINT\" \"$@\""
     ]

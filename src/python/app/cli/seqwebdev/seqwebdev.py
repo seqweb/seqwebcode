@@ -6,7 +6,7 @@ This is the root command for the SeqWeb development system.
 It inherits from BaseCommand and follows the chaining CLI pattern.
 """
 
-from app.cli.chain.base_command import BaseCommand
+from app.cli.base_command import BaseCommand
 
 
 class SeqWebDevCommand(BaseCommand):

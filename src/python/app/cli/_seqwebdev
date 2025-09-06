@@ -22,6 +22,6 @@ if os.environ.get('SETUP_CLI'):
     setup_environment()
 
 if __name__ == "__main__":
-    from app.cli.chain.seqwebdev.seqwebdev import main
+    from app.cli.seqwebdev.seqwebdev import main
     main()
 

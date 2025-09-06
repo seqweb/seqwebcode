@@ -3,7 +3,7 @@
 Base Command Class for SeqWeb Chaining CLI
 
 This class implements the core chaining logic that all commands inherit.
-It provides the uniform two-method structure for command implementations.
+It provides a uniform two-method override structure for command implementations.
 """
 
 import sys
@@ -118,9 +118,9 @@ class BaseCommand(ABC):
         try:
             # Simple approach: convert file path to Python module name
             # Convert slashes to dots and remove .py extension
-            chain_root = Path(__file__).parent  # /chain/
-            relative_path = subcommand_file.relative_to(chain_root)  # seqwebdev/hello.py
-            module_name = "chain." + str(relative_path).replace("/", ".").replace(".py", "")
+            cli_root = Path(__file__).parent  # /cli/
+            relative_path = subcommand_file.relative_to(cli_root)  # seqwebdev/hello.py
+            module_name = str(relative_path).replace("/", ".").replace(".py", "")
             
             # Use Python's built-in import mechanism
             module = __import__(module_name, fromlist=[subcommand_name])
@@ -215,9 +215,9 @@ class BaseCommand(ABC):
         
         try:
             # Import the subcommand module and get its description
-            chain_root = Path(__file__).parent  # /chain/
-            relative_path = file_path.relative_to(chain_root)  # seqwebdev/hello.py
-            module_name = "chain." + str(relative_path).replace("/", ".").replace(".py", "")
+            cli_root = Path(__file__).parent  # /cli/
+            relative_path = file_path.relative_to(cli_root)  # seqwebdev/hello.py
+            module_name = str(relative_path).replace("/", ".").replace(".py", "")
             
             # Import the module
             module = __import__(module_name, fromlist=[canonical_name])

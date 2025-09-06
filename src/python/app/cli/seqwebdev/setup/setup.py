@@ -3,7 +3,7 @@
 Setup command for SeqWeb CLI - manages setup and configuration
 """
 
-from app.cli.chain.base_command import BaseCommand
+from app.cli.base_command import BaseCommand
 
 
 class SetupCommand(BaseCommand):
