@@ -11,7 +11,7 @@ from libs.core.seqvar.seqvar import get as seqvar_get
 from libs.core.seqvar.seqvar import get_dict
 
 
-### helper functions for transforming Cursor/VS Code workspace configs 
+# *** helper functions for transforming Cursor/VS Code workspace configs
 
 """
 Cursor configs are embodied as dicts; this file implements the SeqWeb-specific dict->dict transforms.
@@ -36,7 +36,7 @@ The value of `augmented_folders` is computed via a process which is the "moral e
 
 However the Cursor "folders" config is not a single dict, but a *list* of dicts that describe the workspace folders.
 For SeqWeb development, we merely ensure that for each of our "repo seqvars" there's a folder with a matching "name",
-plus a "seqwebdev" folder for the SeqWeb dev home.  We add any of these that are missing, maintianing other content.
+plus a "seqwebdev" folder for the SeqWeb dev home.  We add any of these that are missing, maintaining other content.
 
 
 The value of `augmented_settings` is given by
@@ -48,8 +48,8 @@ where `base_settings` is base_config["settings"].
 
 The `augment_to_settings` are a dict with keys that suppress Cursor indexing on data folders:
     {
-        "files.exclude": {**dev_files_exclude, **base_settings`["files.exclude"]}
-        "search.exclude": {**data_repos_exclude, **dev_files_exclude, **base_settings["search.exclude"]}
+        "files.exclude": {**dev_files_exclude, **base_settings["files.exclude"]},
+        "search.exclude": {**data_repos_exclude, **dev_files_exclude, **base_settings["search.exclude"]},
         "files.watcherExclude": {**data_repos_exclude, **dev_files_exclude, **base_settings["files.watcherExclude"]}
     }
 
@@ -147,22 +147,22 @@ def data_repos_exclude(default_folders: dict) -> dict:
     return {f"{oeisdata_path}/**": True, f"{seqwebdata_path}/**": True}
 
 
-### implement the `...cursor` CLI subcommand
+# *** implement the `...cursor` CLI subcommand
 
 class CursorCommand(BaseCommand):
     """Manage Cursor/VS Code workspace file for SeqWeb development"""
 
     # This command has no subcommands
     has_subcommands: bool = False
-    
+
     @property
     def name(self) -> str:
         return "cursor"
-    
+
     @property
     def description(self) -> str:
         return "Manage Cursor/VS Code workspace file for SeqWeb development"
-    
+
     @property
     def help_text(self) -> str:
         return """Usage: seqwebdev setup cursor [workspace_file] [--noisy]
@@ -170,7 +170,7 @@ class CursorCommand(BaseCommand):
   Default workspace file: seqwebdev.code-workspace
   Respectfully merges with existing workspace settings, adding repos from seqweb.conf if needed.
   Optional --noisy flag enables printing progress messages."""
-    
+
     def add_arguments(self, parser):
         parser.add_argument(
             "workspace_file",
@@ -184,13 +184,13 @@ class CursorCommand(BaseCommand):
             default=False,
             help="Enable verbose output and pretty-printing (default: False)"
         )
-    
+
     def do_command(self):
         """Manage Cursor/VS Code workspace file"""
         # Use argparse for argument parsing
         parser = self.create_parser()
         args = parser.parse_args(self.args)
-        
+
         try:
             # Get the SeqWeb home directory
             home_path = Path(seqvar_get("seqwebdev.home"))

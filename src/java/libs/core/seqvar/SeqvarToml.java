@@ -81,7 +81,7 @@ public class SeqvarToml {
      * @param src source identifier for these values
      * @throws SeqVarException if storage fails
      */
-    public static void writeTomlToSeqvar(Map<String, Object> bindings, String src) throws SeqVarException {
+    public static void writeTomlToSeqvar(Map<String, Object> bindings, String src) {
         if (bindings == null) {
             return;
         }
@@ -104,7 +104,7 @@ public class SeqvarToml {
      * @param bindings map of key-value pairs to store
      * @throws SeqVarException if storage fails
      */
-    public static void writeTomlToSeqvar(Map<String, Object> bindings) throws SeqVarException {
+    public static void writeTomlToSeqvar(Map<String, Object> bindings) {
         writeTomlToSeqvar(bindings, null);
     }
     
@@ -116,7 +116,7 @@ public class SeqvarToml {
      * @throws IOException if file cannot be read
      * @throws SeqVarException if storage fails
      */
-    public static void loadTomlToSeqvar(Path filePath, String src) throws IOException, SeqVarException {
+    public static void loadTomlToSeqvar(Path filePath, String src) throws IOException {
         Map<String, Object> bindings = loadToml(filePath);
         writeTomlToSeqvar(bindings, src);
     }
@@ -128,7 +128,7 @@ public class SeqvarToml {
      * @throws IOException if file cannot be read
      * @throws SeqVarException if storage fails
      */
-    public static void loadTomlToSeqvar(Path filePath) throws IOException, SeqVarException {
+    public static void loadTomlToSeqvar(Path filePath) throws IOException {
         loadTomlToSeqvar(filePath, null);
     }
 }

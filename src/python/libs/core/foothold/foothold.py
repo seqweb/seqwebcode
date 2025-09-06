@@ -7,27 +7,23 @@ It handles path setup, package imports, and other foundational functionality tha
 enables SeqWeb Python code to operate properly.
 """
 
-import sys
-import os
-from pathlib import Path
-
 
 # foundational seqwebdev setup
 
 def initialize_seqvar_store():
     """
     Set up the seqvar store by loading seqweb.conf configuration.
-    
+
     Reads the seqweb.conf file and loads its contents as defaults into the seqvar store
     for use by other SeqWeb components.
     """
     from libs.core.home.paths import seqweb_conf_path
     from libs.core.seqvar.toml import load_toml_as_dict
     from libs.core.seqvar.seqvar import set_dict
-    
+
     # Get seqweb.conf path
     config_file = seqweb_conf_path()
-    
+
     # Load TOML config and write as defaults to seqvar
     bindings = load_toml_as_dict(str(config_file))
     set_dict(bindings)
@@ -36,7 +32,7 @@ def initialize_seqvar_store():
 def setup_seqwebdev_environment():
     """
     Set up the basic SeqWeb development environment.
-    
+
     This function handles foundational SeqWeb setup that all
     language-specific environments depend on.
     """
@@ -48,7 +44,7 @@ def setup_seqwebdev_environment():
 def setup_python_environment():
     """
     Set up the Python environment for SeqWeb development.
-    
+
     This function orchestrates Python-specific environment setup by calling
     individual setup functions for different aspects of the Python environment.
     """
@@ -61,23 +57,23 @@ def setup_python_environment():
 def setup_universal_CLI_entrypoint(seqwebcode_path: str = None) -> None:
     """
     Generate and write simplified code for CLI Universal entrypoint to file.
-    
+
     This creates a simplified version of the current Universal entrypoint,
     with discovery and error checking replaced by "discovered" values.
     The generated script is written to the Universal entrypoint file.
-    
+
     Args:
         seqwebcode_path: Path to seqwebcode repository. If None, uses SEQWEBCODE_PATH env var.
     """
     import os
     from pathlib import Path
-    
+
     # Get the seqwebcode path from parameter or environment
     if seqwebcode_path is None:
         seqwebcode_path = os.environ.get('SEQWEBCODE_PATH', '')
         if not seqwebcode_path:
             raise RuntimeError("SEQWEBCODE_PATH environment variable not set")
-    
+
     # Generate the bash script
     script_lines = [
         "#!/bin/bash",
@@ -91,32 +87,32 @@ def setup_universal_CLI_entrypoint(seqwebcode_path: str = None) -> None:
         f"export SEQWEBCODE_PATH=\"{seqwebcode_path}\"",
         "unset SETUP_CLI",
         "",
-        f"SEQWEBDEV_ENTRYPOINT=\"$SEQWEBCODE_PATH/src/python/app/cli/_seqwebdev\"",
+        "SEQWEBDEV_ENTRYPOINT=\"$SEQWEBCODE_PATH/src/python/app/cli/_seqwebdev\"",
         "",
         "exec \"$SEQWEBDEV_ENTRYPOINT\" \"$@\""
     ]
-    
+
     script_content = "\n".join(script_lines)
-    
     # Write to the Universal entrypoint file
     universal_entrypoint_path = Path(os.environ.get('SEQWEBDEV_HOME', '')) / "seqwebdev"
-    
+
     with open(universal_entrypoint_path, 'w') as f:
         f.write(script_content)
 
 # Setup everything
 
+
 def setup_environment():
     """
     Set up the complete SeqWeb environment.
-    
+
     This function orchestrates all environment setup by setting up
     the foundational SeqWeb development environment, then the Python-specific environment.
     Note: Python path setup is now handled by the Implementation entrypoint.
     """
     # Set up foundational SeqWeb environment
     setup_seqwebdev_environment()
-    
+
     # Set up Python-specific environment
     setup_python_environment()
 

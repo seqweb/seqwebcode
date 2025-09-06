@@ -16,12 +16,18 @@ else:
     print("Error: SEQWEBCODE_PATH environment variable not set")
     sys.exit(1)
 
+# Import modules after path setup
+# Note: These imports depend on the sys.path manipulation above
+try:
+    from libs.core.foothold.foothold import setup_environment  # type: ignore
+    from app.cli.seqwebdev.seqwebdev import main  # type: ignore
+except ImportError as e:
+    print(f"Error importing required modules: {e}")
+    sys.exit(1)
+
 # Only run setup if SETUP_CLI environment variable is set
 if os.environ.get('SETUP_CLI'):
-    from libs.core.foothold.foothold import setup_environment
     setup_environment()
 
 if __name__ == "__main__":
-    from app.cli.seqwebdev.seqwebdev import main
     main()
-
