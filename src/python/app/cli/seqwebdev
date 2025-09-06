@@ -18,9 +18,10 @@ else:
 
 # Only run setup if SETUP_CLI environment variable is set
 if os.environ.get('SETUP_CLI'):
-    from lib.foothold.foothold import setup_environment
+    from libs.core.foothold.foothold import setup_environment
     setup_environment()
 
 if __name__ == "__main__":
     from app.cli.chain.seqwebdev.seqwebdev import main
     main()
+

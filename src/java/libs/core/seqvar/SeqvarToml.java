@@ -1,4 +1,4 @@
-package lib.seqvar;
+package libs.core.seqvar;
 
 import java.io.File;
 import java.io.IOException;

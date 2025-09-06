@@ -4,7 +4,7 @@ Dict command for SeqWeb CLI - displays seqvar key-value pairs as a dictionary
 """
 
 from ..base import BaseCommand
-from lib.seqvar.seqvar import get_dict as seqvar_dict
+from libs.core.seqvar.seqvar import get_dict as seqvar_dict
 import pprint
 
 

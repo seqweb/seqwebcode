@@ -19,9 +19,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-# lib/ and lib64/ - but allow our custom lib directories
-# lib/
-# lib64/
+lib/
+lib64/
 parts/
 sdist/
 var/

@@ -14,7 +14,7 @@ set -euo pipefail
 _seqvar_python_module() {
   local script_dir
   script_dir="$(dirname "${BASH_SOURCE[0]}")"
-  echo "${script_dir}/../../python/lib/seqvar/seqvar_toml.py"
+  echo "${script_dir}/../../python/libs/core/seqvar/toml.py"
 }
 
 # Validate Python module exists

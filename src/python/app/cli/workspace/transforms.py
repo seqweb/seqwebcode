@@ -46,7 +46,7 @@ These "exclude" settings are dicts whose keys are the excluded path patterns, al
 
 """
 
-from lib.seqvar.seqvar import get_dict
+from libs.core.seqvar.seqvar import get_dict
 
 
 def get_repo_folders() -> dict[str, str]:
@@ -71,7 +71,7 @@ def augment_to_base(base_config: dict) -> dict:
 
 def augmented_folders(base_config: dict, repo_folders: dict) -> list:
     # initialize name:path dict of proposed folders based on seqvar store with the seqwebdev folder
-    from lib.seqvar.seqvar import get as get_seqvar
+    from libs.core.seqvar.seqvar import get as get_seqvar
     proposed_folders = {"seqwebdev": get_seqvar("seqwebdev.home")}.copy()
 
     # then add all the repos to the proposals

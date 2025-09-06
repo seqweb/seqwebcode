@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from typing import Optional
-from lib.seqvar.seqvar import get
+from libs.core.seqvar.seqvar import get
 
 
 def get_seqwebdev_home() -> str:

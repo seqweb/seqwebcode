@@ -4,7 +4,7 @@ Vars command for SeqWeb CLI - displays all seqvar database contents
 """
 
 from ..base import BaseCommand
-from lib.seqvar.seqvar import dump
+from libs.core.seqvar.seqvar import dump
 
 
 class VarsCommand(BaseCommand):

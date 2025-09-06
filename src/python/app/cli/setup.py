@@ -14,12 +14,12 @@ sys.path.insert(0, str(PYTHON_SRC_DIR))
 
 # Import seqvar functionality
 try:
-    from lib.seqvar.seqvar import set as seqvar_set
-    from lib.seqvar import init_seqvar_store
-    from lib.seqvar.seqvar import get as seqvar_get
+    from libs.core.seqvar.seqvar import set as seqvar_set
+    from libs.core.seqvar import init_seqvar_store
+    from libs.core.seqvar.seqvar import get as seqvar_get
 except ImportError as e:
     print(f"❌ seqvar package not found: {e}")
-    print("Please ensure seqvar package is available in seqwebcode/src/python/lib/seqvar/")
+    print("Please ensure seqvar package is available in seqwebcode/src/python/libs/core/seqvar/")
     sys.exit(1)
 
 

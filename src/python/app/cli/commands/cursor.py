@@ -7,7 +7,7 @@ import json
 import shutil
 from pathlib import Path
 from ..base import BaseCommand
-from lib.seqvar.seqvar import get as seqvar_get
+from libs.core.seqvar.seqvar import get as seqvar_get
 
 
 class CursorCommand(BaseCommand):

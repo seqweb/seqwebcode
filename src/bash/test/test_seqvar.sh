@@ -19,7 +19,7 @@ TESTS_FAILED=0
 
 # Source the seqvar library
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. "$SCRIPT_DIR/../lib/seqvar.sh"
+. "$SCRIPT_DIR/../libs/core/seqvar.sh"
 
 # Test helper functions
 test_start() {

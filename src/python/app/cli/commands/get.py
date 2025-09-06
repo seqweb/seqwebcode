@@ -4,7 +4,7 @@ Get command for SeqWeb CLI - retrieves seqvar values
 """
 
 from ..base import BaseCommand
-from lib.seqvar.seqvar import get as seqvar_get
+from libs.core.seqvar.seqvar import get as seqvar_get
 
 
 class GetCommand(BaseCommand):

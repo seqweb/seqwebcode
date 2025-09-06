@@ -26,7 +26,7 @@ sudo yum install sqlite python3
 ```
 seqwebcode/src/bash/
 ├── app/                    # Bash applications (future)
-├── lib/
+├── libs/
 │   ├── seqvar.sh               # Core get/set functionality
 │   └── seqvar_toml.sh          # TOML integration (Python delegation)
 └── test/
@@ -46,7 +46,7 @@ The Bash implementation currently supports:
 
 ```bash
 # Make scripts executable
-chmod +x src/bash/lib/*.sh src/bash/test/*.sh
+chmod +x src/bash/libs/core/*.sh src/bash/test/*.sh
 
 # Test SQLite integration
 sqlite3 --version

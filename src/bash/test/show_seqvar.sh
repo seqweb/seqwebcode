@@ -9,7 +9,7 @@ set -euo pipefail
 
 # Source the seqvar library
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. "$SCRIPT_DIR/../lib/seqvar.sh"
+. "$SCRIPT_DIR/../libs/core/seqvar.sh"
 
 echo "=== Bash SeqVar Facility Demonstration ==="
 echo

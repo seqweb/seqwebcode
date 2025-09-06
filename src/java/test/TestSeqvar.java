@@ -1,5 +1,5 @@
-import lib.seqvar.SeqVar;
-import lib.seqvar.SeqvarToml;
+import libs.core.seqvar.SeqVar;
+import libs.core.seqvar.SeqvarToml;
 import java.util.Map;
 
 /**

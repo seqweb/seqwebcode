@@ -21,9 +21,9 @@ def initialize_seqvar_store():
     Reads the seqweb.conf file and loads its contents as defaults into the seqvar store
     for use by other SeqWeb components.
     """
-    from lib.home.paths import seqweb_conf_path
-    from lib.seqvar.toml import load_toml_as_dict
-    from lib.seqvar.seqvar import set_dict
+    from libs.core.home.paths import seqweb_conf_path
+    from libs.core.seqvar.toml import load_toml_as_dict
+    from libs.core.seqvar.seqvar import set_dict
     
     # Get seqweb.conf path
     config_file = seqweb_conf_path()

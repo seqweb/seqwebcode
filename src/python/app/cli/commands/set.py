@@ -4,7 +4,7 @@ Set command for SeqWeb CLI - sets seqvar values
 """
 
 from ..base import BaseCommand
-from lib.seqvar.seqvar import set as seqvar_set
+from libs.core.seqvar.seqvar import set as seqvar_set
 
 
 class SetCommand(BaseCommand):

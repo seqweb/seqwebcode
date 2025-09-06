@@ -33,7 +33,7 @@ This document outlines the dependencies required to build and run the Common Lis
 ```
 seqwebcode/src/cl/
 ├── app/                    # CL applications (future)
-├── lib/
+├── libs/
 │   ├── seqvar.lisp             # Core get/set functionality
 │   └── seqvar-toml.lisp        # TOML parsing and integration
 └── test/

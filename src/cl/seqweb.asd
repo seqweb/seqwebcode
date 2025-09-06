@@ -7,7 +7,7 @@
   :author "Waldo"
   :license "MIT"
   :depends-on (:cl-sqlite :cl-toml :alexandria :fiveam)
-  :pathname "lib/"
+  :pathname "libs/core/"
   :components ((:file "seqvar")
               (:file "seqvar-toml"))
   :in-order-to ((test-op (test-op :seqweb/tests))))

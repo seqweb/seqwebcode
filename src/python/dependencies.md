@@ -25,7 +25,7 @@ seqwebcode/src/python/
 ├── app/
 │   └── cli/
 │       └── seqwebdev      # CLI application
-├── lib/
+├── libs/
 │   ├── __init__.py        # Package exports
 │   └── seqvar/
 │       ├── __init__.py    # Package exports
