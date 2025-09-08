@@ -1,25 +1,23 @@
 #!/usr/bin/env python3
 """
-fab0 - First SeqWeb fabricator for testing the pipeline framework.
+fab1 - Second SeqWeb fabricator for testing the pipeline framework.
 
-This fabricator runs a simple pipeline consisting of a single module (mod0)
-that prints the incoming A-number. It demonstrates the basic fabricator
-pattern and pipeline execution.
+This fabricator runs a pipeline consisting of mod0 -> standardize_id -> mod0
+that demonstrates chaining multiple modules together. The pipeline
+performs: pass, standardize ID, pass.
 """
 
 import json
 import sys
-import os
 from typing import Dict, Any
-
-# Add the current directory to the path so we can import our modules
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from pipeline import run_pipeline
 from mod0 import mod0
+from standardize_id import standardize_id
+from mod2 import mod2
 
 
-def fab0(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
+def fab1(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
     """
     Fabricator function that processes an ID through the pipeline.
     
@@ -42,8 +40,8 @@ def fab0(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[
         **_rest  # Preserve any extra keys from the input box
     }
     
-    # Define the pipeline modules
-    modules = [mod0]
+    # Define the pipeline modules: mod0 -> standardize_id -> mod0
+    modules = [mod0, standardize_id, mod0]
     
     # Run the pipeline using the box-then-kwargs pattern
     result = run_pipeline(modules, initial_box)
@@ -52,10 +50,10 @@ def fab0(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[
 
 
 def main():
-    """Shell wrapper for fab0 fabricator."""
+    """CLI wrapper for fab1 fabricator."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="fab0 - First SeqWeb fabricator")
+    parser = argparse.ArgumentParser(description="fab1 - Second SeqWeb fabricator")
     parser.add_argument("id", help="The ID to process")
     parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
     
@@ -69,7 +67,7 @@ def main():
         }
         
         # Run the fabricator using destructuring pattern
-        result = fab0(box, **box)
+        result = fab1(box, **box)
         
         # Output the result as JSON (following polyglot pattern)
         json.dump(result, sys.stdout)

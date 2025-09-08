@@ -28,10 +28,10 @@ def run_pipeline(
         
     Example:
         >>> from .modules import mod0
-        >>> initial_inbox = {'A-number': 'A000001', 'noisy': False}
+        >>> initial_inbox = {'id': 'A000001', 'noisy': False}
         >>> result = run_pipeline([mod0], initial_inbox)
         >>> print(result)
-        {'A-number': 'A000001', 'noisy': False}
+        {'id': 'A000001', 'noisy': False}
     """
     if not modules:
         return initial_inbox
@@ -42,8 +42,8 @@ def run_pipeline(
     # Process through each module in sequence
     for i, module in enumerate(modules):
         try:
-            # Call the module with the current box
-            current_box = module(current_box)
+            # Call the module using the box-then-kwargs pattern
+            current_box = module(current_box, **current_box)
             
             # Ensure we always have a dictionary back
             if not isinstance(current_box, dict):
@@ -59,7 +59,7 @@ def run_pipeline(
 
 if __name__ == "__main__":
     # Simple test when run directly
-    test_inbox = {'A-number': 'A000001', 'noisy': True}
+    test_inbox = {'id': 'A000001', 'noisy': True}
     print("Testing pipeline with empty module list:")
     result = run_pipeline([], test_inbox)
     print(f"Result: {result}")

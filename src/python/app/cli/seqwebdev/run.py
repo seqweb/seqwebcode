@@ -42,30 +42,16 @@ class RunCommand(BaseCommand):
     seqwebdev run my_script.py arg1 arg2
     seqwebdev run /path/to/script.py --noisy"""
     
-    def add_arguments(self, parser):
-        parser.add_argument(
-            'file_path',
-            help='Path to the program file to execute'
-        )
-        parser.add_argument(
-            '--noisy',
-            action='store_true',
-            help='Enable verbose output including progress messages'
-        )
-        # Allow unknown arguments to be passed to the target program
-        parser.add_argument(
-            'args',
-            nargs='*',
-            help='Arguments to pass to the target program'
-        )
     
     def do_command(self):
         """Execute the run command"""
-        # Use argparse for argument parsing
-        parser = self.create_parser()
-        args = parser.parse_args(self.args)
+        # Manual argument parsing to avoid consuming target program arguments
+        if not self.args:
+            print("❌ No file path provided")
+            sys.exit(1)
         
-        file_path = Path(args.file_path)
+        file_path = Path(self.args[0])
+        program_args = self.args[1:]  # All remaining arguments go to the target program
         
         # Check if file exists
         if not file_path.exists():
@@ -77,11 +63,14 @@ class RunCommand(BaseCommand):
             print(f"❌ Path is not a file: {file_path}")
             sys.exit(1)
         
+        # Eavesdrop on arguments to detect --noisy flag
+        noisy = '--noisy' in program_args
+        
         # Get file extension to determine how to run it
         file_extension = file_path.suffix.lower()
         
         if file_extension == '.py':
-            self._run_python_file(file_path, args.args, args.noisy)
+            self._run_python_file(file_path, program_args, noisy)
         else:
             print(f"❌ Unsupported file type: {file_extension}")
             print("   Currently only .py files are supported")
@@ -90,44 +79,19 @@ class RunCommand(BaseCommand):
     def _run_python_file(self, file_path: Path, program_args: list, noisy: bool = False):
         """Run a Python file with proper SeqWeb environment setup"""
         try:
-            # Get the absolute path to the Python source directory
-            # This is the directory containing seqvar and other SeqWeb packages
-            cli_dir = Path(__file__).parent
-            python_src_dir = cli_dir.parent.parent.parent  # Go up from chain/seqwebdev/ to src/python/
-            
-            # Set up environment variables for the subprocess
-            env = os.environ.copy()
-            
-            # Add the Python source directory to PYTHONPATH
-            current_pythonpath = env.get('PYTHONPATH', '')
-            if current_pythonpath:
-                new_pythonpath = f"{python_src_dir}:{current_pythonpath}"
-            else:
-                new_pythonpath = str(python_src_dir)
-            
-            env['PYTHONPATH'] = new_pythonpath
-            
-            # Ensure SEQWEBDEV_HOME is available
-            if not env.get('SEQWEBDEV_HOME'):
-                print("❌ SEQWEBDEV_HOME environment variable is not set")
-                print("   Please set SEQWEBDEV_HOME to your SeqWeb development home directory")
-                sys.exit(1)
-            
             # Build the command to run
             cmd = [sys.executable, str(file_path)] + program_args
             
             if noisy:
                 print(f"Running Python file: {file_path}")
                 print(f"  Python executable: {sys.executable}")
-                print(f"  Python path: {new_pythonpath}")
                 print(f"  Arguments: {program_args if program_args else '(none)'}")
                 print("-" * 50)
             
-            # Run the subprocess
+            # Run the subprocess - environment is already set up by foothold
             result = subprocess.run(
                 cmd,
-                env=env,
-                cwd=Path.cwd(),  # Run from current working directory to avoid path issues
+                cwd=Path.cwd(),  # Run from current working directory
                 check=False  # Don't raise exception on non-zero exit code
             )
             
