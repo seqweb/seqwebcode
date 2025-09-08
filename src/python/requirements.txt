@@ -1,0 +1,42 @@
+# Python component dependencies for SeqWeb core functionality
+# This file manages dependencies for Python components in src/python/ that are
+# part of the core SeqWeb system (as distinct from development tools in tools/)
+# 
+# Current components:
+# - seqvar: Core key-value configuration system
+# - oeis_session.py: OEIS authentication and session management
+# - get_core_oeis_numbers.py: OEIS data retrieval utilities
+
+# Core dependencies
+requests>=2.31.0          # HTTP client for OEIS API interactions
+
+# Built-in libraries used (no pip install needed):
+# - sqlite3: Database operations (built-in)
+# - tomllib: TOML parsing (built-in, Python 3.11+)
+
+# Future dependencies (uncomment as needed):
+rdflib>=6.3.0             # For RDF processing and semantic web operations
+# numpy>=1.24.0             # For mathematical computations and array operations
+# pandas>=2.0.0             # For data manipulation and analysis
+# scipy>=1.10.0             # For scientific computing and mathematical functions
+# matplotlib>=3.7.0         # For plotting and visualization
+# networkx>=3.1              # For graph operations and network analysis
+
+# Development dependencies (optional, for contributors):
+# pytest>=7.4.0             # For testing Python components
+# black>=23.0.0             # For code formatting
+# mypy>=1.5.0               # For type checking
+# flake8>=6.0.0             # For linting
+
+# Future CLI dependencies (uncomment as needed):
+# click>=8.1.0               # For building CLI applications
+# typer>=0.9.0               # For modern CLI with type hints
+# rich>=13.0.0               # For rich terminal output and formatting
+# tabulate>=0.9.0            # For table formatting in CLI output
+# colorama>=0.4.6            # For cross-platform colored terminal output
+
+# Future development tool dependencies (uncomment as needed):
+# watchdog>=3.0.0            # For file system monitoring and auto-reloading
+# invoke>=2.0.0              # For task automation and build scripts
+# fabric>=3.0.0              # For remote deployment and server management
+# docker>=6.0.0              # For containerization support

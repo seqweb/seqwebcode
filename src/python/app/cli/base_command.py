@@ -109,28 +109,74 @@ class BaseCommand(ABC):
             return None
         return name.lower()
 
+    def _path_to_module_name(self, file_path: Path) -> str:
+        """
+        Convert a file path to a Python module name.
+        
+        Args:
+            file_path: Path to the Python file
+            
+        Returns:
+            Module name suitable for import (e.g., "seqwebdev.hello")
+        """
+        cli_root = Path(__file__).parent  # /cli/
+        relative_path = file_path.relative_to(cli_root)  # seqwebdev/hello.py
+        module_name = str(relative_path).replace("\\", ".").replace("/", ".")
+        
+        if module_name.endswith(".py"):
+            module_name = module_name[:-3]
+        else:
+            # This shouldn't happen in the current CLI design, but log it for debugging
+            print(f"⚠️  Warning: Unexpected subcommand file without .py extension: {relative_path}")
+        
+        return module_name
+
+    def _import_and_instantiate_command(self, file_path: Path, command_name: str):
+        """
+        Import a command module and instantiate its command class.
+        
+        Args:
+            file_path: Path to the Python file containing the command
+            command_name: Name of the command (e.g., "hello", "var")
+            
+        Returns:
+            Tuple of (module, command_instance) or (None, None) if import fails
+        """
+        try:
+            # Convert file path to Python module name
+            module_name = self._path_to_module_name(file_path)
+            
+            # Import the module
+            module = __import__(module_name, fromlist=[command_name])
+            
+            # Convert command name to PascalCase for class name
+            # e.g., "var" -> "VarCommand", "hello" -> "HelloCommand"
+            command_class_name = f"{command_name.capitalize()}Command"
+            command_class = getattr(module, command_class_name)
+            
+            # Create instance
+            command_instance = command_class()
+            
+            return module, command_instance
+            
+        except (ImportError, AttributeError, Exception) as e:
+            # Log the error for debugging but don't crash
+            print(f"❌ Error importing command {command_name}: {e}")
+            return None, None
+
     def _execute_subcommand(self, subcommand_file: Path, subcommand_name: str) -> bool:
         """Helper method to execute a subcommand if the file exists."""
         if not subcommand_file.exists():
             return False
 
         try:
-            # Simple approach: convert file path to Python module name
-            # Convert slashes to dots and remove .py extension
-            cli_root = Path(__file__).parent  # /cli/
-            relative_path = subcommand_file.relative_to(cli_root)  # seqwebdev/hello.py
-            module_name = str(relative_path).replace("/", ".").replace(".py", "")
+            # Import and instantiate the command
+            module, subcommand_instance = self._import_and_instantiate_command(subcommand_file, subcommand_name)
+            
+            if subcommand_instance is None:
+                return False
 
-            # Use Python's built-in import mechanism
-            module = __import__(module_name, fromlist=[subcommand_name])
-
-            # Convert subcommand name to PascalCase for class name
-            # e.g., "var" -> "VarCommand", "hello" -> "HelloCommand"
-            command_class_name = f"{subcommand_name.capitalize()}Command"
-            command_class = getattr(module, command_class_name)
-
-            # Create instance and call with remaining args
-            subcommand_instance = command_class()
+            # Set up and execute the command
             subcommand_instance.args = self.args[1:]  # Pass remaining arguments
             subcommand_instance.main()
             return True
@@ -170,6 +216,29 @@ class BaseCommand(ABC):
         # Override in subclasses
         pass
 
+    def _extract_subcommand_info(self, file_path: Path, name: str) -> dict | None:
+        """Extract basic info from subcommand by importing and calling its description property"""
+        # First canonicalize the name - if invalid, return None
+        canonical_name = self.canonical_subcommand_name(name)
+        if canonical_name is None:
+            return None
+
+        try:
+            # Import and instantiate the command
+            module, command_instance = self._import_and_instantiate_command(file_path, canonical_name)
+            
+            if command_instance is None:
+                return None
+
+            # Get description from the instance
+            description = command_instance.description
+
+            return {"name": canonical_name, "description": description}
+
+        except (ImportError, AttributeError, Exception):
+            # Fallback to a default description if import fails
+            return {"name": canonical_name, "description": "No description available"}
+
     # Subcommand discovery (for help_text)
     def _discover_subcommands(self) -> List[dict]:
         """Discover subcommands - called only for help_text generation"""
@@ -205,35 +274,12 @@ class BaseCommand(ABC):
         subcommands.sort(key=lambda cmd: cmd['name'])
         return subcommands
 
-    def _extract_subcommand_info(self, file_path: Path, name: str) -> dict | None:
-        """Extract basic info from subcommand by importing and calling its description property"""
-        # First canonicalize the name - if invalid, return None
-        canonical_name = self.canonical_subcommand_name(name)
-        if canonical_name is None:
-            return None
-
-        try:
-            # Import the subcommand module and get its description
-            cli_root = Path(__file__).parent  # /cli/
-            relative_path = file_path.relative_to(cli_root)  # seqwebdev/hello.py
-            module_name = str(relative_path).replace("/", ".").replace(".py", "")
-
-            # Import the module
-            module = __import__(module_name, fromlist=[canonical_name])
-
-            # Get the command class
-            command_class_name = f"{canonical_name.capitalize()}Command"
-            command_class = getattr(module, command_class_name)
-
-            # Create instance and get description
-            command_instance = command_class()
-            description = command_instance.description
-
-            return {"name": canonical_name, "description": description}
-
-        except (ImportError, AttributeError, Exception):
-            # Fallback to a default description if import fails
-            return {"name": canonical_name, "description": "No description available"}
+    def _has_subsubcommands(self, subcommand_name: str) -> bool:
+        """Check if a subcommand has sub-subcommands."""
+        # Check if the subcommand is a folder case (has sub-subcommands)
+        subcommand_dir = self.command_dir / subcommand_name
+        subcommand_file = subcommand_dir / f"{subcommand_name}.py"
+        return subcommand_dir.is_dir() and subcommand_file.exists()
 
     def do_help(self):
         """Display help for this command and its subcommands."""
@@ -257,9 +303,3 @@ class BaseCommand(ABC):
                     print(f"  {name_with_suffix:<20} {cmd['description']}")
                 print(f"Use '{self.name} <subcommand> --help' for more information.")
 
-    def _has_subsubcommands(self, subcommand_name: str) -> bool:
-        """Check if a subcommand has sub-subcommands."""
-        # Check if the subcommand is a folder case (has sub-subcommands)
-        subcommand_dir = self.command_dir / subcommand_name
-        subcommand_file = subcommand_dir / f"{subcommand_name}.py"
-        return subcommand_dir.is_dir() and subcommand_file.exists()
