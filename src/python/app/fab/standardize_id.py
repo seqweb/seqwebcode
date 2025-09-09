@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-standardize_id - Module that converts the id to uppercase.
+standardize_id - Module that standardizes sequence IDs to A###### format.
 
 This module follows the polyglot pipeline pattern with both a core function
-and a shell wrapper for standalone execution. It prints the conversion only when
---noisy is specified.
+and a shell wrapper for standalone execution. It converts various ID formats
+to a standardized 7-character format (A followed by 6 digits) and prints
+the conversion only when --noisy is specified.
+
+Accepts:
+- Decimal digits (0-999999): 695 -> A000695
+- 'a' or 'A' prefix: a695, A695 -> A000695
+- Padded with leading zeros: 00695 -> A000695
 """
 
 import json
@@ -14,30 +20,61 @@ from typing import Dict, Any
 
 def standardize_id(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
     """
-    Core function that processes the box and returns an outbox.
+    Core function that standardizes sequence IDs to A###### format.
     
-    Uses destructuring pattern to bind only needed parameters while preserving
-    the full box and any extra keys for pass-through semantics. Prints the
-    conversion only when noisy=True.
+    Converts various input formats to a standardized 7-character format where
+    the first character is 'A' and the remaining 6 characters are digits.
     
     Args:
         box: Full input box dictionary
-        id: The ID to convert to uppercase
+        id: The ID to standardize (various formats accepted)
         noisy: Whether to enable verbose output (controls printing)
         **_rest: Any additional keys in the box (preserved for pass-through)
         
     Returns:
-        outbox: The box with 'id' converted to uppercase
+        outbox: The box with 'id' standardized to A###### format
+        
+    Raises:
+        ValueError: If the input cannot be converted to the required format
     """
-    # Convert id to uppercase
-    uppercase_id = id.upper()
+    # Remove any whitespace and convert to string
+    input_id = str(id).strip()
+    
+    # Handle empty input
+    if not input_id:
+        raise ValueError("❌ Empty ID provided")
+    
+    # Check if input starts with 'a' or 'A' (case insensitive)
+    if input_id.lower().startswith('a'):
+        # Extract the numeric part after 'a' or 'A'
+        numeric_part = input_id[1:]
+    else:
+        # Use the entire input as numeric part
+        numeric_part = input_id
+    
+    # Validate that numeric part contains only digits
+    if not numeric_part.isdigit():
+        raise ValueError(f"❌ Invalid ID format '{id}': numeric part '{numeric_part}' contains non-digits")
+    
+    # Convert to integer and validate range
+    try:
+        numeric_value = int(numeric_part)
+    except ValueError:
+        raise ValueError(f"❌ Invalid ID format '{id}': cannot convert '{numeric_part}' to integer")
+    
+    # Check range (0 to 999999)
+    if numeric_value < 0 or numeric_value > 999999:
+        raise ValueError(f"❌ Invalid ID format '{id}': number {numeric_value} is out of range (0-999999)")
+    
+    # Format as A###### (A followed by 6 digits with leading zeros)
+    standardized_id = f"A{numeric_value:06d}"
     
     # Print the conversion only in noisy mode
     if noisy:
-        print(f"standardize_id: {id} -> {uppercase_id}")
+        print(f"standardize_id: {id} -> {standardized_id}")
     
     # Return the outbox with updated id, preserving all other keys
-    return {**box, 'id': uppercase_id}
+    return {**box, 'id': standardized_id}
 
 
 def main():

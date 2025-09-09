@@ -82,16 +82,27 @@ class RunCommand(BaseCommand):
             # Build the command to run
             cmd = [sys.executable, str(file_path)] + program_args
             
+            # Set up environment with proper Python path
+            env = os.environ.copy()
+            # Add the current Python path to PYTHONPATH for subprocesses
+            python_path = sys.path[0]  # This is already set up by _seqwebdev
+            if 'PYTHONPATH' in env:
+                env['PYTHONPATH'] = f"{python_path}:{env['PYTHONPATH']}"
+            else:
+                env['PYTHONPATH'] = python_path
+            
             if noisy:
                 print(f"Running Python file: {file_path}")
                 print(f"  Python executable: {sys.executable}")
                 print(f"  Arguments: {program_args if program_args else '(none)'}")
+                print(f"  PYTHONPATH: {env.get('PYTHONPATH', 'not set')}")
                 print("-" * 50)
             
-            # Run the subprocess - environment is already set up by foothold
+            # Run the subprocess with proper environment
             result = subprocess.run(
                 cmd,
                 cwd=Path.cwd(),  # Run from current working directory
+                env=env,  # Use modified environment
                 check=False  # Don't raise exception on non-zero exit code
             )
             

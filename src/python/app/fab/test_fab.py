@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-fab1 - Second SeqWeb fabricator for testing the pipeline framework.
+test_fab - Test fabricator for testing the pipeline framework.
 
 This fabricator runs a pipeline consisting of mod0 -> standardize_id -> mod0
 that demonstrates chaining multiple modules together. The pipeline
@@ -17,7 +17,7 @@ from standardize_id import standardize_id
 from mod2 import mod2
 
 
-def fab1(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
+def test_fab(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
     """
     Fabricator function that processes an ID through the pipeline.
     
@@ -50,10 +50,10 @@ def fab1(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[
 
 
 def main():
-    """CLI wrapper for fab1 fabricator."""
+    """CLI wrapper for test_fab fabricator."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="fab1 - Second SeqWeb fabricator")
+    parser = argparse.ArgumentParser(description="test_fab - Test fabricator for pipeline framework")
     parser.add_argument("id", help="The ID to process")
     parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
     
@@ -67,7 +67,7 @@ def main():
         }
         
         # Run the fabricator using destructuring pattern
-        result = fab1(box, **box)
+        result = test_fab(box, **box)
         
         # Output the result as JSON (following polyglot pattern)
         json.dump(result, sys.stdout)
