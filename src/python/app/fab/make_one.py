@@ -2,9 +2,9 @@
 """
 make_one - Fabricator that standardizes ID and initializes an RDF graph.
 
-This fabricator runs a pipeline consisting of standardize_id -> init_graph -> init_sequence -> get_oeis_data -> add_raw_text -> dump_graph
-that demonstrates ID standardization followed by RDF graph initialization, sequence declaration, OEIS data loading, raw text triples, and output.
-The pipeline performs: standardize ID, create RDF graph with prefixes, declare sequence, load OEIS data, add raw text triples, dump graph to Turtle.
+This fabricator runs a pipeline consisting of standardize_id -> init_graph -> init_sequence -> get_oeis_data -> segment_sections -> dump_graph
+that demonstrates ID standardization followed by RDF graph initialization, sequence declaration, OEIS data loading, section segmentation, and output.
+The pipeline performs: standardize ID, create RDF graph with prefixes, declare sequence, load OEIS data, segment into sections, dump graph to Turtle.
 """
 
 import json
@@ -16,7 +16,9 @@ from standardize_id import standardize_id
 from init_graph import init_graph
 from init_sequence import init_sequence
 from get_oeis_data import get_oeis_data
-from add_raw_text import add_raw_text
+from segment_sections import segment_sections
+from process_sections import process_sections
+from add_sections import add_sections
 from dump_graph import dump_graph
 
 
@@ -43,13 +45,15 @@ def make_one(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> D
         **_rest  # Preserve any extra keys from the input box
     }
     
-    # Define the pipeline modules: standardize_id -> init_graph -> init_sequence -> get_oeis_data -> add_raw_text -> dump_graph
+    # Define the pipeline modules: standardize_id -> init_graph -> init_sequence -> get_oeis_data -> segment_sections -> process_sections -> add_sections -> dump_graph
     modules = [
         standardize_id,    # Standardize ID to A###### format
         init_graph,        # Create RDF graph with SeqWeb prefixes and rdfs:label
         init_sequence,     # Add sequence declaration (oeis:{id} a seq:Sequence)
         get_oeis_data,     # Load OEIS data file contents
-        add_raw_text,      # Add raw text triples with RDF list
+        segment_sections,  # Segment OEIS data into sections by type
+        process_sections,  # Concatenate S, T, U sections into V section
+        add_sections,      # Add RDF triples for all text blocks
         dump_graph         # Serialize graph to Turtle format
     ]
     
@@ -95,6 +99,7 @@ def main():
             'graph_size': len(graph) if graph else 0,
             'graph_json_ld': json_ld,
             'oeis_data_length': len(result.get('oeis_data', '')),
+            'section_map': result.get('section_map', {}),
             'noisy': result.get('noisy', False)
         }
         
