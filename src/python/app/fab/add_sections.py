@@ -40,7 +40,7 @@ def add_sections(box: Dict[str, Any], *, id: str, section_map: Dict[str, List[st
             print(f"add_sections: Using extracted stamp: {stamp}")
     
     # Import RDFLib components inside function for robustness
-    from rdflib import Namespace, Literal
+    from rdflib import Namespace, Literal, RDF
     from rdflib.collection import Collection
     
     # Define namespaces
@@ -68,7 +68,7 @@ def add_sections(box: Dict[str, Any], *, id: str, section_map: Dict[str, List[st
             text_uri = seqweb_ns[text_iri.replace('seq:', '')]
             
             # {iri} a seq:Text .
-            graph.add((text_uri, seqweb_ns["Sequence"], seqweb_ns["Text"]))
+            graph.add((text_uri, RDF.type, seqweb_ns["Text"]))
             
             # {iri} cnt:chars {str} .
             graph.add((text_uri, cnt_ns["chars"], Literal(text_content, lang="en")))

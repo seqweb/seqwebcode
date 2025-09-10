@@ -5,6 +5,7 @@ import sqlite3
 import time
 import inspect
 from pathlib import Path
+from libs.core.util import get_call_trace
 # Removed import to break circular dependency
 
 
@@ -90,7 +91,7 @@ def set(key: str, val: str, src: str = None, as_default: bool = False) -> None:
     # If src is not specified, try to get the caller function name
     if src is None:
         try:
-            src = str(inspect.stack()[1].function)
+            src = get_call_trace()
         except Exception:
             src = "??"
 

@@ -19,6 +19,7 @@ from get_oeis_data import get_oeis_data
 from segment_sections import segment_sections
 from process_sections import process_sections
 from add_sections import add_sections
+from get_metadata import get_metadata
 from dump_graph import dump_graph
 
 
@@ -45,7 +46,7 @@ def make_one(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> D
         **_rest  # Preserve any extra keys from the input box
     }
     
-    # Define the pipeline modules: standardize_id -> init_graph -> init_sequence -> get_oeis_data -> segment_sections -> process_sections -> add_sections -> dump_graph
+    # Define the pipeline modules: standardize_id -> init_graph -> init_sequence -> get_oeis_data -> segment_sections -> process_sections -> add_sections -> get_metadata -> dump_graph
     modules = [
         standardize_id,    # Standardize ID to A###### format
         init_graph,        # Create RDF graph with SeqWeb prefixes and rdfs:label
@@ -54,6 +55,7 @@ def make_one(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> D
         segment_sections,  # Segment OEIS data into sections by type
         process_sections,  # Concatenate S, T, U sections into V section
         add_sections,      # Add RDF triples for all text blocks
+        get_metadata,      # Extract metadata about graph and processing context
         dump_graph         # Serialize graph to Turtle format
     ]
     
@@ -100,6 +102,7 @@ def main():
             'graph_json_ld': json_ld,
             'oeis_data_length': len(result.get('oeis_data', '')),
             'section_map': result.get('section_map', {}),
+            'metadata': result.get('metadata', {}),
             'noisy': result.get('noisy', False)
         }
         

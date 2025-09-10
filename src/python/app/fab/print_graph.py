@@ -52,15 +52,24 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, noisy: bool = False, **_res
     # Serialize the graph to Turtle format
     turtle_output = graph.serialize(format='turtle')
     
+    # Check for metadata and prepend as comment line if present
+    metadata = box.get('metadata')
+    if metadata:
+        import json
+        metadata_line = f"# {json.dumps(metadata)}\n"
+        final_output = metadata_line + turtle_output
+    else:
+        final_output = turtle_output
+    
     # Print the Turtle output prettily
     if noisy:
-        print("dump_graph: RDF/Turtle output:")
+        print("print_graph: RDF/Turtle output:")
         print("=" * 60)
-        print(turtle_output)
+        print(final_output)
         print("=" * 60)
     else:
         # Even in silent mode, we print the Turtle output since that's the main purpose
-        print(turtle_output)
+        print(final_output)
     
     # Return the outbox with the turtle output added, preserving all other keys
     return {**box, 'turtle_output': turtle_output}
