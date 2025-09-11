@@ -18,21 +18,18 @@ import sys
 from typing import Dict, Any
 
 
-def standardize_id(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
+def get_standard_id(id: str) -> str:
     """
-    Core function that standardizes sequence IDs to A###### format.
+    Helper function that standardizes a sequence ID to A###### format.
     
     Converts various input formats to a standardized 7-character format where
     the first character is 'A' and the remaining 6 characters are digits.
     
     Args:
-        box: Full input box dictionary
         id: The ID to standardize (various formats accepted)
-        noisy: Whether to enable verbose output (controls printing)
-        **_rest: Any additional keys in the box (preserved for pass-through)
         
     Returns:
-        outbox: The box with 'id' standardized to A###### format
+        standardized_id: The ID in A###### format
         
     Raises:
         ValueError: If the input cannot be converted to the required format
@@ -68,6 +65,31 @@ def standardize_id(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest
     
     # Format as A###### (A followed by 6 digits with leading zeros)
     standardized_id = f"A{numeric_value:06d}"
+    
+    return standardized_id
+
+
+def standardize_id(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
+    """
+    Core function that standardizes sequence IDs to A###### format.
+    
+    Converts various input formats to a standardized 7-character format where
+    the first character is 'A' and the remaining 6 characters are digits.
+    
+    Args:
+        box: Full input box dictionary
+        id: The ID to standardize (various formats accepted)
+        noisy: Whether to enable verbose output (controls printing)
+        **_rest: Any additional keys in the box (preserved for pass-through)
+        
+    Returns:
+        outbox: The box with 'id' standardized to A###### format
+        
+    Raises:
+        ValueError: If the input cannot be converted to the required format
+    """
+    # Use the helper function to get the standardized ID
+    standardized_id = get_standard_id(id)
     
     # Print the conversion only in noisy mode
     if noisy:
