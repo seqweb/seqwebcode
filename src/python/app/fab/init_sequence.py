@@ -69,52 +69,27 @@ def init_sequence(box: Dict[str, Any], *, id: str, graph: Graph, noisy: bool = F
     return {**box, 'graph': graph}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for init_sequence module."""
-    import argparse
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="init_sequence - Add sequence declaration to RDFLib Graph")
-    parser.add_argument("id", help="The sequence ID to declare")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'The sequence ID to declare', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        if Graph is None:
-            raise ImportError("❌ RDFLib not available. Please run: seqwebdev setup python")
-        
-        # Create an empty graph for testing
-        test_graph = Graph()
-        
-        # Define namespaces and bind them
-        seqweb_ns = Namespace("http://www.seqweb.org/")
-        oeis_ns = Namespace("http://www.oeis.org/")
-        test_graph.bind("", seqweb_ns)
-        test_graph.bind("oeis", oeis_ns)
-        
-        box = {
-            'id': args.id,
-            'graph': test_graph,
-            'noisy': args.noisy
-        }
-        
-        # Process the box using destructuring pattern
-        outbox = init_sequence(box, **box)
-        
-        # Output the result as JSON (following polyglot pattern)
-        json_output = {
-            'id': outbox.get('id'),
-            'graph_type': 'rdflib.Graph',
-            'graph_size': len(outbox.get('graph', [])),
-            'noisy': outbox.get('noisy', False)
-        }
-        
-        json.dump(json_output, sys.stdout)
-        print()  # Add newline for readability
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = init_sequence(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

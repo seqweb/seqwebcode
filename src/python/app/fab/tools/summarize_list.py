@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, Any, List
 from libs.core.util import get_call_trace
 from libs.core.seqvar.seqvar import get as seqvar_get
-from standardize_id import get_standard_id
+from ..standardize_id import get_standard_id
 
 
 def summarize_list(sequence_ids: List[str]) -> Dict[str, Any]:

@@ -11,7 +11,7 @@ import json
 import sys
 from typing import Dict, Any
 
-from pipeline import run_pipeline
+from tools.pipeline import run_pipeline
 from standardize_id import standardize_id
 from init_graph import init_graph
 from init_sequence import init_sequence
@@ -65,54 +65,27 @@ def make_one(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> D
     return result
 
 
+# Reclaimed from test hijacking
 def main():
-    """CLI wrapper for make_one fabricator."""
-    import argparse
+    """Shell wrapper for make_one fabricator."""
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="make_one - Standardize ID and initialize RDF graph")
-    parser.add_argument("id", help="The ID to process")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this fabricator
+    argument_definitions = [
+        ('id', str, 'The ID to process', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        # Create box from command line arguments
-        box = {
-            'id': args.id,
-            'noisy': args.noisy
-        }
-        
-        # Run the fabricator using destructuring pattern
-        result = make_one(box, **box)
-        
-        # Output the result as JSON (following polyglot pattern)
-        # Include both JSON-LD serialization and manual summary
-        graph = result.get('graph')
-        json_ld = None
-        if graph:
-            try:
-                json_ld = json.loads(graph.serialize(format='json-ld'))
-            except Exception:
-                json_ld = None
-        
-        json_output = {
-            'id': result.get('id'),
-            'graph_type': 'rdflib.Graph',
-            'graph_size': len(graph) if graph else 0,
-            'graph_json_ld': json_ld,
-            'oeis_data_length': len(result.get('oeis_data', '')),
-            'section_map': result.get('section_map', {}),
-            'metadata': result.get('metadata', {}),
-            'noisy': result.get('noisy', False)
-        }
-        
-        json.dump(json_output, sys.stdout)
-        print()  # Add newline for readability
-        
-    except Exception as e:
-        # Let Python fail naturally as specified
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = make_one(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

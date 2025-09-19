@@ -88,36 +88,26 @@ def get_metadata(box: Dict[str, Any], *, graph, noisy: bool = False, **_rest) ->
     return {**box, 'metadata': metadata}
 
 
+# Reclaimed from test hijacking
 def main():
-    """CLI entry point for testing the get_metadata module."""
+    """Shell wrapper for get_metadata module."""
+    from libs.core.util import build_inbox_from_args
     import json
-    from argparse import ArgumentParser
+    import sys
     
-    parser = ArgumentParser(description='Extract metadata from RDF graph')
-    parser.add_argument('--noisy', action='store_true', help='Enable verbose output')
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        from rdflib import Graph
-        
-        # Create a test graph
-        test_graph = Graph()
-        test_graph.add((test_graph.namespace_manager.namespace('http://example.org/'), 
-                       test_graph.namespace_manager.namespace('http://example.org/'), 
-                       test_graph.namespace_manager.namespace('http://example.org/')))
-        
-        result = get_metadata(
-            box={},
-            graph=test_graph,
-            noisy=args.noisy
-        )
-        
-        print(json.dumps(result, indent=2))
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = get_metadata(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == '__main__':

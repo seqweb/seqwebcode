@@ -11,10 +11,10 @@ import json
 import sys
 from typing import Dict, Any
 
-from pipeline import run_pipeline
-from mod0 import mod0
-from standardize_id import standardize_id
-from mod2 import mod2
+from .pipeline import run_pipeline
+from ..mod0 import mod0
+from ..standardize_id import standardize_id
+from ..mod2 import mod2
 
 
 def test_fab(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:

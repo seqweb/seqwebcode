@@ -74,36 +74,27 @@ def init_graph(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) ->
     return {**box, 'graph': graph}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for init_graph module."""
-    import argparse
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="init_graph - Create RDFLib Graph with SeqWeb prefixes")
-    parser.add_argument("id", help="The sequence ID to add initial triples for")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'The sequence ID to add initial triples for', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    # Create box from command line arguments
-    box = {
-        'id': args.id,
-        'noisy': args.noisy
-    }
+    # Call core function with identical semantics
+    outbox = init_graph(inbox, **inbox)
     
-    # Process the box using destructuring pattern
-    outbox = init_graph(box, **box)
-    
-    # Output the result as JSON (following polyglot pattern)
-    # Note: RDFLib Graph objects are not JSON serializable, so we'll output
-    # a summary instead of the full graph object
-    json_output = {
-        'graph_type': 'rdflib.Graph',
-        'graph_size': len(outbox.get('graph', [])),
-        'noisy': outbox.get('noisy', False)
-    }
-    
-    json.dump(json_output, sys.stdout)
-    print()  # Add newline for readability
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

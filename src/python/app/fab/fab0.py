@@ -15,7 +15,7 @@ from typing import Dict, Any
 # Add the current directory to the path so we can import our modules
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from pipeline import run_pipeline
+from tools.pipeline import run_pipeline
 from mod0 import mod0
 
 
@@ -51,34 +51,27 @@ def fab0(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> Dict[
     return result
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for fab0 fabricator."""
-    import argparse
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="fab0 - First SeqWeb fabricator")
-    parser.add_argument("id", help="The ID to process")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this fabricator
+    argument_definitions = [
+        ('id', str, 'The ID to process', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        # Create box from command line arguments
-        box = {
-            'id': args.id,
-            'noisy': args.noisy
-        }
-        
-        # Run the fabricator using destructuring pattern
-        result = fab0(box, **box)
-        
-        # Output the result as JSON (following polyglot pattern)
-        json.dump(result, sys.stdout)
-        print()  # Add newline for readability
-        
-    except Exception as e:
-        # Let Python fail naturally as specified
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = fab0(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

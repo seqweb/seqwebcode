@@ -71,39 +71,27 @@ def get_oeis_data(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest)
     return {**box, 'oeis_data': oeis_data}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for get_oeis_data module."""
-    import argparse
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="get_oeis_data - Read OEIS data file for sequence ID")
-    parser.add_argument("id", help="The sequence ID to read data for")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'The sequence ID to read data for', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        # Create box from command line arguments
-        box = {
-            'id': args.id,
-            'noisy': args.noisy
-        }
-        
-        # Process the box using destructuring pattern
-        outbox = get_oeis_data(box, **box)
-        
-        # Output the result as JSON (following polyglot pattern)
-        json_output = {
-            'id': outbox.get('id'),
-            'oeis_data_length': len(outbox.get('oeis_data', '')),
-            'noisy': outbox.get('noisy', False)
-        }
-        
-        json.dump(json_output, sys.stdout)
-        print()  # Add newline for readability
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = get_oeis_data(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

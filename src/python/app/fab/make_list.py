@@ -104,31 +104,24 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
     return {**box, 'list_results': results}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for make_list fabricator."""
-    parser = argparse.ArgumentParser(description="Process a list of OEIS sequence IDs")
-    parser.add_argument("id_list", help="JSON list of sequence IDs (e.g., '[\"A000001\", \"A000002\"]')")
-    parser.add_argument("--replace", action="store_true", help="Replace existing .ttl files")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    args = parser.parse_args()
+    # Define argument specifications for this fabricator
+    argument_definitions = [
+        ('id_list', list, 'JSON list of sequence IDs (e.g., ["A000001", "A000002"])', True),
+        ('replace', bool, 'Replace existing .ttl files', False),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    # Parse the JSON list
-    try:
-        id_list = json.loads(args.id_list)
-        if not isinstance(id_list, list):
-            raise ValueError("Input must be a JSON list")
-    except (json.JSONDecodeError, ValueError) as e:
-        print(f"Error: Invalid JSON list format: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    # Form inbox and call core function
-    inbox = {
-        'id_list': id_list,
-        'replace': args.replace,
-        'noisy': args.noisy
-    }
-    
+    # Call core function with identical semantics
     outbox = make_list(inbox, **inbox)
     
     # Emit JSON output for pipeline consumption

@@ -50,31 +50,27 @@ def process_sections(box: Dict[str, Any], *, section_map: Dict[str, List[str]], 
     return {**box, 'section_map': new_section_map}
 
 
+# Reclaimed from test hijacking
 def main():
-    """CLI entry point for testing the process_sections module."""
-    import sys
+    """Shell wrapper for process_sections module."""
+    from libs.core.util import build_inbox_from_args
     import json
-    from argparse import ArgumentParser
+    import sys
     
-    parser = ArgumentParser(description='Process section_map by concatenating S, T, U into V')
-    parser.add_argument('--section-map', required=True, help='JSON string of section_map to process')
-    parser.add_argument('--noisy', action='store_true', help='Enable verbose output')
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('section_map', dict, 'Dictionary mapping section types to lists of strings', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        section_map = json.loads(args.section_map)
-        result = process_sections(
-            box={},
-            section_map=section_map,
-            noisy=args.noisy
-        )
-        
-        print(json.dumps(result, indent=2))
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = process_sections(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == '__main__':

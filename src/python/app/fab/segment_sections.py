@@ -84,30 +84,27 @@ def segment_sections(box: Dict[str, Any], *, oeis_data: str, noisy: bool = False
     return {**box, 'section_map': section_map}
 
 
+# Reclaimed from test hijacking
 def main():
-    """CLI entry point for testing the segment_sections module."""
-    import sys
+    """Shell wrapper for segment_sections module."""
+    from libs.core.util import build_inbox_from_args
     import json
-    from argparse import ArgumentParser
+    import sys
     
-    parser = ArgumentParser(description='Segment OEIS data into sections')
-    parser.add_argument('--oeis-data', required=True, help='OEIS data string to segment')
-    parser.add_argument('--noisy', action='store_true', help='Enable verbose output')
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('oeis_data', str, 'OEIS data string to segment', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        result = segment_sections(
-            box={},
-            oeis_data=args.oeis_data,
-            noisy=args.noisy
-        )
-        
-        print(json.dumps(result, indent=2))
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = segment_sections(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == '__main__':

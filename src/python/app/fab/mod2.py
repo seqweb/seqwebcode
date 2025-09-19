@@ -66,28 +66,27 @@ def mod2(inbox: dict) -> dict:
     return outbox
 
 
+# Reclaimed from test hijacking
 def main():
-    """Command-line interface for mod2."""
-    parser = argparse.ArgumentParser(description="mod2: RDF Generation Module")
-    parser.add_argument("id", help="The ID to generate RDF for")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    """Shell wrapper for mod2 module."""
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    args = parser.parse_args()
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'The ID to generate RDF for', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    if args.noisy:
-        print(f"mod2: Starting with ID: {args.id}")
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    # Create initial inbox
-    inbox = {
-        'id': args.id,
-        'module': 'mod2'
-    }
-    
-    # Process the inbox
+    # Call core function with identical semantics
     outbox = mod2(inbox)
     
-    if args.noisy:
-        print(f"mod2: Final outbox keys: {list(outbox.keys())}")
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

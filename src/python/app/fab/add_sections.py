@@ -144,39 +144,28 @@ def _extract_stamp_from_i_section(i_sections: List[str]) -> str:
     return ""
 
 
+# Reclaimed from test hijacking
 def main():
-    """CLI entry point for testing the add_sections module."""
-    import sys
+    """Shell wrapper for add_sections module."""
+    from libs.core.util import build_inbox_from_args
     import json
-    from argparse import ArgumentParser
+    import sys
     
-    parser = ArgumentParser(description='Add RDF triples for text blocks in section_map')
-    parser.add_argument('--id', required=True, help='Sequence ID')
-    parser.add_argument('--section-map', required=True, help='JSON string of section_map')
-    parser.add_argument('--noisy', action='store_true', help='Enable verbose output')
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'Sequence ID', True),
+        ('section_map', dict, 'Dictionary mapping section types to lists of strings', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    try:
-        from rdflib import Graph
-        section_map = json.loads(args.section_map)
-        graph = Graph()
-        
-        result = add_sections(
-            box={},
-            id=args.id,
-            section_map=section_map,
-            graph=graph,
-            noisy=args.noisy
-        )
-        
-        print(f"Graph has {len(result['graph'])} triples")
-        print("Turtle output:")
-        print(result['graph'].serialize(format='turtle'))
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = add_sections(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == '__main__':

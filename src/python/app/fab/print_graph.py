@@ -75,46 +75,26 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, noisy: bool = False, **_res
     return {**box, 'turtle_output': turtle_output}
 
 
+# Reclaimed from test hijacking
 def main():
-    """Shell wrapper for dump_graph module."""
-    import argparse
+    """Shell wrapper for print_graph module."""
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="dump_graph - Serialize RDFLib Graph to RDF/Turtle format")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    # Create box from command line arguments
-    # Note: This module expects a graph to be passed in, but for standalone testing
-    # we'll create an empty graph
-    try:
-        if Graph is None:
-            raise ImportError("❌ RDFLib not available. Please run: seqwebdev setup python")
-        
-        # Create an empty graph for testing
-        test_graph = Graph()
-        
-        box = {
-            'graph': test_graph,
-            'noisy': args.noisy
-        }
-        
-        # Process the box using destructuring pattern
-        outbox = dump_graph(box, **box)
-        
-        # Output the result as JSON (following polyglot pattern)
-        json_output = {
-            'turtle_output_length': len(outbox.get('turtle_output', '')),
-            'graph_size': len(outbox.get('graph', [])),
-            'noisy': outbox.get('noisy', False)
-        }
-        
-        json.dump(json_output, sys.stdout)
-        print()  # Add newline for readability
-        
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Call core function with identical semantics
+    outbox = dump_graph(inbox, **inbox)
+    
+    # Emit JSON output for pipeline consumption
+    json.dump(outbox, sys.stdout)
 
 
 if __name__ == "__main__":

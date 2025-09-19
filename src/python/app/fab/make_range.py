@@ -138,24 +138,25 @@ def make_range(box: Dict[str, Any], *, start_id: str, end_id: str, replace: bool
     return {**box, 'range_results': results}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for make_range fabricator."""
-    parser = argparse.ArgumentParser(description="Process a range of OEIS sequence IDs")
-    parser.add_argument("start_id", help="Starting sequence ID (e.g., A000001)")
-    parser.add_argument("end_id", help="Ending sequence ID (e.g., A000010)")
-    parser.add_argument("--replace", action="store_true", help="Replace existing .ttl files")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    args = parser.parse_args()
+    # Define argument specifications for this fabricator
+    argument_definitions = [
+        ('start_id', str, 'Starting sequence ID (e.g., A000001)', True),
+        ('end_id', str, 'Ending sequence ID (e.g., A000010)', True),
+        ('replace', bool, 'Replace existing .ttl files', False),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    # Form inbox and call core function
-    inbox = {
-        'start_id': args.start_id,
-        'end_id': args.end_id,
-        'replace': args.replace,
-        'noisy': args.noisy
-    }
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
+    # Call core function with identical semantics
     outbox = make_range(inbox, **inbox)
     
     # Emit JSON output for pipeline consumption

@@ -99,28 +99,27 @@ def standardize_id(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest
     return {**box, 'id': standardized_id}
 
 
+# Reclaimed from test hijacking
 def main():
     """Shell wrapper for standardize_id module."""
-    import argparse
+    from libs.core.util import build_inbox_from_args
+    import json
+    import sys
     
-    parser = argparse.ArgumentParser(description="standardize_id - Convert id to uppercase from box")
-    parser.add_argument("id", help="The ID to process")
-    parser.add_argument("--noisy", action="store_true", help="Enable verbose output")
+    # Define argument specifications for this module
+    argument_definitions = [
+        ('id', str, 'The ID to process', True),
+        ('noisy', bool, 'Enable verbose output', False)
+    ]
     
-    args = parser.parse_args()
+    # Build inbox from stdin + CLI args using shared utility
+    inbox = build_inbox_from_args(argument_definitions)
     
-    # Create box from command line arguments
-    box = {
-        'id': args.id,
-        'noisy': args.noisy
-    }
+    # Call core function with identical semantics
+    outbox = standardize_id(inbox, **inbox)
     
-    # Process the box using destructuring pattern
-    outbox = standardize_id(box, **box)
-    
-    # Output the result as JSON (following polyglot pattern)
+    # Emit JSON output for pipeline consumption
     json.dump(outbox, sys.stdout)
-    print()  # Add newline for readability
 
 
 if __name__ == "__main__":
