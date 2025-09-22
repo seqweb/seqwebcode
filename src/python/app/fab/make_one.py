@@ -12,6 +12,7 @@ import sys
 from typing import Dict, Any
 
 from tools.pipeline import run_pipeline
+from libs.core.wrapper import dump_outbox
 from standardize_id import standardize_id
 from init_graph import init_graph
 from init_sequence import init_sequence
@@ -68,8 +69,7 @@ def make_one(box: Dict[str, Any], *, id: str, noisy: bool = False, **_rest) -> D
 # Reclaimed from test hijacking
 def main():
     """Shell wrapper for make_one fabricator."""
-    from libs.core.util import build_inbox_from_args
-    import json
+    from libs.core.wrapper import get_inbox, dump_outbox
     import sys
     
     # Define argument specifications for this fabricator
@@ -79,13 +79,13 @@ def main():
     ]
     
     # Build inbox from stdin + CLI args using shared utility
-    inbox = build_inbox_from_args(argument_definitions)
+    inbox = get_inbox(argument_definitions)
     
     # Call core function with identical semantics
     outbox = make_one(inbox, **inbox)
     
     # Emit JSON output for pipeline consumption
-    json.dump(outbox, sys.stdout)
+    dump_outbox(outbox)
 
 
 if __name__ == "__main__":

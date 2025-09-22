@@ -7,6 +7,7 @@ This document outlines the dependencies required to build and run the Java compo
 - **Java 8+**: Required for Path, Files, and other modern Java features
 - **SQLite JDBC Driver**: For database connectivity
 - **org.tomlj:tomlj**: For TOML parsing
+- **Jackson**: For JSON serialization/deserialization in polyglot pipelines
 
 ## Maven Dependencies
 
@@ -25,6 +26,13 @@ This document outlines the dependencies required to build and run the Java compo
         <artifactId>sqlite-jdbc</artifactId>
         <version>3.42.0.0</version>
     </dependency>
+    
+    <!-- Jackson for JSON processing -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.15.2</version>
+    </dependency>
 </dependencies>
 ```
 
@@ -34,6 +42,7 @@ This document outlines the dependencies required to build and run the Java compo
 dependencies {
     implementation 'org.tomlj:tomlj:1.0.0'
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 }
 ```
 
@@ -42,10 +51,12 @@ dependencies {
 ```
 seqwebcode/src/java/
 ├── app/                    # Java applications (future)
-├── lib/
-│   └── seqvar/
-│       ├── SeqVar.java         # Core get/set functionality
-│       └── SeqvarToml.java     # TOML parsing and integration
+├── libs/
+│   └── core/
+│       ├── Wrapper.java        # Polyglot pipeline wrapper utilities
+│       └── seqvar/
+│           ├── SeqVar.java     # Core get/set functionality
+│           └── SeqvarToml.java # TOML parsing and integration
 └── test/
     ├── TestSeqvar.java         # Unit tests
     └── TestSeqvar.class        # Compiled tests
@@ -56,6 +67,7 @@ seqwebcode/src/java/
 The Java implementation currently supports:
 
 - **seqvar facility**: Core key-value configuration system with TOML integration
+- **Wrapper utilities**: Polyglot pipeline wrapper contract implementation with non-blocking stdin support
 
 *Note: Additional Java components, libraries, and applications are expected to be added as the SeqWeb system expands.*
 

@@ -6,10 +6,6 @@ This module provides common utility functions used across the SeqWeb codebase.
 """
 
 import inspect
-import json
-import sys
-import argparse
-from typing import List, Dict, Any, Tuple, Type
 
 
 def get_call_trace() -> str:
@@ -57,54 +53,3 @@ def get_call_trace() -> str:
             call_stack.append(frame_info.function)
     
     return ">".join(call_stack)
-
-
-def build_inbox_from_args(argument_definitions: List[Tuple[str, Type, str, bool]]) -> Dict[str, Any]:
-    """
-    Build an inbox from stdin (JSON) and command-line arguments.
-    
-    This function implements the unified wrapper contract:
-    1. Read JSON from stdin (defaults to empty dict if empty)
-    2. Parse command-line arguments according to definitions
-    3. Merge CLI args into inbox (CLI overrides stdin)
-    4. Return the merged inbox
-    
-    Args:
-        argument_definitions: List of (name, type, help, required) tuples
-        
-    Returns:
-        Dict containing the merged inbox
-    """
-    # Read JSON from stdin
-    stdin_input = sys.stdin.read().strip()
-    if stdin_input:
-        try:
-            inbox = json.loads(stdin_input)
-        except json.JSONDecodeError:
-            # If stdin is not valid JSON, treat as empty
-            inbox = {}
-    else:
-        inbox = {}
-    
-    # Parse command-line arguments
-    parser = argparse.ArgumentParser()
-    
-    for name, arg_type, help_text, required in argument_definitions:
-        if arg_type == bool:
-            parser.add_argument(f'--{name}', action='store_true', help=help_text)
-        else:
-            parser.add_argument(f'--{name}', type=arg_type, required=required, help=help_text)
-    
-    args = parser.parse_args()
-    
-    # Convert args to dict and merge with inbox
-    cli_args = {}
-    for name, arg_type, _, _ in argument_definitions:
-        value = getattr(args, name)
-        if value is not None:
-            cli_args[name] = value
-    
-    # Merge CLI args into inbox (CLI overrides stdin)
-    inbox.update(cli_args)
-    
-    return inbox
