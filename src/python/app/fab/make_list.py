@@ -107,9 +107,7 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
 # Reclaimed from test hijacking
 def main():
     """Shell wrapper for make_list fabricator."""
-    from libs.core.util import build_inbox_from_args
-    import json
-    import sys
+    from libs.core.wrapper import get_inbox, dump_outbox
     
     # Define argument specifications for this fabricator
     argument_definitions = [
@@ -119,13 +117,13 @@ def main():
     ]
     
     # Build inbox from stdin + CLI args using shared utility
-    inbox = build_inbox_from_args(argument_definitions)
+    inbox = get_inbox(argument_definitions)
     
     # Call core function with identical semantics
     outbox = make_list(inbox, **inbox)
     
     # Emit JSON output for pipeline consumption
-    json.dump(outbox, sys.stdout)
+    dump_outbox(outbox)
 
 
 if __name__ == "__main__":

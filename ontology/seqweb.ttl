@@ -1,9 +1,177 @@
+@prefix : <http://www.seqweb.org/> .
 @prefix seq: <http://www.seqweb.org/> .
 @prefix oeis: <http://www.oeis.org/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix cnt: <http://www.w3.org/2011/content#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+# @prefix sh: <http://www.w3.org/ns/shacl#> .               # maybe later
+# @prefix skos: <http://www.w3.org/2004/02/skos/core#> .    # maybe later
 
-seq:Sequence a owl:Class ;
+
+# Sequence class
+:Sequence a owl:Class ;
     rdfs:label "Sequence"@en ;
     rdfs:comment "An OEIS and mathematical integer sequence modeled in the SeqWeb knowledge graph."@en . 
+
+:hasTextList a owl:ObjectProperty ;
+    rdfs:domain :Sequence ;
+    rdfs:range rdf:List ;
+    rdfs:comment "Links a Sequence to an ordered list of :Texts (presumably comprising its sections)."@en .
+
+# shacl constrint that all the list members are indeed :Text    # maybe later
+# :SequenceShape a sh:NodeShape ;
+#     sh:targetClass :Sequence ;
+#     sh:property [
+#         sh:path :hasTextList ;
+#         sh:node [
+#             sh:property [
+#                 sh:path (rdf:rest* rdf:first) ;
+#                 sh:class :Text ;
+#             ]
+#         ]
+#     ] .
+
+# Text base class
+:Text a rdfs:Class ;
+    rdfs:subClassOf cnt:ContentAsText ,
+        [ a owl:Restriction ;
+          owl:onProperty cnt:characterEncoding ;
+          owl:hasValue "utf-8"
+        ] ;
+    rdfs:label "Text"@en ;
+    rdfs:comment "DRYer synonym for cnt:ContentAsText where encoding is assumed UTF-8."@en .
+
+# SectionText subclass of Text -- these are sections rendered for an OEIS entry
+:SectionText a rdfs:Class ;
+    rdfs:subClassOf :Text ;
+    rdfs:label "SectionText"@en ;
+    rdfs:comment "A typed section of text for an OEIS entry."@en .
+
+:letterCode a owl:DatatypeProperty ;
+    rdfs:domain :SectionText ;
+    rdfs:range xsd:string ;
+    rdfs:comment "A single-letter code used to denote the SectionText type."@en .
+
+# AugmentedSectionText subclass
+:AugmentedSectionText a owl:Class ;
+    rdfs:label "AugmentedSectionText"@en ;
+    rdfs:subClassOf :SectionText ;
+    rdfs:comment "A SectionText variant introduced by SeqWeb to supplement the classic OEIS-defined types."@en .
+
+# Classic SectionText types:
+
+:IdentificationSection a :SectionText ;
+    rdfs:label "Identification"@en ;
+    :letterCode "I" .
+
+:SequenceLine1Section a :SectionText ;
+    rdfs:label "Sequence line 1"@en ;
+    :letterCode "S" .
+
+:SequenceLine2Section a :SectionText ;
+    rdfs:label "Sequence line 2"@en ;
+    :letterCode "T" .
+
+:SequenceLine3Section a :SectionText ;
+    rdfs:label "Sequence line 3"@en ;
+    :letterCode "U" .
+
+:NameSection a :SectionText ;
+    rdfs:label "Name"@en ;
+    :letterCode "N" .
+
+:ReferenceSection a :SectionText ;
+    rdfs:label "Reference"@en ;
+    :letterCode "D" .
+
+:LinkSection a :SectionText ;
+    rdfs:label "Link"@en ;
+    :letterCode "H" .
+
+:FormulaSection a :SectionText ;
+    rdfs:label "Formula"@en ;
+    :letterCode "F" .
+
+:CrossReferenceSection a :SectionText ;
+    rdfs:label "Cross-reference"@en ;
+    :letterCode "Y" .
+
+:AuthorSection a :SectionText ;
+    rdfs:label "Author"@en ;
+    :letterCode "A" .
+
+:OffsetSection a :SectionText ;
+    rdfs:label "Offset"@en ;
+    :letterCode "O" .
+
+:ExtensionSection a :SectionText ;
+    rdfs:label "Extension or error note"@en ;
+    :letterCode "E" .
+
+:ExampleSection a :SectionText ;
+    rdfs:label "Example"@en ;
+    :letterCode "e" .
+
+:MapleProgramSection a :SectionText ;
+    rdfs:label "Maple program"@en ;
+    :letterCode "p" .
+
+:MathematicaProgramSection a :SectionText ;
+    rdfs:label "Mathematica program"@en ;
+    :letterCode "t" .
+
+:OtherProgramSection a :SectionText ;
+    rdfs:label "Program in other language"@en ;
+    :letterCode "o" .
+
+:KeywordsSection a :SectionText ;
+    rdfs:label "Keywords"@en ;
+    :letterCode "K" .
+
+:CommentSection a :SectionText ;
+    rdfs:label "Comment"@en ;
+    :letterCode "C" .
+
+# Augmented Section types:
+
+:ExperimentalSection a :AugmentedSectionText ;
+    rdfs:label "Experimental Section"@en ;
+    :letterCode "X" ;
+    rdfs:comment "Experimental section."@en .
+
+:SequenceValuesSection a :AugmentedSectionText ;
+    rdfs:label "Sequence Values Section"@en ;
+    :letterCode "V" ;
+    rdfs:comment "Concatentated S, T & U lines."@en .
+
+
+# This singleton gives the ordering in which the OEIS renders these sections
+:SectionTextOrder a rdf:List ;
+    rdfs:label "SectionTextOrder"@en ;
+    rdfs:comment "Presentation order used by the OEIS, with some inserted SeqWeb augmentations"@en ;
+    rdf:first :IdentificationSection ;
+    rdf:rest (
+        :ExperimentalSection    # augmentation
+        :SequenceValuesSection  # augmentation
+        :SequenceLine1Section
+        :SequenceLine2Section
+        :SequenceLine3Section
+        :NameSection
+        :ReferenceSection
+        :LinkSection
+        :FormulaSection
+        :CrossReferenceSection
+        :AuthorSection
+        :OffsetSection
+        :ExtensionSection
+        :ExampleSection
+        :MapleProgramSection
+        :MathematicaProgramSection
+        :OtherProgramSection
+        :KeywordsSection
+        :CommentSection
+    ) .
+
+

@@ -91,9 +91,7 @@ def get_metadata(box: Dict[str, Any], *, graph, noisy: bool = False, **_rest) ->
 # Reclaimed from test hijacking
 def main():
     """Shell wrapper for get_metadata module."""
-    from libs.core.util import build_inbox_from_args
-    import json
-    import sys
+    from libs.core.wrapper import get_inbox, dump_outbox
     
     # Define argument specifications for this module
     argument_definitions = [
@@ -101,13 +99,13 @@ def main():
     ]
     
     # Build inbox from stdin + CLI args using shared utility
-    inbox = build_inbox_from_args(argument_definitions)
+    inbox = get_inbox(argument_definitions)
     
     # Call core function with identical semantics
     outbox = get_metadata(inbox, **inbox)
     
     # Emit JSON output for pipeline consumption
-    json.dump(outbox, sys.stdout)
+    dump_outbox(outbox)
 
 
 if __name__ == '__main__':
