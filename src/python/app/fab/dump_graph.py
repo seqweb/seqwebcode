@@ -10,9 +10,7 @@ Dependencies:
 - RDFLib (installed via 'seqwebdev setup python')
 """
 
-import json
 import os
-import sys
 from typing import Dict, Any
 
 try:
@@ -24,21 +22,21 @@ except ImportError:
 def dump_graph(box: Dict[str, Any], *, graph: Graph, id: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
     """
     Core function that serializes an RDFLib Graph to RDF/Turtle format and writes to file.
-    
+
     Uses destructuring pattern to bind only needed parameters while preserving
     the full box and any extra keys for pass-through semantics. Serializes
     the graph to Turtle format and writes it to a TTL file in seqwebdata.
-    
+
     Args:
         box: Full input box dictionary
         graph: The RDFLib Graph to serialize
         id: The sequence ID (e.g., "A000001")
         noisy: Whether to enable verbose output (controls printing)
         **_rest: Any additional keys in the box (preserved for pass-through)
-        
+
     Returns:
         outbox: The box with 'turtle_output' and 'file_path' keys
-        
+
     Raises:
         ImportError: If RDFLib is not available
         ValueError: If graph is not a valid RDFLib Graph
@@ -47,39 +45,39 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, id: str, noisy: bool = Fals
     # Check if RDFLib is available
     if Graph is None:
         raise ImportError("❌ RDFLib not available. Please run: seqwebdev setup python")
-    
+
     # Validate that graph is an RDFLib Graph
     if not isinstance(graph, Graph):
         raise ValueError(f"❌ Invalid graph type: expected RDFLib Graph, got {type(graph)}")
-    
+
     if noisy:
         print(f"dump_graph: Serializing graph with {len(graph)} statements")
-    
+
     # Get seqwebdata path from seqvar system
     from libs.core.seqvar.seqvar import get as seqvar_get
-    
+
     try:
         seqwebdata_path = seqvar_get("repos.seqwebdata")
     except Exception as e:
         raise RuntimeError(f"❌ Failed to get seqwebdata path from seqvar: {e}")
-    
+
     if not seqwebdata_path:
         raise RuntimeError("❌ seqwebdata path not set in seqvar system")
-    
+
     # Compute folder and file path (analogous to get_oeis_data)
     folder = id[:4]  # First 4 characters of ID
     file_path = os.path.join(seqwebdata_path, "seq", folder, f"{id}.ttl")
-    
+
     if noisy:
         print(f"dump_graph: Writing to {file_path}")
-    
+
     # Create target directory if it doesn't exist
     target_dir = os.path.dirname(file_path)
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
         if noisy:
             print(f"dump_graph: Created directory {target_dir}")
-    
+
     # Check if file already exists and create backup
     if os.path.exists(file_path):
         backup_path = f"{file_path}.bkp"
@@ -89,10 +87,10 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, id: str, noisy: bool = Fals
         os.rename(file_path, backup_path)
         if noisy:
             print(f"dump_graph: Created backup {backup_path}")
-    
+
     # Serialize the graph to Turtle format
     turtle_output = graph.serialize(format='turtle')
-    
+
     # Check for metadata and prepend as comment line if present
     metadata = box.get('metadata')
     if metadata:
@@ -101,7 +99,7 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, id: str, noisy: bool = Fals
         final_output = metadata_line + turtle_output
     else:
         final_output = turtle_output
-    
+
     # Write to file
     try:
         with open(file_path, 'w', encoding='utf-8') as f:
@@ -110,17 +108,14 @@ def dump_graph(box: Dict[str, Any], *, graph: Graph, id: str, noisy: bool = Fals
             print(f"dump_graph: Successfully wrote {len(final_output)} characters to {file_path}")
     except Exception as e:
         raise RuntimeError(f"❌ Failed to write TTL file {file_path}: {e}")
-    
+
     # Print the Turtle output prettily
     if noisy:
         print("dump_graph: RDF/Turtle output:")
         print("=" * 60)
         print(final_output)
         print("=" * 60)
-    else:
-        # Even in silent mode, we print the Turtle output since that's the main purpose
-        print(final_output)
-    
+
     # Return the outbox with the turtle output and file path added, preserving all other keys
     return {**box, 'turtle_output': turtle_output, 'file_path': file_path}
 
@@ -131,19 +126,19 @@ def main():
     from libs.core.util import build_inbox_from_args
     import json
     import sys
-    
+
     # Define argument specifications for this module
     argument_definitions = [
         ('id', str, 'Sequence ID (e.g., A000001)', True),
         ('noisy', bool, 'Enable verbose output', False)
     ]
-    
+
     # Build inbox from stdin + CLI args using shared utility
     inbox = build_inbox_from_args(argument_definitions)
-    
+
     # Call core function with identical semantics
     outbox = dump_graph(inbox, **inbox)
-    
+
     # Emit JSON output for pipeline consumption
     json.dump(outbox, sys.stdout)
 

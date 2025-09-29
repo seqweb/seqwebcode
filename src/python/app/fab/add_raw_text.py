@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+
+# DEPRECATED
+
 """
 add_raw_text - Module that adds raw text triples to an RDFLib Graph.
 
@@ -10,12 +13,12 @@ Dependencies:
 - RDFLib (installed via 'seqwebdev setup python')
 """
 
-import json
-import sys
 from typing import Dict, Any
 
 
-def add_raw_text(box: Dict[str, Any], *, id: str, graph, oeis_data: str, noisy: bool = False, **_rest) -> Dict[str, Any]:
+def add_raw_text(box: Dict[str, Any], *,
+                 id: str, graph, oeis_data: str, noisy: bool = False,
+                 **_rest) -> Dict[str, Any]:
     """
     Core function that adds raw text triples to the RDFLib Graph.
 

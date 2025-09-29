@@ -6,43 +6,42 @@ Processes a list of OEIS sequence IDs by calling make_one for each ID.
 Simple implementation for one-off tasks like processing core sequences.
 """
 
-import argparse
-import json
-import sys
 from typing import Dict, Any, List
 from make_one import make_one
 
 
-def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False, noisy: bool = False, **_rest) -> Dict[str, Any]:
+def make_list(box: Dict[str, Any], *,
+              id_list: List[str], replace: bool = False, noisy: bool = False,
+              **_rest) -> Dict[str, Any]:
     """
     Process a list of OEIS sequence IDs by calling make_one for each ID.
-    
+
     Args:
         box: The processing box containing input data
         id_list: List of sequence IDs to process (e.g., ["A000001", "A000002"])
         replace: Whether to replace existing .ttl files (default: False)
         noisy: Whether to print debug information
         **_rest: Additional keyword arguments (ignored)
-    
+
     Returns:
         Updated box with processing results
     """
     if noisy:
         print(f"make_list: Processing {len(id_list)} IDs, replace={replace}")
-    
+
     processed_ids = []
     preexisting_ids = []
     missing_ids = []
     error_ids = []
-    
+
     # Process each ID
     for seq_id in id_list:
         if noisy:
             print(f"make_list: Processing {seq_id}")
-        
+
         # Call make_one for this ID
         try:
-            result = make_one(
+            make_one(
                 box={
                     'id': seq_id,
                     'noisy': noisy,
@@ -54,11 +53,11 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
                 replace=replace,
                 **_rest
             )
-            
+
             if noisy:
                 print(f"make_list: Successfully processed {seq_id}")
             processed_ids.append(seq_id)
-            
+
         except Exception as e:
             # Check if this is a pipeline-wrapped file error
             if isinstance(e, RuntimeError) and "Pipeline failed" in str(e):
@@ -84,7 +83,7 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
                 if noisy:
                     print(f"make_list: Error processing {seq_id}: {e}")
                 error_ids.append({'id': seq_id, 'error': str(e)})
-    
+
     # Build results
     results = {
         'processed_ids': processed_ids,
@@ -97,10 +96,13 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
         'total_missing': len(missing_ids),
         'total_errors': len(error_ids)
     }
-    
     if noisy:
-        print(f"make_list: Summary - Processed: {len(processed_ids)}, Skipped: {len(preexisting_ids)}, Missing: {len(missing_ids)}, Errors: {len(error_ids)}")
-    
+        print("make_list: Summary - "
+              f"Processed: {len(processed_ids)}, "
+              f"Skipped: {len(preexisting_ids)}, "
+              f"Missing: {len(missing_ids)}, "
+              f"Errors: {len(error_ids)}")
+
     return {**box, 'list_results': results}
 
 
@@ -108,20 +110,20 @@ def make_list(box: Dict[str, Any], *, id_list: List[str], replace: bool = False,
 def main():
     """Shell wrapper for make_list fabricator."""
     from libs.core.wrapper import get_inbox, dump_outbox
-    
+
     # Define argument specifications for this fabricator
     argument_definitions = [
         ('id_list', list, 'JSON list of sequence IDs (e.g., ["A000001", "A000002"])', True),
         ('replace', bool, 'Replace existing .ttl files', False),
         ('noisy', bool, 'Enable verbose output', False)
     ]
-    
+
     # Build inbox from stdin + CLI args using shared utility
     inbox = get_inbox(argument_definitions)
-    
+
     # Call core function with identical semantics
     outbox = make_list(inbox, **inbox)
-    
+
     # Emit JSON output for pipeline consumption
     dump_outbox(outbox)
 

@@ -50,19 +50,19 @@ class PythonCommand(BaseCommand):
             from libs.core.seqvar.seqvar import get as seqvar_get
             seqwebcode_path = seqvar_get("repos.seqwebcode")
             requirements_file = Path(seqwebcode_path) / "src" / "python" / "requirements.txt"
-            
+
             if args.noisy:
                 print(f"Looking for requirements.txt at: {requirements_file}")
                 print(f"seqwebcode_path: {seqwebcode_path}")
-            
+
             if not requirements_file.exists():
                 print(f"❌ Error: requirements.txt not found at {requirements_file}")
                 sys.exit(1)
-            
+
             if args.noisy:
                 print(f"📦 Installing Python packages from {requirements_file}")
                 print(f"🔧 Running: pip install -r {requirements_file}")
-            
+
             # Run pip install with both --break-system-packages and --user flags
             # --break-system-packages: Override externally-managed-environment error
             # --user: Install to user directory to avoid breaking Homebrew installation
