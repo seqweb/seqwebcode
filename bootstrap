@@ -29,8 +29,24 @@ echo "Added $SEQWEBDEV_HOME to PATH: $PATH"
 
 echo "Bootstrapping SeqWeb dev home environment in ($SEQWEBDEV_HOME) (was ${PREV_SEQWEBDEV_HOME:-<not set>})"
 
-# Note: seqweb.conf is no longer required for CLI operation
-# The Universal entrypoint now uses filesystem discovery to find the seqwebcode repo
+# Check if seqweb.conf exists, create initial one if not
+if [[ -f "seqweb.conf" ]]; then
+    echo "Using existing seqweb.conf configuration file"
+else
+    echo "Creating initial seqweb.conf configuration file..."
+    cat > seqweb.conf << 'EOF'
+# SeqWeb Development Configuration
+# This file contains paths to SeqWeb repositories and other configuration info
+
+[repos]
+seqwebcode="$SEQWEBDEV_HOME/seqwebcode"
+seqweb="$SEQWEBDEV_HOME/seqweb"
+seqwebdata="$SEQWEBDEV_HOME/seqwebdata"
+oeisdata="$SEQWEBDEV_HOME/oeisdata"
+".github"="$SEQWEBDEV_HOME/.github"
+EOF
+    echo "Created default seqweb.conf with repo paths as subdirectories under SEQWEBDEV_HOME"
+fi
 
 # Always recreate the universal SeqWeb CLI entry point (it's generated, not user data)
 echo "Creating universal SeqWeb CLI entry point..."
@@ -43,9 +59,19 @@ cat > "$SEQWEBDEV_HOME/seqwebdev" << 'EOF'
 
 set -e
 
-# Find seqwebcode directory using filesystem discovery
-# Look for directories named 'seqwebcode' containing the 'bootstrap' file
-SEQWEBCODE_PATH=$(find ~ -name "seqwebcode" -type d -exec test -f {}/bootstrap \; -print -quit 2>/dev/null)
+# Find seqwebcode directory from seqweb.conf configuration file
+# Extract the seqwebcode path from TOML configuration with error handling
+if SEQWEBCODE_PATH=$(grep -E '^\s*seqwebcode\s*=' seqweb.conf | head -1 | sed 's/.*=\s*"\([^"]*\)".*/\1/'); then
+    if [[ -n "$SEQWEBCODE_PATH" && -d "$SEQWEBCODE_PATH" ]]; then
+        echo "Found seqwebcode at: $SEQWEBCODE_PATH"
+    else
+        echo "Error: Invalid seqwebcode path in config: $SEQWEBCODE_PATH"
+        exit 1
+    fi
+else
+    echo "Error: seqwebcode repo location not found in seqweb.conf"
+    exit 1
+fi
 
 if [ -n "$SEQWEBCODE_PATH" ]; then
     # Construct the path to the implementation entry point
@@ -81,18 +107,37 @@ chmod +x "$SEQWEBDEV_HOME/seqwebdev"
 # Detect and modify the appropriate bash file
 echo "Detecting bash configuration file..."
 
-# Determine which bash file to use
-if [ -f "$HOME/.bashrc" ]; then
-    BASH_FILE="$HOME/.bashrc"
-elif [ -f "$HOME/.bash_profile" ]; then
-    BASH_FILE="$HOME/.bash_profile"
-elif [ -f "$HOME/.profile" ]; then
-    BASH_FILE="$HOME/.profile"
-else
-    BASH_FILE="$HOME/.bashrc"
-fi
+# Determine which config file to use based on the actual shell
+SHELL_NAME=$(basename "$SHELL" 2>/dev/null || echo "unknown")
 
-echo "Using bash file: $BASH_FILE"
+# Function to find the best config file for a shell
+find_shell_config() {
+    local shell_name="$1"
+    case "$shell_name" in
+        bash)
+            for file in "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+                [ -f "$file" ] && echo "$file" && return
+            done
+            echo "$HOME/.bashrc"  # Default if none exist
+            ;;
+        zsh)
+            [ -f "$HOME/.zshrc" ] && echo "$HOME/.zshrc" || echo "$HOME/.zshrc"
+            ;;
+        fish)
+            [ -f "$HOME/.config/fish/config.fish" ] && echo "$HOME/.config/fish/config.fish" || echo "$HOME/.config/fish/config.fish"
+            ;;
+        *)
+            # Fallback for unknown shells - try common files
+            for file in "$HOME/.profile" "$HOME/.bashrc" "$HOME/.zshrc"; do
+                [ -f "$file" ] && echo "$file" && return
+            done
+            echo "$HOME/.profile"
+            ;;
+    esac
+}
+
+BASH_FILE=$(find_shell_config "$SHELL_NAME")
+echo "Detected shell: $SHELL_NAME, using config file: $BASH_FILE"
 
 # Append the export line and alias to the bash file
 echo "Appending SeqWeb configuration to $BASH_FILE..."
@@ -114,6 +159,6 @@ echo ""
 echo "SeqWeb bootstrap complete! You can now:"
 echo "1. Clone the seqwebcode repository (required for CLI operation)."
 echo "2. Clone other repositories as needed."
-echo "3. Check/update your 'seqweb.conf' file to give your repo locations."
+echo "3. Check/update your 'seqweb.conf' file if needed to give your actual repo locations."
 echo "4. Start a new terminal session to use the 'seqwebdev' command."
 echo " (The seqwebdev command requires a fresh shell session to pick up PATH changes.)"
