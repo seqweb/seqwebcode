@@ -34,7 +34,7 @@ if [[ -f "seqweb.conf" ]]; then
     echo "Using existing seqweb.conf configuration file"
 else
     echo "Creating initial seqweb.conf configuration file..."
-    cat > seqweb.conf << 'EOF'
+    cat > seqweb.conf << EOF
 # SeqWeb Development Configuration
 # This file contains paths to SeqWeb repositories and other configuration info
 
